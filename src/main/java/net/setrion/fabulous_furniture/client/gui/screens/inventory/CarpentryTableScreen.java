@@ -3,15 +3,18 @@ package net.setrion.fabulous_furniture.client.gui.screens.inventory;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.*;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.util.context.ContextMap;
@@ -33,14 +36,14 @@ import java.util.Comparator;
 import java.util.List;
 
 public class CarpentryTableScreen extends AbstractContainerScreen<CarpentryTableMenu> {
-    private static final ResourceLocation SCROLLER_SPRITE = FabulousFurniture.prefix("container/carpentry_table/scroller");
-    private static final ResourceLocation SCROLLER_DISABLED_SPRITE = FabulousFurniture.prefix("container/carpentry_table/scroller_disabled");
-    private static final ResourceLocation SCROLLER_FILTER_SPRITE = FabulousFurniture.prefix("container/carpentry_table/scroller_filter");
-    private static final ResourceLocation SCROLLER_FILTER_DISABLED_SPRITE = FabulousFurniture.prefix("container/carpentry_table/scroller_filter_disabled");
-    private static final ResourceLocation SLOT_CRAFTABLE = FabulousFurniture.prefix("container/carpentry_table/slot_craftable");
-    private static final ResourceLocation SLOT_HOVERED = FabulousFurniture.prefix("container/carpentry_table/slot_hovered");
-    private static final ResourceLocation SLOT_UNCRAFTABLE = FabulousFurniture.prefix("container/carpentry_table/slot_uncraftable");
-    public static final ResourceLocation BG_LOCATION = FabulousFurniture.prefix("textures/gui/container/carpentry_table.png");
+    private static final Identifier SCROLLER_SPRITE = FabulousFurniture.prefix("container/carpentry_table/scroller");
+    private static final Identifier SCROLLER_DISABLED_SPRITE = FabulousFurniture.prefix("container/carpentry_table/scroller_disabled");
+    private static final Identifier SCROLLER_FILTER_SPRITE = FabulousFurniture.prefix("container/carpentry_table/scroller_filter");
+    private static final Identifier SCROLLER_FILTER_DISABLED_SPRITE = FabulousFurniture.prefix("container/carpentry_table/scroller_filter_disabled");
+    private static final Identifier SLOT_CRAFTABLE = FabulousFurniture.prefix("container/carpentry_table/slot_craftable");
+    private static final Identifier SLOT_HOVERED = FabulousFurniture.prefix("container/carpentry_table/slot_hovered");
+    private static final Identifier SLOT_UNCRAFTABLE = FabulousFurniture.prefix("container/carpentry_table/slot_uncraftable");
+    public static final Identifier BG_LOCATION = FabulousFurniture.prefix("textures/gui/container/carpentry_table.png");
     private static final WidgetSprites FILTER_BUTTON_SPRITES = new WidgetSprites(
             FabulousFurniture.prefix("container/carpentry_table/filter_enabled"),
             FabulousFurniture.prefix("container/carpentry_table/filter_disabled"),
@@ -49,7 +52,7 @@ public class CarpentryTableScreen extends AbstractContainerScreen<CarpentryTable
     );
     private EditBox name;
     private boolean filterEnabled = false;
-    protected StateSwitchingButton filterButton;
+    protected CycleButton<Boolean> filterButton;
     private List<Checkbox> categoryList;
     private List<Checkbox> materialList;
 
@@ -105,15 +108,14 @@ public class CarpentryTableScreen extends AbstractContainerScreen<CarpentryTable
         name.setMaxLength(50);
         name.setResponder(this::onNameChanged);
         name.setValue("");
-        addWidget(name);
+        addRenderableWidget(name);
     }
 
     protected void initButton() {
         int i = leftPos-80;
         int j = topPos-40;
-        filterButton = new StateSwitchingButton(i+224, j+9, 26, 16, filterEnabled);
-        updateFilterButtonTooltip();
-        initFilterButtonTextures();
+        filterButton = CycleButton.booleanBuilder(Component.empty(), Component.empty(), filterEnabled).withTooltip(bool -> bool ? Tooltip.create(Component.translatable("gui.recipebook.toggleRecipes.craftable")) : Tooltip.create(Component.translatable("gui.recipebook.toggleRecipes.all")))
+                .withSprite((button, bool) -> FILTER_BUTTON_SPRITES.get(bool, button.isHoveredOrFocused())).create(i+224, j+9, 26, 16, CommonComponents.EMPTY);
     }
 
     private void onCategoryListChanged(Checkbox checkbox, boolean selected) {
@@ -177,53 +179,42 @@ public class CarpentryTableScreen extends AbstractContainerScreen<CarpentryTable
         onRecipeReload(true, s);
     }
 
-    private void updateFilterButtonTooltip() {
-        filterButton.setTooltip(filterButton.isStateTriggered() ? Tooltip.create(Component.translatable("gui.recipebook.toggleRecipes.craftable")) : Tooltip.create(Component.translatable("gui.recipebook.toggleRecipes.all")));
-    }
-
-    private void initFilterButtonTextures() {
-        filterButton.initTextureValues(FILTER_BUTTON_SPRITES);
-    }
-
-    public void resize(Minecraft minecraft, int width, int height) {
-        String s = name.getValue();
-        init(minecraft, width, height);
-        name.setValue(s);
-    }
-
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (keyCode == 256) {
+    @Override
+    public boolean keyPressed(KeyEvent event) {
+        if (event.isEscape()) {
             minecraft.player.closeContainer();
+            return true;
+        } else {
+            return this.name.keyPressed(event) || this.name.canConsumeInput() || super.keyPressed(event);
         }
-        return name.keyPressed(keyCode, scanCode, modifiers) || name.canConsumeInput() || super.keyPressed(keyCode, scanCode, modifiers);
     }
 
-    public void render(GuiGraphics guiGraphics, int x, int y, float p_282389_) {
-        super.render(guiGraphics, x, y, p_282389_);
-        guiGraphics.drawString(font, Component.translatable("carpentry_table.categories"), leftPos-73, topPos-34, 4210752, false);
-        guiGraphics.drawString(font, Component.translatable("carpentry_table.materials"), leftPos-73, topPos+76, 4210752, false);
-        renderFg(guiGraphics, x, y, p_282389_);
-        filterButton.render(guiGraphics, x, y, p_282389_);
-        renderTooltip(guiGraphics, x, y);
+    @Override
+    public void extractContents(GuiGraphicsExtractor graphics, int x, int y, float f) {
+        super.extractContents(graphics, x, y, f);
+        graphics.text(font, Component.translatable("carpentry_table.categories"), leftPos-73, topPos-34, 4210752, false);
+        graphics.text(font, Component.translatable("carpentry_table.materials"), leftPos-73, topPos+76, 4210752, false);
+        filterButton.extractRenderState(graphics, x, y, f);
+        extractTooltip(graphics, x, y);
     }
 
     private boolean isRecipeCraftable(RecipeHolder<CarpentryTableRecipe> recipe) {
         boolean b = true;
         for (StackedIngredient ingredient : recipe.value().getMaterials()) {
-            if (!(menu.container.countItem(ingredient.ingredient().getValues().get(0).value()) >= ingredient.count())) {
+            if (!(menu.container.countItem(ingredient.ingredient().items().toList().get(0).value()) >= ingredient.count())) {
                 b = false;
             }
         }
         return b;
     }
 
-    private void renderButtons(GuiGraphics guiGraphics, int mouseX, int mouseY, int x, int y, int lastVisibleElementIndex) {
+    private void renderButtons(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, int x, int y, int lastVisibleElementIndex) {
         for(int i = recipeListStartIndex; i < lastVisibleElementIndex && i < recipesForInput.size(); ++i) {
             int j = i - recipeListStartIndex;
             int k = x + j % 6 * 25;
             int l = j / 6;
             int i1 = y + l * 25 + 2;
-            ResourceLocation resourcelocation;
+            Identifier resourcelocation;
             if (!isRecipeCraftable(recipesForInput.get(i))) {
                 resourcelocation = SLOT_UNCRAFTABLE;
             } else {
@@ -238,7 +229,7 @@ public class CarpentryTableScreen extends AbstractContainerScreen<CarpentryTable
         }
     }
 
-    private void renderRecipes(GuiGraphics guiGraphics, int x, int y, int lastVisibleElementIndex) {
+    private void renderRecipes(GuiGraphicsExtractor guiGraphics, int x, int y, int lastVisibleElementIndex) {
         ContextMap contextmap = SlotDisplayContext.fromLevel(minecraft.level);
 
         for(int i = recipeListStartIndex; i < lastVisibleElementIndex && i < recipesForInput.size(); ++i) {
@@ -247,18 +238,18 @@ public class CarpentryTableScreen extends AbstractContainerScreen<CarpentryTable
             int l = j / 6;
             int i1 = y + l * 25 + 1;
             SlotDisplay slotdisplay = recipesForInput.get(i).value().display().getFirst().result();
-            guiGraphics.renderItem(slotdisplay.resolveForFirstStack(contextmap), k, i1);
+            guiGraphics.item(slotdisplay.resolveForFirstStack(contextmap), k, i1);
         }
     }
 
     @Override
-    protected void renderTooltip(GuiGraphics guiGraphics, int x, int y) {
-        super.renderTooltip(guiGraphics, x, y);
+    protected void extractTooltip(GuiGraphicsExtractor graphics, int x, int y) {
+        super.extractTooltip(graphics, x, y);
         categoryList.forEach(box -> {
             if (box.isActive() && box.isMouseOver(x, y)) {
                 for(int i = categoryListStartIndex; i < categoryListStartIndex+5 && i < categoryList.size(); ++i) {
                     if (box == categoryList.get(i)) {
-                        guiGraphics.setTooltipForNextFrame(font, FurnitureCategory.values().toList().get(i).getTranslatedName(), x, y);
+                        graphics.setTooltipForNextFrame(font, FurnitureCategory.values().toList().get(i).getTranslatedName(), x, y);
                     }
                 }
             }
@@ -268,7 +259,7 @@ public class CarpentryTableScreen extends AbstractContainerScreen<CarpentryTable
             if (box.isActive() && box.isMouseOver(x, y)) {
                 for(int i = materialListStartIndex; i < materialListStartIndex+5 && i < materialList.size(); ++i) {
                     if (box == materialList.get(i)) {
-                        guiGraphics.setTooltipForNextFrame(font, MaterialType.values().toList().get(i).getTranslatedName(), x, y);
+                        graphics.setTooltipForNextFrame(font, MaterialType.values().toList().get(i).getTranslatedName(), x, y);
                     }
                 }
             }
@@ -284,6 +275,8 @@ public class CarpentryTableScreen extends AbstractContainerScreen<CarpentryTable
                 int j1 = i + i1 % 6 * 25;
                 int k1 = j + i1 / 6 * 25 + 1;
                 if (x >= j1 && x < j1 + 25 && y >= k1 && y < k1 + 25) {
+                    if (minecraft.hasShiftDown()) {
+                    }
                     ContextMap contextmap = SlotDisplayContext.fromLevel(this.minecraft.level);
                     SlotDisplay slotdisplay = recipesForInput.get(l).value().display().getFirst().result();
                     List<Either<FormattedText, TooltipComponent>> components = new ArrayList<>();
@@ -291,14 +284,14 @@ public class CarpentryTableScreen extends AbstractContainerScreen<CarpentryTable
                     components.add(Either.left(FormattedText.of(Component.translatable("carpentry_table.amount").getString()+slotdisplay.resolveForFirstStack(contextmap).getCount(), Style.EMPTY.withColor(ChatFormatting.BLUE))));
                     components.add(Either.left(FormattedText.of("")));
                     components.add(Either.left(FormattedText.of(Component.translatable("carpentry_table.ingredients").getString())));
-                    recipesForInput.get(l).value().getMaterials().forEach(material -> components.add(Either.left(FormattedText.of(material.count()+"x "+Component.translatable(material.ingredient().getValues().get(0).value().getDescriptionId()).getString(), Style.EMPTY.withColor(ChatFormatting.BLUE)))));
-                    guiGraphics.setComponentTooltipFromElementsForNextFrame(this.font, components, x, y, slotdisplay.resolveForFirstStack(contextmap));
+                    recipesForInput.get(l).value().getMaterials().forEach(material -> components.add(Either.left(FormattedText.of(material.count()+"x "+Component.translatable(material.ingredient().items().toList().get(0).value().getDescriptionId()).getString(), Style.EMPTY.withColor(ChatFormatting.BLUE)))));
+                    graphics.setComponentTooltipFromElementsForNextFrame(this.font, components, x, y, slotdisplay.resolveForFirstStack(contextmap));
                 }
             }
         }
     }
 
-    private void renderCategories(GuiGraphics guiGraphics, int x, int y, int lastVisibleElementIndex) {
+    private void renderCategories(GuiGraphicsExtractor graphics, int x, int y, int lastVisibleElementIndex) {
         categoryList.forEach(box -> {
             box.active = false;
             box.visible = false;
@@ -310,12 +303,12 @@ public class CarpentryTableScreen extends AbstractContainerScreen<CarpentryTable
             box.setPosition(x, i1);
             box.active = true;
             box.visible = true;
-            box.render(guiGraphics, x, y, 1.0F);
-            guiGraphics.renderItem(new ItemStack(FurnitureCategory.values().toList().get(i).item()), x+20, i1+1);
+            box.extractContents(graphics, x, y, 1.0F);
+            graphics.item(new ItemStack(FurnitureCategory.values().toList().get(i).item()), x+20, i1+1);
         }
     }
 
-    private void renderMaterials(GuiGraphics guiGraphics, int x, int y, int lastVisibleElementIndex) {
+    private void renderMaterials(GuiGraphicsExtractor graphics, int x, int y, int lastVisibleElementIndex) {
         materialList.forEach(box -> {
             box.active = false;
             box.visible = false;
@@ -327,36 +320,32 @@ public class CarpentryTableScreen extends AbstractContainerScreen<CarpentryTable
             box.setPosition(x, i1);
             box.active = true;
             box.visible = true;
-            box.render(guiGraphics, x, y, 1.0F);
-            guiGraphics.renderItem(new ItemStack(MaterialType.values().toList().get(i).item()), x+20, i1+1);
+            box.extractContents(graphics, x, y, 1.0F);
+            graphics.item(new ItemStack(MaterialType.values().toList().get(i).item()), x+20, i1+1);
         }
     }
 
     @Override
-    protected void renderBg(GuiGraphics guiGraphics, float v, int mouseX, int mouseY) {
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
         int i = leftPos-80;
         int j = topPos-40;
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, BG_LOCATION, i, j, 0.0F, 0.0F, 256, 256, 256, 256);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, BG_LOCATION, i, j, 0.0F, 0.0F, 256, 256, 256, 256);
         int r = (int)(85.0F * recipeListScrollOffs);
         int c = (int)(78.0F * categoryListScrollOffs);
         int m = (int)(78.0F * materialListScrollOffs);
-        ResourceLocation scroller = isRecipeListScrollBarActive() ? SCROLLER_SPRITE : SCROLLER_DISABLED_SPRITE;
-        ResourceLocation scroller_filter = isCategoryScrollBarActive() ? SCROLLER_FILTER_SPRITE : SCROLLER_FILTER_DISABLED_SPRITE;
-        ResourceLocation scroller_filter2 = isMaterialTypeScrollBarActive() ? SCROLLER_FILTER_SPRITE : SCROLLER_FILTER_DISABLED_SPRITE;
-        guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, scroller, i+239, j+31+r, 11, 15);
-        guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, scroller_filter, i+61, j+19+c, 12, 15);
-        guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, scroller_filter2, i+61, j+128+m, 12, 15);
+        Identifier scroller = isRecipeListScrollBarActive() ? SCROLLER_SPRITE : SCROLLER_DISABLED_SPRITE;
+        Identifier scroller_filter = isCategoryScrollBarActive() ? SCROLLER_FILTER_SPRITE : SCROLLER_FILTER_DISABLED_SPRITE;
+        Identifier scroller_filter2 = isMaterialTypeScrollBarActive() ? SCROLLER_FILTER_SPRITE : SCROLLER_FILTER_DISABLED_SPRITE;
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, scroller, i+239, j+31+r, 11, 15);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, scroller_filter, i+61, j+19+c, 12, 15);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, scroller_filter2, i+61, j+128+m, 12, 15);
         int l = leftPos+7;
         int i1 = topPos-10;
         int j1 = recipeListStartIndex + 24;
-        renderButtons(guiGraphics, mouseX, mouseY, l, i1, j1);
-        renderRecipes(guiGraphics, l+4, i1+4, j1);
-        renderCategories(guiGraphics, i+5, j+17, categoryListStartIndex+5);
-        renderMaterials(guiGraphics, i+5, j+126, materialListStartIndex+5);
-    }
-
-    public void renderFg(GuiGraphics p_283449_, int p_283263_, int p_281526_, float p_282957_) {
-        name.render(p_283449_, p_283263_, p_281526_, p_282957_);
+        renderButtons(graphics, mouseX, mouseY, l, i1, j1);
+        renderRecipes(graphics, l+4, i1+4, j1);
+        renderCategories(graphics, i+5, j+17, categoryListStartIndex+5);
+        renderMaterials(graphics, i+5, j+126, materialListStartIndex+5);
     }
 
     public static void setRecipes(List<RecipeHolder<CarpentryTableRecipe>> recipes) {
@@ -364,7 +353,8 @@ public class CarpentryTableScreen extends AbstractContainerScreen<CarpentryTable
         recipesForInput = recipes;
     }
 
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    @Override
+    public boolean mouseClicked(MouseButtonEvent event, boolean bool) {
         if (!recipesForInput.isEmpty()) {
             int i = leftPos + 7;
             int j = topPos - 10;
@@ -373,8 +363,8 @@ public class CarpentryTableScreen extends AbstractContainerScreen<CarpentryTable
             for(int l = recipeListStartIndex; l < k; ++l) {
                 if (l < recipesForInput.size() && isRecipeCraftable(recipesForInput.get(l))) {
                     int i1 = l - recipeListStartIndex;
-                    double d0 = mouseX - (double) (i + i1 % 6 * 25);
-                    double d1 = mouseY - (double) (j + i1 / 6 * 25);
+                    double d0 = event.x() - (double) (i + i1 % 6 * 25);
+                    double d1 = event.y() - (double) (j + i1 / 6 * 25);
                     int id = allRecipes.indexOf(recipesForInput.get(l));
                     menu.setRecipes(allRecipes);
                     if (d0 >= 0.0 && d1 >= 0.0 && d0 < 25.0 && d1 < 25.0 && (menu).clickMenuButton(minecraft.player, id)) {
@@ -385,57 +375,56 @@ public class CarpentryTableScreen extends AbstractContainerScreen<CarpentryTable
                 }
             }
         }
-        if (filterButton.mouseClicked(mouseX, mouseY, button)) {
+        if (filterButton.mouseClicked(event, bool)) {
             filterEnabled = !filterEnabled;
-            updateFilterButtonTooltip();
-            filterButton.setStateTriggered(filterEnabled);
             onRecipeReload(false, name.getValue());
         }
         recipeListScrolling = false;
         int i = leftPos-80+239;
         int j = topPos-40+25;
-        if (mouseX >= (double)i && mouseX < (double)(i + 11) && mouseY >= (double)j && mouseY < (double)(j + 100)) {
+        if (event.x() >= (double)i && event.x() < (double)(i + 11) && event.y() >= (double)j && event.y() < (double)(j + 100)) {
             recipeListScrolling = true;
         }
         categoryListScrolling = false;
         int i1 = leftPos-80+61;
         int j1 = topPos-40+14;
-        if (mouseX >= (double)i1 && mouseX < (double)(i1 + 12) && mouseY >= (double)j1 && mouseY < (double)(j1 + 93)) {
+        if (event.x() >= (double)i1 && event.x() < (double)(i1 + 12) && event.y() >= (double)j1 && event.y() < (double)(j1 + 93)) {
             categoryListScrolling = true;
         }
         materialListScrolling = false;
         int i2 = leftPos-80+61;
         int j2 = topPos-40+123;
-        if (mouseX >= (double)i2 && mouseX < (double)(i2 + 12) && mouseY >= (double)j2 && mouseY < (double)(j2 + 93)) {
+        if (event.x() >= (double)i2 && event.x() < (double)(i2 + 12) && event.y() >= (double)j2 && event.y() < (double)(j2 + 93)) {
             materialListScrolling = true;
         }
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, bool);
     }
 
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+    @Override
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
         if (recipeListScrolling && this.isRecipeListScrollBarActive()) {
             int i = topPos-10;
             int j = i + 100;
-            recipeListScrollOffs = ((float)mouseY - (float)i - 7.5F) / ((float)(j - i) - 15.0F);
+            recipeListScrollOffs = ((float)event.y() - (float)i - 7.5F) / ((float)(j - i) - 15.0F);
             recipeListScrollOffs = Mth.clamp(recipeListScrollOffs, 0.0F, 1.0F);
             recipeListStartIndex = (int)((double)(recipeListScrollOffs * (float) getOffscreenRecipeRows()) + 0.5) * 6;
             return true;
         } else if (categoryListScrolling && this.isCategoryScrollBarActive()) {
             int i = topPos-21;
             int j = i + 93;
-            categoryListScrollOffs = ((float)mouseY - (float)i - 7.5F) / ((float)(j - i) - 15.0F);
+            categoryListScrollOffs = ((float)event.y() - (float)i - 7.5F) / ((float)(j - i) - 15.0F);
             categoryListScrollOffs = Mth.clamp(categoryListScrollOffs, 0.0F, 1.0F);
             categoryListStartIndex = (int)((double)(categoryListScrollOffs * (float) getOffscreenCategories()) + 0.5);
             return true;
         } else if (materialListScrolling && this.isMaterialTypeScrollBarActive()) {
             int i = topPos+88;
             int j = i + 93;
-            materialListScrollOffs = ((float)mouseY - (float)i - 7.5F) / ((float)(j - i) - 15.0F);
+            materialListScrollOffs = ((float)event.y() - (float)i - 7.5F) / ((float)(j - i) - 15.0F);
             materialListScrollOffs = Mth.clamp(materialListScrollOffs, 0.0F, 1.0F);
             materialListStartIndex = (int)((double)(materialListScrollOffs * (float) getOffScreenMaterials()) + 0.5);
             return true;
         } else {
-            return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+            return super.mouseDragged(event, dragX, dragY);
         }
     }
 

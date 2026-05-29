@@ -8,9 +8,11 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.attribute.BedRule;
+import net.minecraft.world.attribute.EnvironmentAttributes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -60,7 +62,7 @@ public class WoodenBedBlock extends Block implements BlockTagSupplier, ItemModel
     }
 
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult result) {
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             return InteractionResult.SUCCESS_SERVER;
         } else {
             if (state.getValue(PART) != BedPart.HEAD) {
@@ -71,7 +73,9 @@ public class WoodenBedBlock extends Block implements BlockTagSupplier, ItemModel
                 }
             }
 
-            if (!canSetSpawn(level)) {
+            BedRule bedrule = level.environmentAttributes().getValue(EnvironmentAttributes.BED_RULE, pos);
+            if (bedrule.explodes()) {
+                bedrule.errorMessage().ifPresent(player::sendOverlayMessage);
                 level.removeBlock(pos, false);
                 BlockPos blockpos = pos.relative(state.getValue(FACING).getOpposite());
                 if (level.getBlockState(blockpos).is(this)) {
@@ -83,14 +87,14 @@ public class WoodenBedBlock extends Block implements BlockTagSupplier, ItemModel
                 return InteractionResult.SUCCESS_SERVER;
             } else if (state.getValue(OCCUPIED)) {
                 if (!this.kickVillagerOutOfBed(level, pos)) {
-                    player.displayClientMessage(Component.translatable("block.minecraft.bed.occupied"), true);
+                    player.sendOverlayMessage(Component.translatable("block.minecraft.bed.occupied"));
                 }
 
                 return InteractionResult.SUCCESS_SERVER;
             } else {
                 player.startSleepInBed(pos).ifLeft((problem) -> {
-                    if (problem.getMessage() != null) {
-                        player.displayClientMessage(problem.getMessage(), true);
+                    if (problem.message() != null) {
+                        player.sendOverlayMessage(problem.message());
                     }
                 });
                 return InteractionResult.SUCCESS_SERVER;
@@ -101,10 +105,6 @@ public class WoodenBedBlock extends Block implements BlockTagSupplier, ItemModel
     @Override
     public boolean isBed(BlockState state, BlockGetter level, BlockPos pos, LivingEntity sleeper) {
         return true;
-    }
-
-    public static boolean canSetSpawn(Level level) {
-        return level.dimensionType().bedWorks();
     }
 
     private boolean kickVillagerOutOfBed(Level level, BlockPos pos) {
@@ -193,7 +193,7 @@ public class WoodenBedBlock extends Block implements BlockTagSupplier, ItemModel
     }
 
     public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
-        if (!level.isClientSide && player.isCreative()) {
+        if (!level.isClientSide() && player.isCreative()) {
             BedPart bedpart = state.getValue(PART);
             if (bedpart == BedPart.FOOT) {
                 BlockPos blockpos = pos.relative(getNeighbourDirection(bedpart, state.getValue(FACING)));
@@ -229,7 +229,7 @@ public class WoodenBedBlock extends Block implements BlockTagSupplier, ItemModel
 
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         super.setPlacedBy(level, pos, state, placer, stack);
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             BlockPos blockpos = pos.relative(state.getValue(FACING));
             level.setBlock(blockpos, state.setValue(PART, BedPart.HEAD), 3);
             level.updateNeighborsAt(pos, Blocks.AIR);

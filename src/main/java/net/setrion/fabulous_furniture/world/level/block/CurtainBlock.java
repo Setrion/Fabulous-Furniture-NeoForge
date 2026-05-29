@@ -82,7 +82,7 @@ public class CurtainBlock extends Block implements BlockTagSupplier, ItemModelSu
     protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
         Direction facing = state.getValue(FACING);
         BlockState defaultState = defaultBlockState().setValue(FACING, facing).setValue(OPEN, state.getValue(OPEN));
-        if (neighborState.getBlock().equals(this) && isSameCurtains(state, neighborState)) {
+        if (isSameCurtains(state, neighborState)) {
             if (state.getValue(CURTAIN_SHAPE) == CurtainShape.SINGLE && (neighborState.getValue(CURTAIN_SHAPE) != CurtainShape.TOP && neighborState.getValue(CURTAIN_SHAPE) != CurtainShape.BOTTOM)) {
                 defaultState = defaultState.setValue(OPEN, neighborState.getValue(OPEN));
             } else if ((state.getValue(CURTAIN_SHAPE) == CurtainShape.TOP || state.getValue(CURTAIN_SHAPE) == CurtainShape.BOTTOM) && (neighborState.getValue(CURTAIN_SHAPE) == CurtainShape.TOP || neighborState.getValue(CURTAIN_SHAPE) == CurtainShape.BOTTOM)) {
@@ -106,12 +106,7 @@ public class CurtainBlock extends Block implements BlockTagSupplier, ItemModelSu
     }
 
     private boolean isSameCurtains(BlockState state, BlockState state2) {
-        return state2.getBlock().equals(state.getBlock()) && state2.getValue(FACING).equals(state.getValue(FACING));
-    }
-
-    @Override
-    protected int getLightBlock(BlockState blockState) {
-        return blockState.getValue(OPEN) ? blockState.getLightBlock() : 15;
+        return state2.getBlock() instanceof CurtainBlock && state.getBlock() instanceof CurtainBlock && state2.getValue(FACING).equals(state.getValue(FACING));
     }
 
     @Override

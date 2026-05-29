@@ -4,7 +4,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.BlockFamilies;
 import net.minecraft.data.loot.BlockLootSubProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -96,10 +96,12 @@ public class BlockLootTables extends BlockLootSubProvider {
         });
 
         METALS.forEach((metal, name) -> dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix(name+"_toaster"))));
+
+        CONCRETE_MATERIALS.forEach((concrete, color) -> dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix(color.getName()+"_ceiling_lamp"))));
     }
 
     private void generateWoodenFurniture(WoodType type) {
-        Block planks = getBlockFromResourceLocation(ResourceLocation.parse(type.name()+"_planks"));
+        Block planks = getBlockFromResourceLocation(Identifier.parse(type.name()+"_planks"));
         String log_suffix;
         if (type == WoodType.CRIMSON || type == WoodType.WARPED) {
             log_suffix = "_stem";
@@ -152,20 +154,28 @@ public class BlockLootTables extends BlockLootSubProvider {
         }));
 
         dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+"_kitchen_cabinet")));
-        add(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+"_kitchen_cabinet_shelf")), this::createNameableBlockEntityTable);
-        add(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+"_kitchen_shelf")), this::createNameableBlockEntityTable);
-
         dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+log_suffix+"_kitchen_cabinet")));
-        add(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+log_suffix+"_kitchen_cabinet_shelf")), this::createNameableBlockEntityTable);
-        add(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+log_suffix+"_kitchen_shelf")), this::createNameableBlockEntityTable);
-
         dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_kitchen_cabinet")));
+
+        add(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+"_kitchen_cabinet_shelf")), this::createNameableBlockEntityTable);
+        add(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+log_suffix+"_kitchen_cabinet_shelf")), this::createNameableBlockEntityTable);
         add(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_kitchen_cabinet_shelf")), this::createNameableBlockEntityTable);
-        add(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_kitchen_shelf")), this::createNameableBlockEntityTable);
+
+        METALS.forEach((metal, name) -> {
+            if (metal != Blocks.GOLD_BLOCK && metal != Blocks.NETHERITE_BLOCK) {
+                add(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name() + "_" + name + "_kitchen_shelf")), this::createNameableBlockEntityTable);
+                add(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name() + log_suffix + "_" + name + "_kitchen_shelf")), this::createNameableBlockEntityTable);
+                add(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_" + type.name() + log_suffix + "_" + name + "_kitchen_shelf")), this::createNameableBlockEntityTable);
+            }
+        });
 
         dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+"_table")));
         dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+log_suffix+"_table")));
         dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_table")));
+
+        dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+"_couch_table")));
+        dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+log_suffix+"_couch_table")));
+        dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_couch_table")));
 
         dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+"_bedside_table")));
         dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+log_suffix+"_bedside_table")));
@@ -227,37 +237,9 @@ public class BlockLootTables extends BlockLootSubProvider {
         }
 
         METALS.forEach((metal, name) -> {
-            if (metal != Blocks.COPPER_BLOCK) {
-                dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name() + "_" + name + "_bench")));
-                dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name() + log_suffix + "_" + name + "_bench")));
-                dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_" + type.name() + log_suffix + "_" + name + "_bench")));
-            } else {
-                dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name() + "_waxed_" + name + "_bench")));
-                dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name() + log_suffix + "_waxed_" + name + "_bench")));
-                dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_" + type.name() + log_suffix + "_waxed_" + name + "_bench")));
-                dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name() + "_waxed_exposed_" + name + "_bench")));
-                dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name() + log_suffix + "_waxed_exposed_" + name + "_bench")));
-                dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_" + type.name() + log_suffix + "_waxed_exposed_" + name + "_bench")));
-                dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name() + "_waxed_weathered_" + name + "_bench")));
-                dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name() + log_suffix + "_waxed_weathered_" + name + "_bench")));
-                dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_" + type.name() + log_suffix + "_waxed_weathered_" + name + "_bench")));
-                dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name() + "_waxed_oxidized_" + name + "_bench")));
-                dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name() + log_suffix + "_waxed_oxidized_" + name + "_bench")));
-                dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_" + type.name() + log_suffix + "_waxed_oxidized_" + name + "_bench")));
-
-                dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name() + "_" +  name + "_bench")));
-                dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name() + log_suffix + "_" + name + "_bench")));
-                dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_" + type.name() + log_suffix + "_" + name + "_bench")));
-                dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name() + "_exposed_" + name + "_bench")));
-                dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name() + log_suffix + "_exposed_" + name + "_bench")));
-                dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_" + type.name() + log_suffix + "_exposed_" + name + "_bench")));
-                dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name() + "_weathered_" + name + "_bench")));
-                dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name() + log_suffix + "_weathered_" + name + "_bench")));
-                dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_" + type.name() + log_suffix + "_weathered_" + name + "_bench")));
-                dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name() + "_oxidized_" + name + "_bench")));
-                dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name() + log_suffix + "_oxidized_" + name + "_bench")));
-                dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_" + type.name() + log_suffix + "_oxidized_" + name + "_bench")));
-            }
+            dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name() + "_" + name + "_bench")));
+            dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name() + log_suffix + "_" + name + "_bench")));
+            dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_" + type.name() + log_suffix + "_" + name + "_bench")));
         });
 
         WOOL_COLORS.forEach((block, color) -> BlockFamilies.getAllFamilies().toList().forEach(blockFamily -> {
@@ -271,6 +253,14 @@ public class BlockLootTables extends BlockLootSubProvider {
                 add(getBlockFromResourceLocation(FabulousFurniture.prefix(color+"_"+type.name()+"_bed")), loot -> createSinglePropConditionTable(loot, WoodenBedBlock.PART, BedPart.HEAD));
                 add(getBlockFromResourceLocation(FabulousFurniture.prefix(color+"_"+type.name()+log_suffix+"_bed")), loot -> createSinglePropConditionTable(loot, WoodenBedBlock.PART, BedPart.HEAD));
                 add(getBlockFromResourceLocation(FabulousFurniture.prefix(color+"_stripped_"+type.name()+log_suffix+"_bed")), loot -> createSinglePropConditionTable(loot, WoodenBedBlock.PART, BedPart.HEAD));
+
+                dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix(color.getName()+"_"+type.name()+"_couch")));
+                dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix(color.getName()+"_"+type.name()+log_suffix+"_couch")));
+                dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix(color.getName()+"_stripped_"+type.name()+log_suffix+"_couch")));
+
+                dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix(color.getName()+"_"+type.name()+"_footstool")));
+                dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix(color.getName()+"_"+type.name()+log_suffix+"_footstool")));
+                dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix(color.getName()+"_stripped_"+type.name()+log_suffix+"_footstool")));
             }
         }));
     }
@@ -289,7 +279,7 @@ public class BlockLootTables extends BlockLootSubProvider {
         dropSelf(FLOWERING_AZALEA_HEDGE.get());
     }
 
-    private Block getBlockFromResourceLocation(ResourceLocation location) {
+    private Block getBlockFromResourceLocation(Identifier location) {
         return BuiltInRegistries.BLOCK.getValue(location);
     }
 

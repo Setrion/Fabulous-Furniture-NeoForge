@@ -49,7 +49,7 @@ public class BirdhouseBlock extends Block implements BlockTagSupplier, ItemModel
 
     @Override
     public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             if (player.preventsBlockDrops()) {
                 preventDropFromBottomPart(level, pos, state, player);
             } else {

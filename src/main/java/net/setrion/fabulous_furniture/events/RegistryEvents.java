@@ -25,7 +25,7 @@ public class RegistryEvents {
         SFFCreativeTabs.CREATIVE_MODE_TABS.register(modEventBus);
         SFFBlocks.BLOCKS.register(modEventBus);
         SFFMenuTypes.MENU_TYPES.register(modEventBus);
-        SFFRecipeSerializers.RECIPE_SERIALIZERS.register(modEventBus);
+        SFFRecipeSerializers.SERIALIZERS.register(modEventBus);
         SFFRecipeTypes.RECIPE_TYPES.register(modEventBus);
         SFFBlockEntityTypes.BLOCK_ENTITY_TYPES.register(modEventBus);
         SFFItems.ITEMS.register(modEventBus);

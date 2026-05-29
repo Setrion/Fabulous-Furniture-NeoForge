@@ -1,15 +1,14 @@
 package net.setrion.fabulous_furniture.world.level.block.entity;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.entity.ContainerUser;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -63,7 +62,7 @@ public class SFFBaseContainerBlockEntity extends RandomizableContainerBlockEntit
                 SFFBaseContainerBlockEntity.this.signalOpenCount(level, blockPos, blockState, newCount);
             }
 
-            protected boolean isOwnContainer(Player player) {
+            public boolean isOwnContainer(Player player) {
                 if (player.containerMenu instanceof ChestMenu) {
                     Container container = ((ChestMenu)player.containerMenu).getContainer();
                     return container == SFFBaseContainerBlockEntity.this;
@@ -118,15 +117,15 @@ public class SFFBaseContainerBlockEntity extends RandomizableContainerBlockEntit
         return size*9;
     }
 
-    public void startOpen(Player player) {
-        if (!remove && !player.isSpectator() && getLevel() != null) {
-            openersCounter.incrementOpeners(player, getLevel(), getBlockPos(), getBlockState());
+    public void startOpen(ContainerUser user) {
+        if (!remove && !user.getLivingEntity().isSpectator() && getLevel() != null) {
+            openersCounter.incrementOpeners(user.getLivingEntity(), getLevel(), getBlockPos(), getBlockState(), user.getContainerInteractionRange());
         }
     }
 
-    public void stopOpen(Player player) {
-        if (!remove && !player.isSpectator() && getLevel() != null) {
-            openersCounter.decrementOpeners(player, getLevel(), getBlockPos(), getBlockState());
+    public void stopOpen(ContainerUser user) {
+        if (!remove && !user.getLivingEntity().isSpectator() && getLevel() != null) {
+            openersCounter.decrementOpeners(user.getLivingEntity(), getLevel(), getBlockPos(), getBlockState());
         }
     }
 
@@ -141,7 +140,7 @@ public class SFFBaseContainerBlockEntity extends RandomizableContainerBlockEntit
             double d0 = worldPosition.getX() + 0.5 / 2.0;
             double d1 = worldPosition.getY() + 0.5 / 2.0;
             double d2 = worldPosition.getZ() + 0.5 / 2.0;
-            level.playSound(null, d0, d1, d2, sound, SoundSource.BLOCKS, 0.5F, level.random.nextFloat() * 0.1F + 0.9F);
+            level.playSound(null, d0, d1, d2, sound, SoundSource.BLOCKS, 0.5F, level.getRandom().nextFloat() * 0.1F + 0.9F);
         }
     }
 

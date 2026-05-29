@@ -39,7 +39,7 @@ public class TrashBinBlock extends Block implements BlockTagSupplier {
         if (level instanceof ServerLevel) {
             if (!stack.isEmpty()) {
                 if (!hasClicked) {
-                    player.displayClientMessage(Component.translatable("trash_bin.warning").withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.DARK_RED), true);
+                    player.sendOverlayMessage(Component.translatable("trash_bin.warning").withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.DARK_RED));
                     hasClicked = true;
                     return InteractionResult.SUCCESS;
                 } else {

@@ -37,7 +37,7 @@ public class CarpentryTableBlock extends Block implements BlockTagSupplier {
     @Override
     @SuppressWarnings("unchecked")
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             return InteractionResult.SUCCESS;
         } else {
             if (level instanceof ServerLevel serverLevel) {

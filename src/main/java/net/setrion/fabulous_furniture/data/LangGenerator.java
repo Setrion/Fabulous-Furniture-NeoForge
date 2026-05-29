@@ -3,7 +3,7 @@ package net.setrion.fabulous_furniture.data;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.BlockFamilies;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.WoodType;
@@ -93,6 +93,10 @@ public class LangGenerator extends LanguageProvider {
         add(MANGROVE_HEDGE.asItem(), "Mangrove Hedge");
         add(AZALEA_HEDGE.asItem(), "Azalea Hedge");
         add(FLOWERING_AZALEA_HEDGE.asItem(), "Flowering Azalea Hedge");
+
+        CONCRETE_MATERIALS.forEach((concrete, color) -> {
+            translate(color.getName()+"_ceiling_lamp");
+        });
     }
 
     private void translateStats() {
@@ -105,8 +109,10 @@ public class LangGenerator extends LanguageProvider {
         add("stat."+SFFStats.TAKE_WATER_FROM_SINK.get().toLanguageKey(), "Water Taken from Sink");
         add("stat."+SFFStats.INTERACT_WITH_FLOWER_BOX.get().toLanguageKey(), "Interactions with Flower Boxes");
         add("stat."+SFFStats.INTERACT_WITH_LAMP.get().toLanguageKey(), "Interactions with Lamps");
+        add("stat."+SFFStats.INTERACT_WITH_CEILING_LAMP.get().toLanguageKey(), "Interactions with Ceiling Lamps");
         add("stat."+SFFStats.THROW_AWAY_ITEM.get().toLanguageKey(), "Items Thrown away");
         add("stat."+SFFStats.SIT_ON_CHAIR.get().toLanguageKey(), "Times Sat on a Chair");
+        add("stat."+SFFStats.SIT_ON_COUCH.get().toLanguageKey(), "Times Sat on a Couch");
         add("stat."+SFFStats.SIT_ON_BENCH.get().toLanguageKey(), "Times Sat on a Bench");
     }
 
@@ -133,7 +139,7 @@ public class LangGenerator extends LanguageProvider {
     }
 
     private void translateWoodenFurniture(WoodType type) {
-        Block planks = getBlockFromResourceLocation(ResourceLocation.parse(type.name()+"_planks"));
+        Block planks = getBlockFromResourceLocation(Identifier.parse(type.name()+"_planks"));
         String log_suffix;
         if (type == WoodType.CRIMSON || type == WoodType.WARPED) {
             log_suffix = "_stem";
@@ -185,20 +191,28 @@ public class LangGenerator extends LanguageProvider {
         }));
 
         translate(type.name()+"_kitchen_cabinet");
-        translate(type.name()+"_kitchen_cabinet_shelf");
-        translate(type.name()+"_kitchen_shelf");
-
         translate(type.name()+log_suffix+"_kitchen_cabinet");
-        translate(type.name()+log_suffix+"_kitchen_cabinet_shelf");
-        translate(type.name()+log_suffix+"_kitchen_shelf");
-
         translate("stripped_"+type.name()+log_suffix+"_kitchen_cabinet");
+
+        translate(type.name()+"_kitchen_cabinet_shelf");
+        translate(type.name()+log_suffix+"_kitchen_cabinet_shelf");
         translate("stripped_"+type.name()+log_suffix+"_kitchen_cabinet_shelf");
-        translate("stripped_"+type.name()+log_suffix+"_kitchen_shelf");
+
+        METALS.forEach((metal, name) -> {
+            if (metal != Blocks.GOLD_BLOCK && metal != Blocks.NETHERITE_BLOCK) {
+                translate(type.name() + "_" + name + "_kitchen_shelf");
+                translate(type.name() + log_suffix + "_" + name + "_kitchen_shelf");
+                translate("stripped_" + type.name() + log_suffix + "_" + name + "_kitchen_shelf");
+            }
+        });
 
         translate(type.name()+"_table");
         translate(type.name()+log_suffix+"_table");
         translate("stripped_"+type.name()+log_suffix+"_table");
+
+        translate(type.name()+"_couch_table");
+        translate(type.name()+log_suffix+"_couch_table");
+        translate("stripped_"+type.name()+log_suffix+"_couch_table");
 
         translate(type.name()+"_bedside_table");
         translate(type.name()+log_suffix+"_bedside_table");
@@ -260,37 +274,9 @@ public class LangGenerator extends LanguageProvider {
         }
 
         METALS.forEach((metal, name) -> {
-            if (metal != Blocks.COPPER_BLOCK) {
-                translate(type.name() + "_" + name + "_bench");
-                translate(type.name() + log_suffix + "_" + name + "_bench");
-                translate("stripped_" + type.name() + log_suffix + "_" + name + "_bench");
-            } else {
-                translate(type.name() + "_waxed_" + name + "_bench");
-                translate(type.name() + log_suffix + "_waxed_" + name + "_bench");
-                translate("stripped_" + type.name() + log_suffix + "_waxed_" + name + "_bench");
-                translate(type.name() + "_waxed_exposed_" + name + "_bench");
-                translate(type.name() + log_suffix + "_waxed_exposed_" + name + "_bench");
-                translate("stripped_" + type.name() + log_suffix + "_waxed_exposed_" + name + "_bench");
-                translate(type.name() + "_waxed_weathered_" + name + "_bench");
-                translate(type.name() + log_suffix + "_waxed_weathered_" + name + "_bench");
-                translate("stripped_" + type.name() + log_suffix + "_waxed_weathered_" + name + "_bench");
-                translate(type.name() + "_waxed_oxidized_" + name + "_bench");
-                translate(type.name() + log_suffix + "_waxed_oxidized_" + name + "_bench");
-                translate("stripped_" + type.name() + log_suffix + "_waxed_oxidized_" + name + "_bench");
-
-                translate(type.name() + "_" +  name + "_bench");
-                translate(type.name() + log_suffix + "_" + name + "_bench");
-                translate("stripped_" + type.name() + log_suffix + "_" + name + "_bench");
-                translate(type.name() + "_exposed_" + name + "_bench");
-                translate(type.name() + log_suffix + "_exposed_" + name + "_bench");
-                translate("stripped_" + type.name() + log_suffix + "_exposed_" + name + "_bench");
-                translate(type.name() + "_weathered_" + name + "_bench");
-                translate(type.name() + log_suffix + "_weathered_" + name + "_bench");
-                translate("stripped_" + type.name() + log_suffix + "_weathered_" + name + "_bench");
-                translate(type.name() + "_oxidized_" + name + "_bench");
-                translate(type.name() + log_suffix + "_oxidized_" + name + "_bench");
-                translate("stripped_" + type.name() + log_suffix + "_oxidized_" + name + "_bench");
-            }
+            translate(type.name() + "_" + name + "_bench");
+            translate(type.name() + log_suffix + "_" + name + "_bench");
+            translate("stripped_" + type.name() + log_suffix + "_" + name + "_bench");
         });
 
         WOOL_COLORS.forEach((block, color) -> BlockFamilies.getAllFamilies().toList().forEach(blockFamily -> {
@@ -302,6 +288,14 @@ public class LangGenerator extends LanguageProvider {
                 translate(color+"_"+type.name()+"_bed");
                 translate(color+"_"+type.name()+log_suffix+"_bed");
                 translate(color+"_stripped_"+type.name()+log_suffix+"_bed");
+
+                translate(color.getName()+"_"+type.name()+"_couch");
+                translate(color.getName()+"_"+type.name()+log_suffix+"_couch");
+                translate(color.getName()+"_stripped_"+type.name()+log_suffix+"_couch");
+
+                translate(color.getName()+"_"+type.name()+"_footstool");
+                translate(color.getName()+"_"+type.name()+log_suffix+"_footstool");
+                translate(color.getName()+"_stripped_"+type.name()+log_suffix+"_footstool");
             }
         }));
     }
@@ -325,7 +319,7 @@ public class LangGenerator extends LanguageProvider {
         return s.toString().replaceFirst(" ", "");
     }
 
-    private Block getBlockFromResourceLocation(ResourceLocation location) {
+    private Block getBlockFromResourceLocation(Identifier location) {
         return BuiltInRegistries.BLOCK.getValue(location);
     }
 }

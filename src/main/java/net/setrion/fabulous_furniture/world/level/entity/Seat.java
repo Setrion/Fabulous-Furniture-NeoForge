@@ -94,15 +94,20 @@ public class Seat extends Entity {
     }
 
     public static boolean sit(Player player, BlockPos pos, double seatHeight, @Nullable Direction direction) {
+        float seatYaw = direction != null ? direction.toYRot() : player.getYRot();
+        return sit(player, pos, seatHeight, seatYaw);
+    }
+
+    public static boolean sit(Player player, BlockPos pos, double seatHeight, float rot) {
         Level level = player.level();
         if(!level.isClientSide() && availableAt(level, pos)) {
-            float seatYaw = direction != null ? direction.toYRot() : player.getYRot();
-            Seat seat = new Seat(level, pos, seatHeight, seatYaw);
+            Seat seat = new Seat(level, pos, seatHeight, rot);
             level.addFreshEntity(seat);
             return player.startRiding(seat);
         }
         return false;
     }
+
     public static boolean availableAt(Level level, BlockPos pos) {
         return level.getEntitiesOfClass(Seat.class, new AABB(pos)).isEmpty();
     }

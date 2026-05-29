@@ -3,7 +3,7 @@ package net.setrion.fabulous_furniture.registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
@@ -32,6 +32,7 @@ public class SFFBlocks {
 
     public static final List<WoodType> WOOD_TYPES = new ArrayList<>();
     public static final Map<Block, String> STONE_MATERIALS = new HashMap<>();
+    public static final Map<Block, DyeColor> CONCRETE_MATERIALS = new HashMap<>();
     public static final Map<Block, DyeColor> WOOL_COLORS = new HashMap<>();
     public static final Map<Block, String> METALS = new HashMap<>();
     public static final Map<Block, String> TABLEWARE_MATERIALS = new HashMap<>();
@@ -69,6 +70,23 @@ public class SFFBlocks {
         STONE_MATERIALS.put(Blocks.QUARTZ_BLOCK, "_top");
         STONE_MATERIALS.put(Blocks.CALCITE, "");
 
+        CONCRETE_MATERIALS.put(Blocks.WHITE_CONCRETE, DyeColor.WHITE);
+        CONCRETE_MATERIALS.put(Blocks.LIGHT_GRAY_CONCRETE, DyeColor.LIGHT_GRAY);
+        CONCRETE_MATERIALS.put(Blocks.GRAY_CONCRETE, DyeColor.GRAY);
+        CONCRETE_MATERIALS.put(Blocks.BLACK_CONCRETE, DyeColor.BLACK);
+        CONCRETE_MATERIALS.put(Blocks.BROWN_CONCRETE, DyeColor.BROWN);
+        CONCRETE_MATERIALS.put(Blocks.RED_CONCRETE, DyeColor.RED);
+        CONCRETE_MATERIALS.put(Blocks.ORANGE_CONCRETE, DyeColor.ORANGE);
+        CONCRETE_MATERIALS.put(Blocks.YELLOW_CONCRETE, DyeColor.YELLOW);
+        CONCRETE_MATERIALS.put(Blocks.LIME_CONCRETE, DyeColor.LIME);
+        CONCRETE_MATERIALS.put(Blocks.GREEN_CONCRETE, DyeColor.GREEN);
+        CONCRETE_MATERIALS.put(Blocks.CYAN_CONCRETE, DyeColor.CYAN);
+        CONCRETE_MATERIALS.put(Blocks.LIGHT_BLUE_CONCRETE, DyeColor.LIGHT_BLUE);
+        CONCRETE_MATERIALS.put(Blocks.BLUE_CONCRETE, DyeColor.BLUE);
+        CONCRETE_MATERIALS.put(Blocks.PURPLE_CONCRETE, DyeColor.PURPLE);
+        CONCRETE_MATERIALS.put(Blocks.MAGENTA_CONCRETE, DyeColor.MAGENTA);
+        CONCRETE_MATERIALS.put(Blocks.PINK_CONCRETE, DyeColor.PINK);
+
         WOOL_COLORS.put(Blocks.WHITE_WOOL, DyeColor.WHITE);
         WOOL_COLORS.put(Blocks.LIGHT_GRAY_WOOL, DyeColor.LIGHT_GRAY);
         WOOL_COLORS.put(Blocks.GRAY_WOOL, DyeColor.GRAY);
@@ -87,6 +105,13 @@ public class SFFBlocks {
         WOOL_COLORS.put(Blocks.PINK_WOOL, DyeColor.PINK);
 
         METALS.put(Blocks.COPPER_BLOCK, "copper");
+        METALS.put(Blocks.EXPOSED_COPPER, "exposed_copper");
+        METALS.put(Blocks.WEATHERED_COPPER, "weathered_copper");
+        METALS.put(Blocks.OXIDIZED_COPPER, "oxidized_copper");
+        METALS.put(Blocks.WAXED_COPPER_BLOCK, "waxed_copper");
+        METALS.put(Blocks.WAXED_EXPOSED_COPPER, "waxed_exposed_copper");
+        METALS.put(Blocks.WAXED_WEATHERED_COPPER, "waxed_weathered_copper");
+        METALS.put(Blocks.WAXED_OXIDIZED_COPPER, "waxed_oxidized_copper");
         METALS.put(Blocks.IRON_BLOCK, "iron");
         METALS.put(Blocks.GOLD_BLOCK, "gold");
         METALS.put(Blocks.NETHERITE_BLOCK, "netherite");
@@ -136,79 +161,91 @@ public class SFFBlocks {
             } else {
                 log_suffix = "_log";
             }
-            registerBlockWithItem(type.name()+"_crate", CrateBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
+            registerBlockWithItem(type.name()+"_crate", CrateBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
             STONE_MATERIALS.forEach(((block, suffix) -> {
                 String top_name = block.getDescriptionId().replaceFirst("block.minecraft.", "").replaceFirst("quartz_block", "quartz");
-                registerBlockWithItem(type.name()+"_"+top_name+"_kitchen_counter", KitchenCounterBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
-                registerBlockWithItem(type.name()+"_"+top_name+"_kitchen_counter_shelf", properties -> new KitchenCounterContainerBaseBlock(properties, false, false), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
-                registerBlockWithItem(type.name()+"_"+top_name+"_kitchen_counter_door", KitchenCounterOpenableHingeContainerBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
-                registerBlockWithItem(type.name()+"_"+top_name+"_kitchen_counter_small_drawer", properties -> new KitchenCounterOpenableContainerBlock(properties, false), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
-                registerBlockWithItem(type.name()+"_"+top_name+"_kitchen_counter_big_drawer", properties -> new KitchenCounterOpenableContainerBlock(properties, false), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
-                registerBlockWithItem(type.name()+"_"+top_name+"_kitchen_counter_sink", KitchenCounterSinkBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))).randomTicks().pushReaction(PushReaction.BLOCK));
-                registerBlockWithItem(type.name()+"_"+top_name+"_kitchen_counter_smoker", KitchenCounterSmokerBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
-                registerBlockWithItem(type.name()+"_"+top_name+"_kitchen_cabinet_door", properties -> new KitchenCabinetOpenableContainerBlock(properties, false), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
-                registerBlockWithItem(type.name()+"_"+top_name+"_kitchen_cabinet_glass_door", properties -> new KitchenCabinetOpenableContainerBlock(properties, false), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
-                registerBlockWithItem(type.name()+"_"+top_name+"_kitchen_cabinet_sideways_door", KitchenCabinetOpenableHingeContainerBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
-                registerBlockWithItem(type.name()+"_"+top_name+"_kitchen_cabinet_sideways_glass_door", KitchenCabinetOpenableHingeContainerBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
+                registerBlockWithItem(type.name()+"_"+top_name+"_kitchen_counter", KitchenCounterBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+                registerBlockWithItem(type.name()+"_"+top_name+"_kitchen_counter_shelf", properties -> new KitchenCounterContainerBaseBlock(properties, false, false), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
+                registerBlockWithItem(type.name()+"_"+top_name+"_kitchen_counter_door", KitchenCounterOpenableHingeContainerBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
+                registerBlockWithItem(type.name()+"_"+top_name+"_kitchen_counter_small_drawer", properties -> new KitchenCounterOpenableContainerBlock(properties, false), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
+                registerBlockWithItem(type.name()+"_"+top_name+"_kitchen_counter_big_drawer", properties -> new KitchenCounterOpenableContainerBlock(properties, false), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
+                registerBlockWithItem(type.name()+"_"+top_name+"_kitchen_counter_sink", KitchenCounterSinkBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))).randomTicks().pushReaction(PushReaction.BLOCK));
+                registerBlockWithItem(type.name()+"_"+top_name+"_kitchen_counter_smoker", KitchenCounterSmokerBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
+                registerBlockWithItem(type.name()+"_"+top_name+"_kitchen_cabinet_door", properties -> new KitchenCabinetOpenableContainerBlock(properties, false), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
+                registerBlockWithItem(type.name()+"_"+top_name+"_kitchen_cabinet_glass_door", properties -> new KitchenCabinetOpenableContainerBlock(properties, false), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
+                registerBlockWithItem(type.name()+"_"+top_name+"_kitchen_cabinet_sideways_door", KitchenCabinetOpenableHingeContainerBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
+                registerBlockWithItem(type.name()+"_"+top_name+"_kitchen_cabinet_sideways_glass_door", KitchenCabinetOpenableHingeContainerBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
 
-                registerBlockWithItem(type.name()+log_suffix+"_"+top_name+"_kitchen_counter", KitchenCounterBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
-                registerBlockWithItem(type.name()+log_suffix+"_"+top_name+"_kitchen_counter_shelf", properties -> new KitchenCounterContainerBaseBlock(properties, false, false), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
-                registerBlockWithItem(type.name()+log_suffix+"_"+top_name+"_kitchen_counter_door", KitchenCounterOpenableHingeContainerBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
-                registerBlockWithItem(type.name()+log_suffix+"_"+top_name+"_kitchen_counter_small_drawer", properties -> new KitchenCounterOpenableContainerBlock(properties, false), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
-                registerBlockWithItem(type.name()+log_suffix+"_"+top_name+"_kitchen_counter_big_drawer", properties -> new KitchenCounterOpenableContainerBlock(properties, false), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
-                registerBlockWithItem(type.name()+log_suffix+"_"+top_name+"_kitchen_counter_sink", KitchenCounterSinkBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))).randomTicks().pushReaction(PushReaction.BLOCK));
-                registerBlockWithItem(type.name()+log_suffix+"_"+top_name+"_kitchen_counter_smoker", KitchenCounterSmokerBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
-                registerBlockWithItem(type.name()+log_suffix+"_"+top_name+"_kitchen_cabinet_door", properties -> new KitchenCabinetOpenableContainerBlock(properties, false), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
-                registerBlockWithItem(type.name()+log_suffix+"_"+top_name+"_kitchen_cabinet_glass_door", properties -> new KitchenCabinetOpenableContainerBlock(properties, false), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
-                registerBlockWithItem(type.name()+log_suffix+"_"+top_name+"_kitchen_cabinet_sideways_door", KitchenCabinetOpenableHingeContainerBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
-                registerBlockWithItem(type.name()+log_suffix+"_"+top_name+"_kitchen_cabinet_sideways_glass_door", KitchenCabinetOpenableHingeContainerBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
+                registerBlockWithItem(type.name()+log_suffix+"_"+top_name+"_kitchen_counter", KitchenCounterBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+                registerBlockWithItem(type.name()+log_suffix+"_"+top_name+"_kitchen_counter_shelf", properties -> new KitchenCounterContainerBaseBlock(properties, false, false), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
+                registerBlockWithItem(type.name()+log_suffix+"_"+top_name+"_kitchen_counter_door", KitchenCounterOpenableHingeContainerBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
+                registerBlockWithItem(type.name()+log_suffix+"_"+top_name+"_kitchen_counter_small_drawer", properties -> new KitchenCounterOpenableContainerBlock(properties, false), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
+                registerBlockWithItem(type.name()+log_suffix+"_"+top_name+"_kitchen_counter_big_drawer", properties -> new KitchenCounterOpenableContainerBlock(properties, false), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
+                registerBlockWithItem(type.name()+log_suffix+"_"+top_name+"_kitchen_counter_sink", KitchenCounterSinkBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))).randomTicks().pushReaction(PushReaction.BLOCK));
+                registerBlockWithItem(type.name()+log_suffix+"_"+top_name+"_kitchen_counter_smoker", KitchenCounterSmokerBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
+                registerBlockWithItem(type.name()+log_suffix+"_"+top_name+"_kitchen_cabinet_door", properties -> new KitchenCabinetOpenableContainerBlock(properties, false), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
+                registerBlockWithItem(type.name()+log_suffix+"_"+top_name+"_kitchen_cabinet_glass_door", properties -> new KitchenCabinetOpenableContainerBlock(properties, false), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
+                registerBlockWithItem(type.name()+log_suffix+"_"+top_name+"_kitchen_cabinet_sideways_door", KitchenCabinetOpenableHingeContainerBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
+                registerBlockWithItem(type.name()+log_suffix+"_"+top_name+"_kitchen_cabinet_sideways_glass_door", KitchenCabinetOpenableHingeContainerBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
 
-                registerBlockWithItem("stripped_"+type.name()+log_suffix+"_"+top_name+"_kitchen_counter", KitchenCounterBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
-                registerBlockWithItem("stripped_"+type.name()+log_suffix+"_"+top_name+"_kitchen_counter_shelf", properties -> new KitchenCounterContainerBaseBlock(properties, false, false), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
-                registerBlockWithItem("stripped_"+type.name()+log_suffix+"_"+top_name+"_kitchen_counter_door", KitchenCounterOpenableHingeContainerBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
-                registerBlockWithItem("stripped_"+type.name()+log_suffix+"_"+top_name+"_kitchen_counter_small_drawer", properties -> new KitchenCounterOpenableContainerBlock(properties, false), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
-                registerBlockWithItem("stripped_"+type.name()+log_suffix+"_"+top_name+"_kitchen_counter_big_drawer", properties -> new KitchenCounterOpenableContainerBlock(properties, false), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
-                registerBlockWithItem("stripped_"+type.name()+log_suffix+"_"+top_name+"_kitchen_counter_sink", KitchenCounterSinkBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))).randomTicks().pushReaction(PushReaction.BLOCK));
-                registerBlockWithItem("stripped_"+type.name()+log_suffix+"_"+top_name+"_kitchen_counter_smoker", KitchenCounterSmokerBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
-                registerBlockWithItem("stripped_"+type.name()+log_suffix+"_"+top_name+"_kitchen_cabinet_door", properties -> new KitchenCabinetOpenableContainerBlock(properties, false), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
-                registerBlockWithItem("stripped_"+type.name()+log_suffix+"_"+top_name+"_kitchen_cabinet_glass_door", properties -> new KitchenCabinetOpenableContainerBlock(properties, false), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
-                registerBlockWithItem("stripped_"+type.name()+log_suffix+"_"+top_name+"_kitchen_cabinet_sideways_door", KitchenCabinetOpenableHingeContainerBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
-                registerBlockWithItem("stripped_"+type.name()+log_suffix+"_"+top_name+"_kitchen_cabinet_sideways_glass_door", KitchenCabinetOpenableHingeContainerBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
+                registerBlockWithItem("stripped_"+type.name()+log_suffix+"_"+top_name+"_kitchen_counter", KitchenCounterBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+                registerBlockWithItem("stripped_"+type.name()+log_suffix+"_"+top_name+"_kitchen_counter_shelf", properties -> new KitchenCounterContainerBaseBlock(properties, false, false), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
+                registerBlockWithItem("stripped_"+type.name()+log_suffix+"_"+top_name+"_kitchen_counter_door", KitchenCounterOpenableHingeContainerBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
+                registerBlockWithItem("stripped_"+type.name()+log_suffix+"_"+top_name+"_kitchen_counter_small_drawer", properties -> new KitchenCounterOpenableContainerBlock(properties, false), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
+                registerBlockWithItem("stripped_"+type.name()+log_suffix+"_"+top_name+"_kitchen_counter_big_drawer", properties -> new KitchenCounterOpenableContainerBlock(properties, false), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
+                registerBlockWithItem("stripped_"+type.name()+log_suffix+"_"+top_name+"_kitchen_counter_sink", KitchenCounterSinkBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))).randomTicks().pushReaction(PushReaction.BLOCK));
+                registerBlockWithItem("stripped_"+type.name()+log_suffix+"_"+top_name+"_kitchen_counter_smoker", KitchenCounterSmokerBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
+                registerBlockWithItem("stripped_"+type.name()+log_suffix+"_"+top_name+"_kitchen_cabinet_door", properties -> new KitchenCabinetOpenableContainerBlock(properties, false), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
+                registerBlockWithItem("stripped_"+type.name()+log_suffix+"_"+top_name+"_kitchen_cabinet_glass_door", properties -> new KitchenCabinetOpenableContainerBlock(properties, false), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
+                registerBlockWithItem("stripped_"+type.name()+log_suffix+"_"+top_name+"_kitchen_cabinet_sideways_door", KitchenCabinetOpenableHingeContainerBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
+                registerBlockWithItem("stripped_"+type.name()+log_suffix+"_"+top_name+"_kitchen_cabinet_sideways_glass_door", KitchenCabinetOpenableHingeContainerBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
 
-                registerBlockWithItem(type.name()+"_"+top_name+"_knife_block", properties -> new RotatableBlock(properties, Block.box(4, 0, 4, 12, 14, 12)), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
+                registerBlockWithItem(type.name()+"_"+top_name+"_knife_block", properties -> new RotatableBlock(properties, Block.box(4, 0, 4, 12, 14, 12)), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
             }));
 
-            registerBlockWithItem(type.name()+"_kitchen_cabinet", KitchenCabinetBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
-            registerBlockWithItem(type.name()+"_kitchen_cabinet_shelf", properties -> new KitchenCabinetContainerBaseBlock(properties, false, false), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
-            registerBlockWithItem(type.name()+"_kitchen_shelf", KitchenShelfBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
+            registerBlockWithItem(type.name()+"_kitchen_cabinet", KitchenCabinetBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+            registerBlockWithItem(type.name()+log_suffix+"_kitchen_cabinet", KitchenCabinetBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+            registerBlockWithItem("stripped_"+type.name()+log_suffix+"_kitchen_cabinet", KitchenCabinetBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
 
-            registerBlockWithItem(type.name()+log_suffix+"_kitchen_cabinet", KitchenCabinetBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
-            registerBlockWithItem(type.name()+log_suffix+"_kitchen_cabinet_shelf", properties -> new KitchenCabinetContainerBaseBlock(properties, false, false), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
-            registerBlockWithItem(type.name()+log_suffix+"_kitchen_shelf", KitchenShelfBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
+            registerBlockWithItem(type.name()+"_kitchen_cabinet_shelf", properties -> new KitchenCabinetContainerBaseBlock(properties, false, false), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
+            registerBlockWithItem(type.name()+log_suffix+"_kitchen_cabinet_shelf", properties -> new KitchenCabinetContainerBaseBlock(properties, false, false), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
+            registerBlockWithItem("stripped_"+type.name()+log_suffix+"_kitchen_cabinet_shelf", properties -> new KitchenCabinetContainerBaseBlock(properties, false, false), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
 
-            registerBlockWithItem("stripped_"+type.name()+log_suffix+"_kitchen_cabinet", KitchenCabinetBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
-            registerBlockWithItem("stripped_"+type.name()+log_suffix+"_kitchen_cabinet_shelf", properties -> new KitchenCabinetContainerBaseBlock(properties, false, false), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
-            registerBlockWithItem("stripped_"+type.name()+log_suffix+"_kitchen_shelf", KitchenShelfBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))).pushReaction(PushReaction.BLOCK));
+            METALS.forEach((metal, name) -> {
+                if (metal != Blocks.GOLD_BLOCK && metal != Blocks.NETHERITE_BLOCK) {
+                    if (!name.contains("waxed") && name.contains("copper")) {
+                        registerBlockWithItem(type.name() + "_" + name + "_kitchen_shelf", properties -> new WeatheringKitchenShelfBlock(getWeatherStateFromBlock(metal), properties), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name() + "_planks"))).pushReaction(PushReaction.BLOCK));
+                        registerBlockWithItem(type.name() + log_suffix + "_" + name + "_kitchen_shelf", properties -> new WeatheringKitchenShelfBlock(getWeatherStateFromBlock(metal), properties), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name() + "_planks"))).pushReaction(PushReaction.BLOCK));
+                        registerBlockWithItem("stripped_" + type.name() + log_suffix + "_" + name + "_kitchen_shelf", properties -> new WeatheringKitchenShelfBlock(getWeatherStateFromBlock(metal), properties), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name() + "_planks"))).pushReaction(PushReaction.BLOCK));
+                    } else {
+                        registerBlockWithItem(type.name() + "_" + name + "_kitchen_shelf", KitchenShelfBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name() + "_planks"))).pushReaction(PushReaction.BLOCK));
+                        registerBlockWithItem(type.name() + log_suffix + "_" + name + "_kitchen_shelf", KitchenShelfBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name() + "_planks"))).pushReaction(PushReaction.BLOCK));
+                        registerBlockWithItem("stripped_" + type.name() + log_suffix + "_" + name + "_kitchen_shelf", KitchenShelfBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name() + "_planks"))).pushReaction(PushReaction.BLOCK));
+                    }
+                }
+            });
 
-            registerBlockWithItem(type.name()+"_flower_box_inner_corner", FlowerBoxInnerCornerBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
-            registerBlockWithItem(type.name()+log_suffix+"_flower_box_inner_corner", FlowerBoxInnerCornerBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
-            registerBlockWithItem("stripped_"+type.name()+log_suffix+"_flower_box_inner_corner", FlowerBoxInnerCornerBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
+            registerBlockWithItem(type.name()+"_flower_box_inner_corner", FlowerBoxInnerCornerBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+            registerBlockWithItem(type.name()+log_suffix+"_flower_box_inner_corner", FlowerBoxInnerCornerBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+            registerBlockWithItem("stripped_"+type.name()+log_suffix+"_flower_box_inner_corner", FlowerBoxInnerCornerBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
 
-            registerBlockWithItem(type.name()+"_flower_box", FlowerBoxBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
-            registerBlockWithItem(type.name()+log_suffix+"_flower_box", FlowerBoxBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
-            registerBlockWithItem("stripped_"+type.name()+log_suffix+"_flower_box", FlowerBoxBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
+            registerBlockWithItem(type.name()+"_flower_box", FlowerBoxBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+            registerBlockWithItem(type.name()+log_suffix+"_flower_box", FlowerBoxBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+            registerBlockWithItem("stripped_"+type.name()+log_suffix+"_flower_box", FlowerBoxBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
 
-            registerBlockWithItem(type.name()+"_flower_box_outer_corner", FlowerBoxOuterCornerBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
-            registerBlockWithItem(type.name()+log_suffix+"_flower_box_outer_corner", FlowerBoxOuterCornerBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
-            registerBlockWithItem("stripped_"+type.name()+log_suffix+"_flower_box_outer_corner", FlowerBoxOuterCornerBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
+            registerBlockWithItem(type.name()+"_flower_box_outer_corner", FlowerBoxOuterCornerBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+            registerBlockWithItem(type.name()+log_suffix+"_flower_box_outer_corner", FlowerBoxOuterCornerBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+            registerBlockWithItem("stripped_"+type.name()+log_suffix+"_flower_box_outer_corner", FlowerBoxOuterCornerBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
 
-            registerBlockWithItem(type.name()+"_flower_box_big", FlowerBoxBigBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
-            registerBlockWithItem(type.name()+log_suffix+"_flower_box_big", FlowerBoxBigBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
-            registerBlockWithItem("stripped_"+type.name()+log_suffix+"_flower_box_big", FlowerBoxBigBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
+            registerBlockWithItem(type.name()+"_flower_box_big", FlowerBoxBigBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+            registerBlockWithItem(type.name()+log_suffix+"_flower_box_big", FlowerBoxBigBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+            registerBlockWithItem("stripped_"+type.name()+log_suffix+"_flower_box_big", FlowerBoxBigBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
 
-            registerBlockWithItem(type.name()+"_trash_bin", TrashBinBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
-            registerBlockWithItem(type.name()+log_suffix+"_trash_bin", TrashBinBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
-            registerBlockWithItem("stripped_"+type.name()+log_suffix+"_trash_bin", TrashBinBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
+            registerBlockWithItem(type.name()+"_trash_bin", TrashBinBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+            registerBlockWithItem(type.name()+log_suffix+"_trash_bin", TrashBinBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+            registerBlockWithItem("stripped_"+type.name()+log_suffix+"_trash_bin", TrashBinBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+
+            //registerBlockWithItem(type.name()+"_music_disc_shelf", MusicDiscShelfBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
 
             for (WoodType type2 : WOOD_TYPES) {
                 String log_suffix2;
@@ -220,80 +257,70 @@ public class SFFBlocks {
                     log_suffix2 = "_log";
                 }
 
-                registerBlockWithItem(type.name()+"_"+type2.name()+"_birdhouse", BirdhouseBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
-                registerBlockWithItem(type.name()+log_suffix+"_"+type2.name()+"_birdhouse", BirdhouseBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
-                registerBlockWithItem("stripped_"+type.name()+log_suffix+"_"+type2.name()+"_birdhouse", BirdhouseBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
-                registerBlockWithItem(type.name()+"_"+type2.name()+log_suffix2+"_birdhouse", BirdhouseBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
-                registerBlockWithItem(type.name()+log_suffix+"_"+type2.name()+log_suffix2+"_birdhouse", BirdhouseBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
-                registerBlockWithItem("stripped_"+type.name()+log_suffix+"_"+type2.name()+log_suffix2+"_birdhouse", BirdhouseBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
-                registerBlockWithItem(type.name()+"_stripped_"+type2.name()+log_suffix2+"_birdhouse", BirdhouseBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
-                registerBlockWithItem(type.name()+log_suffix+"_stripped_"+type2.name()+log_suffix2+"_birdhouse", BirdhouseBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
-                registerBlockWithItem("stripped_"+type.name()+log_suffix+"_stripped_"+type2.name()+log_suffix2+"_birdhouse", BirdhouseBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
+                registerBlockWithItem(type.name()+"_"+type2.name()+"_birdhouse", BirdhouseBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+                registerBlockWithItem(type.name()+log_suffix+"_"+type2.name()+"_birdhouse", BirdhouseBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+                registerBlockWithItem("stripped_"+type.name()+log_suffix+"_"+type2.name()+"_birdhouse", BirdhouseBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+                registerBlockWithItem(type.name()+"_"+type2.name()+log_suffix2+"_birdhouse", BirdhouseBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+                registerBlockWithItem(type.name()+log_suffix+"_"+type2.name()+log_suffix2+"_birdhouse", BirdhouseBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+                registerBlockWithItem("stripped_"+type.name()+log_suffix+"_"+type2.name()+log_suffix2+"_birdhouse", BirdhouseBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+                registerBlockWithItem(type.name()+"_stripped_"+type2.name()+log_suffix2+"_birdhouse", BirdhouseBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+                registerBlockWithItem(type.name()+log_suffix+"_stripped_"+type2.name()+log_suffix2+"_birdhouse", BirdhouseBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+                registerBlockWithItem("stripped_"+type.name()+log_suffix+"_stripped_"+type2.name()+log_suffix2+"_birdhouse", BirdhouseBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
 
-                registerBlockWithItem("hanging_"+type.name()+"_"+type2.name()+"_birdhouse", HangingBirdhouseBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
-                registerBlockWithItem("hanging_"+type.name()+log_suffix+"_"+type2.name()+"_birdhouse", HangingBirdhouseBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
-                registerBlockWithItem("hanging_stripped_"+type.name()+log_suffix+"_"+type2.name()+"_birdhouse", HangingBirdhouseBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
-                registerBlockWithItem("hanging_"+type.name()+"_"+type2.name()+log_suffix2+"_birdhouse", HangingBirdhouseBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
-                registerBlockWithItem("hanging_"+type.name()+log_suffix+"_"+type2.name()+log_suffix2+"_birdhouse", HangingBirdhouseBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
-                registerBlockWithItem("hanging_stripped_"+type.name()+log_suffix+"_"+type2.name()+log_suffix2+"_birdhouse", HangingBirdhouseBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
-                registerBlockWithItem("hanging_"+type.name()+"_stripped_"+type2.name()+log_suffix2+"_birdhouse", HangingBirdhouseBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
-                registerBlockWithItem("hanging_"+type.name()+log_suffix+"_stripped_"+type2.name()+log_suffix2+"_birdhouse", HangingBirdhouseBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
-                registerBlockWithItem("hanging_stripped_"+type.name()+log_suffix+"_stripped_"+type2.name()+log_suffix2+"_birdhouse", HangingBirdhouseBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
+                registerBlockWithItem("hanging_"+type.name()+"_"+type2.name()+"_birdhouse", HangingBirdhouseBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+                registerBlockWithItem("hanging_"+type.name()+log_suffix+"_"+type2.name()+"_birdhouse", HangingBirdhouseBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+                registerBlockWithItem("hanging_stripped_"+type.name()+log_suffix+"_"+type2.name()+"_birdhouse", HangingBirdhouseBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+                registerBlockWithItem("hanging_"+type.name()+"_"+type2.name()+log_suffix2+"_birdhouse", HangingBirdhouseBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+                registerBlockWithItem("hanging_"+type.name()+log_suffix+"_"+type2.name()+log_suffix2+"_birdhouse", HangingBirdhouseBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+                registerBlockWithItem("hanging_stripped_"+type.name()+log_suffix+"_"+type2.name()+log_suffix2+"_birdhouse", HangingBirdhouseBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+                registerBlockWithItem("hanging_"+type.name()+"_stripped_"+type2.name()+log_suffix2+"_birdhouse", HangingBirdhouseBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+                registerBlockWithItem("hanging_"+type.name()+log_suffix+"_stripped_"+type2.name()+log_suffix2+"_birdhouse", HangingBirdhouseBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+                registerBlockWithItem("hanging_stripped_"+type.name()+log_suffix+"_stripped_"+type2.name()+log_suffix2+"_birdhouse", HangingBirdhouseBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
             }
 
             WOOL_COLORS.forEach(((block, color) -> {
-                registerBlockWithItem(color.getName()+"_"+type.name()+"_chair", ChairBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
-                registerBlockWithItem(color.getName()+"_"+type.name()+log_suffix+"_chair", ChairBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
-                registerBlockWithItem(color.getName()+"_stripped_"+type.name()+log_suffix+"_chair", ChairBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
-                registerBlockWithItem(color.getName()+"_"+type.name()+"_lamp", LampBlock::new, () -> lampProperties(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
-                registerBlockWithItem(color.getName()+"_"+type.name()+"_bed", WoodenBedBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))).noOcclusion());
-                registerBlockWithItem(color.getName()+"_"+type.name()+log_suffix+"_bed", WoodenBedBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))).noOcclusion());
-                registerBlockWithItem(color.getName()+"_stripped_"+type.name()+log_suffix+"_bed", WoodenBedBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))).noOcclusion());
+                registerBlockWithItem(color.getName()+"_"+type.name()+"_chair", ChairBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+                registerBlockWithItem(color.getName()+"_"+type.name()+log_suffix+"_chair", ChairBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+                registerBlockWithItem(color.getName()+"_stripped_"+type.name()+log_suffix+"_chair", ChairBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+                registerBlockWithItem(color.getName()+"_"+type.name()+"_lamp", LampBlock::new, () -> lampProperties(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+                registerBlockWithItem(color.getName()+"_"+type.name()+"_bed", WoodenBedBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))).noOcclusion());
+                registerBlockWithItem(color.getName()+"_"+type.name()+log_suffix+"_bed", WoodenBedBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))).noOcclusion());
+                registerBlockWithItem(color.getName()+"_stripped_"+type.name()+log_suffix+"_bed", WoodenBedBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))).noOcclusion());
+
+                registerBlockWithItem(color.getName()+"_"+type.name()+"_couch", CouchBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+                registerBlockWithItem(color.getName()+"_"+type.name()+log_suffix+"_couch", CouchBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+                registerBlockWithItem(color.getName()+"_stripped_"+type.name()+log_suffix+"_couch", CouchBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+
+                registerBlockWithItem(color.getName()+"_"+type.name()+"_footstool", FootstoolBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+                registerBlockWithItem(color.getName()+"_"+type.name()+log_suffix+"_footstool", FootstoolBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+                registerBlockWithItem(color.getName()+"_stripped_"+type.name()+log_suffix+"_footstool", FootstoolBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
             }));
 
-            registerBlockWithItem(type.name()+"_table", TableBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
-            registerBlockWithItem(type.name()+log_suffix+"_table", TableBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
-            registerBlockWithItem("stripped_"+type.name()+log_suffix+"_table", TableBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
+            registerBlockWithItem(type.name()+"_table", TableBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+            registerBlockWithItem(type.name()+log_suffix+"_table", TableBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+            registerBlockWithItem("stripped_"+type.name()+log_suffix+"_table", TableBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
 
-            registerBlockWithItem(type.name()+"_bedside_table", BedsideTableBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
-            registerBlockWithItem(type.name()+log_suffix+"_bedside_table", BedsideTableBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
-            registerBlockWithItem("stripped_"+type.name()+log_suffix+"_bedside_table", BedsideTableBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
+            registerBlockWithItem(type.name()+"_couch_table", CouchTableBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+            registerBlockWithItem(type.name()+log_suffix+"_couch_table", CouchTableBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+            registerBlockWithItem("stripped_"+type.name()+log_suffix+"_couch_table", CouchTableBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
 
-            registerBlockWithItem(type.name()+"_closet", ClosetBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
-            registerBlockWithItem(type.name()+log_suffix+"_closet", ClosetBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
-            registerBlockWithItem("stripped_"+type.name()+log_suffix+"_closet", ClosetBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name()+"_planks"))));
+            registerBlockWithItem(type.name()+"_bedside_table", BedsideTableBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+            registerBlockWithItem(type.name()+log_suffix+"_bedside_table", BedsideTableBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+            registerBlockWithItem("stripped_"+type.name()+log_suffix+"_bedside_table", BedsideTableBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+
+            registerBlockWithItem(type.name()+"_closet", ClosetBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+            registerBlockWithItem(type.name()+log_suffix+"_closet", ClosetBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
+            registerBlockWithItem("stripped_"+type.name()+log_suffix+"_closet", ClosetBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name()+"_planks"))));
 
             METALS.forEach((metal, name) -> {
-                if (metal != Blocks.COPPER_BLOCK) {
-                    registerBlockWithItem(type.name() + "_" + name + "_bench", BenchBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name() + "_planks"))).noOcclusion());
-                    registerBlockWithItem(type.name() + log_suffix + "_" + name + "_bench", BenchBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name() + "_planks"))).noOcclusion());
-                    registerBlockWithItem("stripped_" + type.name() + log_suffix + "_" + name + "_bench", BenchBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name() + "_planks"))).noOcclusion());
+                if (!name.contains("waxed") && name.contains("copper")) {
+                    registerBlockWithItem(type.name() + "_" + name + "_bench", properties -> new WeatheringBenchBlock(getWeatherStateFromBlock(metal), properties), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name() + "_planks"))).noOcclusion());
+                    registerBlockWithItem(type.name() + log_suffix + "_" + name + "_bench", properties -> new WeatheringBenchBlock(WeatheringCopper.WeatherState.UNAFFECTED, properties), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name() + "_planks"))).noOcclusion());
+                    registerBlockWithItem("stripped_" + type.name() + log_suffix + "_" + name + "_bench", properties -> new WeatheringBenchBlock(WeatheringCopper.WeatherState.UNAFFECTED, properties), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name() + "_planks"))).noOcclusion());
                 } else {
-                    registerBlockWithItem(type.name() + "_waxed_" + name + "_bench", BenchBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name() + "_planks"))).noOcclusion());
-                    registerBlockWithItem(type.name() + log_suffix + "_waxed_" + name + "_bench", BenchBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name() + "_planks"))).noOcclusion());
-                    registerBlockWithItem("stripped_" + type.name() + log_suffix + "_waxed_" + name + "_bench", BenchBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name() + "_planks"))).noOcclusion());
-                    registerBlockWithItem(type.name() + "_waxed_exposed_" + name + "_bench", BenchBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name() + "_planks"))).noOcclusion());
-                    registerBlockWithItem(type.name() + log_suffix + "_waxed_exposed_" + name + "_bench", BenchBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name() + "_planks"))).noOcclusion());
-                    registerBlockWithItem("stripped_" + type.name() + log_suffix + "_waxed_exposed_" + name + "_bench", BenchBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name() + "_planks"))).noOcclusion());
-                    registerBlockWithItem(type.name() + "_waxed_weathered_" + name + "_bench", BenchBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name() + "_planks"))).noOcclusion());
-                    registerBlockWithItem(type.name() + log_suffix + "_waxed_weathered_" + name + "_bench", BenchBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name() + "_planks"))).noOcclusion());
-                    registerBlockWithItem("stripped_" + type.name() + log_suffix + "_waxed_weathered_" + name + "_bench", BenchBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name() + "_planks"))).noOcclusion());
-                    registerBlockWithItem(type.name() + "_waxed_oxidized_" + name + "_bench", BenchBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name() + "_planks"))).noOcclusion());
-                    registerBlockWithItem(type.name() + log_suffix + "_waxed_oxidized_" + name + "_bench", BenchBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name() + "_planks"))).noOcclusion());
-                    registerBlockWithItem("stripped_" + type.name() + log_suffix + "_waxed_oxidized_" + name + "_bench", BenchBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name() + "_planks"))).noOcclusion());
-
-                    registerBlockWithItem(type.name() + "_" +  name + "_bench", properties -> new WeatheringBenchBlock(WeatheringCopper.WeatherState.UNAFFECTED, properties), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name() + "_planks"))).noOcclusion());
-                    registerBlockWithItem(type.name() + log_suffix + "_" + name + "_bench", properties -> new WeatheringBenchBlock(WeatheringCopper.WeatherState.UNAFFECTED, properties), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name() + "_planks"))).noOcclusion());
-                    registerBlockWithItem("stripped_" + type.name() + log_suffix + "_" + name + "_bench", properties -> new WeatheringBenchBlock(WeatheringCopper.WeatherState.UNAFFECTED, properties), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name() + "_planks"))).noOcclusion());
-                    registerBlockWithItem(type.name() + "_exposed_" + name + "_bench", properties -> new WeatheringBenchBlock(WeatheringCopper.WeatherState.EXPOSED, properties), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name() + "_planks"))).noOcclusion());
-                    registerBlockWithItem(type.name() + log_suffix + "_exposed_" + name + "_bench", properties -> new WeatheringBenchBlock(WeatheringCopper.WeatherState.EXPOSED, properties), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name() + "_planks"))).noOcclusion());
-                    registerBlockWithItem("stripped_" + type.name() + log_suffix + "_exposed_" + name + "_bench", properties -> new WeatheringBenchBlock(WeatheringCopper.WeatherState.EXPOSED, properties), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name() + "_planks"))).noOcclusion());
-                    registerBlockWithItem(type.name() + "_weathered_" + name + "_bench", properties -> new WeatheringBenchBlock(WeatheringCopper.WeatherState.WEATHERED, properties), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name() + "_planks"))).noOcclusion());
-                    registerBlockWithItem(type.name() + log_suffix + "_weathered_" + name + "_bench", properties -> new WeatheringBenchBlock(WeatheringCopper.WeatherState.WEATHERED, properties), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name() + "_planks"))).noOcclusion());
-                    registerBlockWithItem("stripped_" + type.name() + log_suffix + "_weathered_" + name + "_bench", properties -> new WeatheringBenchBlock(WeatheringCopper.WeatherState.WEATHERED, properties), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name() + "_planks"))).noOcclusion());
-                    registerBlockWithItem(type.name() + "_oxidized_" + name + "_bench", properties -> new WeatheringBenchBlock(WeatheringCopper.WeatherState.OXIDIZED, properties), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name() + "_planks"))).noOcclusion());
-                    registerBlockWithItem(type.name() + log_suffix + "_oxidized_" + name + "_bench", properties -> new WeatheringBenchBlock(WeatheringCopper.WeatherState.OXIDIZED, properties), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name() + "_planks"))).noOcclusion());
-                    registerBlockWithItem("stripped_" + type.name() + log_suffix + "_oxidized_" + name + "_bench", properties -> new WeatheringBenchBlock(WeatheringCopper.WeatherState.OXIDIZED, properties), () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(type.name() + "_planks"))).noOcclusion());
+                    registerBlockWithItem(type.name() + "_" + name + "_bench", BenchBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name() + "_planks"))).noOcclusion());
+                    registerBlockWithItem(type.name() + log_suffix + "_" + name + "_bench", BenchBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name() + "_planks"))).noOcclusion());
+                    registerBlockWithItem("stripped_" + type.name() + log_suffix + "_" + name + "_bench", BenchBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(BuiltInRegistries.BLOCK.getValue(Identifier.parse(type.name() + "_planks"))).noOcclusion());
                 }
             });
         }
@@ -308,9 +335,25 @@ public class SFFBlocks {
             registerBlockWithItem(top_name+"_tableware", TablewareBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(block));
         });
 
-        WOOL_COLORS.forEach((block, color) -> METALS.forEach((metal, name) -> registerBlockWithItem(color+"_"+name+"_curtains", CurtainBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(block).noOcclusion())));
+        WOOL_COLORS.forEach((block, color) -> METALS.forEach((metal, name) -> {
+            if (!name.contains("waxed") && name.contains("copper")) {
+                registerBlockWithItem(color+"_"+name+"_curtains", properties -> new WeatheringCurtainBlock(getWeatherStateFromBlock(metal), properties), () -> BlockBehaviour.Properties.ofFullCopy(block).noOcclusion());
+            } else {
+                registerBlockWithItem(color+"_"+name+"_curtains", CurtainBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(block).noOcclusion());
+            }
+        }));
 
-        METALS.forEach((metal, name) -> registerBlockWithItem(name+"_toaster", properties -> new RotatableBlock(properties, Block.box(2, 0, 2, 14, 4, 14)), () -> BlockBehaviour.Properties.ofFullCopy(metal)));
+        METALS.forEach((metal, name) ->  {
+            if (!name.contains("waxed") && name.contains("copper")) {
+                registerBlockWithItem(name+"_toaster", properties -> new WeatheringToasterBlock(getWeatherStateFromBlock(metal), properties), () -> BlockBehaviour.Properties.ofFullCopy(metal));
+            } else {
+                registerBlockWithItem(name+"_toaster", ToasterBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(metal).noOcclusion());
+            }
+        });
+
+        CONCRETE_MATERIALS.forEach((concrete, color) -> {
+            registerBlockWithItem(color.getName()+"_ceiling_lamp", CeilingLampBlock::new, () -> ceilingLampProperties(concrete));
+        });
     }
 
     public static final DeferredBlock<Block> IRON_FRIDGE = registerBlockWithItem("iron_fridge", FridgeBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).pushReaction(PushReaction.BLOCK));
@@ -353,8 +396,19 @@ public class SFFBlocks {
     public static final DeferredBlock<Block> WHITE_MAGENTA_KITCHEN_TILES = registerBlockWithItem("white_magenta_kitchen_tiles", KitchenTileBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_CONCRETE));
     public static final DeferredBlock<Block> WHITE_PINK_KITCHEN_TILES = registerBlockWithItem("white_pink_kitchen_tiles", KitchenTileBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_CONCRETE));
 
+    private static WeatheringCopper.WeatherState getWeatherStateFromBlock(Block metal) {
+        if (metal == Blocks.COPPER_BLOCK) return WeatheringCopper.WeatherState.UNAFFECTED;
+        else if (metal == Blocks.EXPOSED_COPPER) return WeatheringCopper.WeatherState.EXPOSED;
+        else if (metal == Blocks.WEATHERED_COPPER) return WeatheringCopper.WeatherState.WEATHERED;
+        else return WeatheringCopper.WeatherState.OXIDIZED;
+    }
+
     private static BlockBehaviour.Properties lampProperties(Block block) {
         return BlockBehaviour.Properties.ofFullCopy(block).lightLevel((state) -> state.getValue(LampBlock.ON) && (state.getValue(LampBlock.PART) == LampPart.TOP || state.getValue(LampBlock.PART) == LampPart.SINGLE) ? 15 : 0);
+    }
+
+    private static BlockBehaviour.Properties ceilingLampProperties(Block block) {
+        return BlockBehaviour.Properties.ofFullCopy(block).lightLevel((state) -> state.getValue(CeilingLampBlock.ON) && (state.getValue(CeilingLampBlock.PART) == LampPart.BOTTOM || state.getValue(CeilingLampBlock.PART) == LampPart.SINGLE) ? 15 : 0);
     }
     
     public static <T extends Block> DeferredBlock<T> registerBlock(String name, Function<BlockBehaviour.Properties, T> block, Supplier<BlockBehaviour.Properties> properties) {

@@ -72,7 +72,7 @@ public record FurnitureCategory(String name, Item item) {
         KITCHEN_COUNTERS = register(new FurnitureCategory("kitchen_counters", BuiltInRegistries.BLOCK.getValue(FabulousFurniture.prefix("oak_polished_tuff_kitchen_counter")).asItem()));
         KITCHEN_CABINETS = register(new FurnitureCategory("kitchen_cabinets", BuiltInRegistries.BLOCK.getValue(FabulousFurniture.prefix("oak_kitchen_cabinet")).asItem()));
         KITCHEN_MISC = register(new FurnitureCategory("kitchen_misc", BuiltInRegistries.BLOCK.getValue(FabulousFurniture.prefix("oak_polished_tuff_knife_block")).asItem()));
-        KITCHEN_SHELFS = register(new FurnitureCategory("kitchen_shelfs", BuiltInRegistries.BLOCK.getValue(FabulousFurniture.prefix("oak_kitchen_shelf")).asItem()));
+        KITCHEN_SHELFS = register(new FurnitureCategory("kitchen_shelfs", BuiltInRegistries.BLOCK.getValue(FabulousFurniture.prefix("oak_iron_kitchen_shelf")).asItem()));
         CHAIRS = register(new FurnitureCategory("chairs", BuiltInRegistries.BLOCK.getValue(FabulousFurniture.prefix("white_oak_chair")).asItem()));
         TABLES = register(new FurnitureCategory("tables", BuiltInRegistries.BLOCK.getValue(FabulousFurniture.prefix("oak_table")).asItem()));
         LAMPS = register(new FurnitureCategory("lamps", BuiltInRegistries.BLOCK.getValue(FabulousFurniture.prefix("white_oak_lamp")).asItem()));

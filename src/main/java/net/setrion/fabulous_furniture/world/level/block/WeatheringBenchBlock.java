@@ -10,9 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class WeatheringBenchBlock extends BenchBlock implements WeatheringCopper {
 
-    public static final MapCodec<WeatheringBenchBlock> CODEC = RecordCodecBuilder.mapCodec((instance) -> {
-        return instance.group(WeatherState.CODEC.fieldOf("weathering_state").forGetter(WeatheringBenchBlock::getAge), propertiesCodec()).apply(instance, WeatheringBenchBlock::new);
-    });
+    public static final MapCodec<WeatheringBenchBlock> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(WeatherState.CODEC.fieldOf("weathering_state").forGetter(WeatheringBenchBlock::getAge), propertiesCodec()).apply(instance, WeatheringBenchBlock::new));
     private final WeatheringCopper.WeatherState weatherState;
 
     public MapCodec<WeatheringBenchBlock> codec() {

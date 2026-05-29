@@ -82,7 +82,7 @@ public class FridgeBlock extends BaseEntityBlock implements BlockTagSupplier, It
 
     @Override
     public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             if (player.preventsBlockDrops()) {
                 preventDropFromBottomPart(level, pos, state, player);
             } else {

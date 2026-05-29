@@ -3,14 +3,15 @@ loaderVersion="${loader_version_range}"
 license="All Rights Reserved"
 [[mods]]
 modId="fabulous_furniture"
-version="0.3.1"
+version="0.3.2"
 displayName="Setrion's Fabulous Furniture"
-updateJSONURL="https://raw.githubusercontent.com/Setrion/Setrions-Fabulous-Furniture/refs/heads/main/update.json"
+updateJSONURL="https://raw.githubusercontent.com/Setrion/Fabulous-Furniture-NeoForge/refs/heads/main/update.json"
 displayURL="https://www.curseforge.com/minecraft/mc-mods/setrions-fabulous-furniture"
 logoFile="logo.png"
 credits="By Setrion"
 authors="Setrion"
 description='''This mod adds thousands of new Furniture-Blocks to the game!'''
+
 [[dependencies.fabulous_furniture]]
     modId="neoforge"
     type="required"

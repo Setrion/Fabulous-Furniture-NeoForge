@@ -99,7 +99,7 @@ public class CarpentryTableMenu extends AbstractContainerMenu {
     private boolean isRecipeCraftable(RecipeHolder<CarpentryTableRecipe> recipe) {
         boolean b = true;
         for (StackedIngredient ingredient : recipe.value().getMaterials()) {
-            if (!(container.countItem(ingredient.ingredient().getValues().get(0).value()) >= ingredient.count())) {
+            if (!(container.countItem(ingredient.ingredient().items().toList().get(0).value()) >= ingredient.count())) {
                 b = false;
             }
         }
@@ -157,7 +157,7 @@ public class CarpentryTableMenu extends AbstractContainerMenu {
     private boolean removeItems(RecipeHolder<CarpentryTableRecipe> recipe) {
         AtomicBoolean removed = new AtomicBoolean(true);
         recipe.value().getMaterials().forEach(ingredient -> {
-            if (!removeItem(ingredient.ingredient().getValues().get(0).value(), ingredient.count())) {
+            if (!removeItem(ingredient.ingredient().items().toList().get(0).value(), ingredient.count())) {
                 removed.set(false);
             }
         });
@@ -246,7 +246,7 @@ public class CarpentryTableMenu extends AbstractContainerMenu {
 
     public void removed(Player player) {
         super.removed(player);
-        this.resultContainer.removeItemNoUpdate(1);
-        this.access.execute((p_40313_, p_40314_) -> this.clearContainer(player, this.container));
+        this.access.execute((_, _) -> this.clearContainer(player, this.resultContainer));
+        this.access.execute((_, _) -> this.clearContainer(player, this.container));
     }
 }

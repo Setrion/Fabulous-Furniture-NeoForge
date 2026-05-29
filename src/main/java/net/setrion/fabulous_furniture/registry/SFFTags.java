@@ -1,7 +1,7 @@
 package net.setrion.fabulous_furniture.registry;
 
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -20,11 +20,11 @@ public class SFFTags {
         public static final TagKey<Block> FLOWER_BOX_PLACABLES = createBlockKey(FabulousFurniture.prefix("flower_box_placables"));
     }
 
-    public static TagKey<Item> createItemKey(ResourceLocation name) {
+    public static TagKey<Item> createItemKey(Identifier name) {
         return TagKey.create(Registries.ITEM, name);
     }
 
-    public static TagKey<Block> createBlockKey(ResourceLocation name) {
+    public static TagKey<Block> createBlockKey(Identifier name) {
         return TagKey.create(Registries.BLOCK, name);
     }
 }

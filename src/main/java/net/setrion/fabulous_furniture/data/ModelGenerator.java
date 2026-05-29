@@ -4,13 +4,15 @@ import com.mojang.math.Quadrant;
 import net.minecraft.client.data.models.*;
 import net.minecraft.client.data.models.blockstates.*;
 import net.minecraft.client.data.models.model.*;
+import net.minecraft.client.renderer.block.dispatch.VariantMutator;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.BlockFamilies;
 import net.minecraft.data.BlockFamily;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -25,14 +27,15 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static net.minecraft.client.data.models.BlockModelGenerators.ROTATION_HORIZONTAL_FACING;
-import static net.minecraft.client.data.models.BlockModelGenerators.ROTATION_HORIZONTAL_FACING_ALT;
-import static net.minecraft.client.renderer.block.model.VariantMutator.*;
+import static net.minecraft.client.data.models.BlockModelGenerators.*;
+import static net.minecraft.client.renderer.block.dispatch.VariantMutator.Y_ROT;
 import static net.minecraft.world.level.block.Blocks.*;
 
 import static net.setrion.fabulous_furniture.registry.SFFBlocks.*;
 
 public class ModelGenerator extends ModelProvider {
+
+    public static final PropertyDispatch<VariantMutator> ROTATION_HORIZONTAL_FACING_UV_LOCKED;
 
     public ModelGenerator(PackOutput output) {
         super(output, FabulousFurniture.MOD_ID);
@@ -47,32 +50,34 @@ public class ModelGenerator extends ModelProvider {
 
         blockModels.createCraftingTableLike(CARPENTRY_TABLE.get(), MANGROVE_PLANKS, TextureMapping::craftingTable);
 
-        createModel(blockModels, createFridge(IRON_FRIDGE.get(), TextureMapping.getBlockTexture(IRON_BLOCK), TextureMapping.getBlockTexture(IRON_BARS), TextureMapping.getBlockTexture(ANVIL), blockModels));
-        createModel(blockModels, createFridge(GOLD_FRIDGE.get(), TextureMapping.getBlockTexture(GOLD_BLOCK), TextureMapping.getBlockTexture(IRON_BARS), TextureMapping.getBlockTexture(ANVIL), blockModels));
-        createModel(blockModels, createFridge(NETHERITE_FRIDGE.get(), TextureMapping.getBlockTexture(NETHERITE_BLOCK), TextureMapping.getBlockTexture(IRON_BARS), TextureMapping.getBlockTexture(ANVIL), blockModels));
-        createModel(blockModels, createFridge(COPPER_FRIDGE.get(), TextureMapping.getBlockTexture(COPPER_BLOCK), TextureMapping.getBlockTexture(IRON_BARS), TextureMapping.getBlockTexture(ANVIL), blockModels));
-        createModel(blockModels, createFridge(EXPOSED_COPPER_FRIDGE.get(), TextureMapping.getBlockTexture(EXPOSED_COPPER), TextureMapping.getBlockTexture(IRON_BARS), TextureMapping.getBlockTexture(ANVIL), blockModels));
-        createModel(blockModels, createFridge(WEATHERED_COPPER_FRIDGE.get(), TextureMapping.getBlockTexture(WEATHERED_COPPER), TextureMapping.getBlockTexture(IRON_BARS), TextureMapping.getBlockTexture(ANVIL), blockModels));
-        createModel(blockModels, createFridge(OXIDIZED_COPPER_FRIDGE.get(), TextureMapping.getBlockTexture(OXIDIZED_COPPER), TextureMapping.getBlockTexture(IRON_BARS), TextureMapping.getBlockTexture(ANVIL), blockModels));
-        createModel(blockModels, createFridge(WAXED_COPPER_FRIDGE.get(), TextureMapping.getBlockTexture(COPPER_BLOCK), TextureMapping.getBlockTexture(IRON_BARS), TextureMapping.getBlockTexture(ANVIL), blockModels));
-        createModel(blockModels, createFridge(WAXED_EXPOSED_COPPER_FRIDGE.get(), TextureMapping.getBlockTexture(EXPOSED_COPPER), TextureMapping.getBlockTexture(IRON_BARS), TextureMapping.getBlockTexture(ANVIL), blockModels));
-        createModel(blockModels, createFridge(WAXED_WEATHERED_COPPER_FRIDGE.get(), TextureMapping.getBlockTexture(WEATHERED_COPPER), TextureMapping.getBlockTexture(IRON_BARS), TextureMapping.getBlockTexture(ANVIL), blockModels));
-        createModel(blockModels, createFridge(WAXED_OXIDIZED_COPPER_FRIDGE.get(), TextureMapping.getBlockTexture(OXIDIZED_COPPER), TextureMapping.getBlockTexture(IRON_BARS), TextureMapping.getBlockTexture(ANVIL), blockModels));
+        createModel(blockModels, createFridge(IRON_FRIDGE.get(), TextureMapping.getBlockTexture(IRON_BLOCK).sprite(), TextureMapping.getBlockTexture(IRON_BARS).sprite(), TextureMapping.getBlockTexture(ANVIL).sprite(), blockModels));
+        createModel(blockModels, createFridge(GOLD_FRIDGE.get(), TextureMapping.getBlockTexture(GOLD_BLOCK).sprite(), TextureMapping.getBlockTexture(IRON_BARS).sprite(), TextureMapping.getBlockTexture(ANVIL).sprite(), blockModels));
+        createModel(blockModels, createFridge(NETHERITE_FRIDGE.get(), TextureMapping.getBlockTexture(NETHERITE_BLOCK).sprite(), TextureMapping.getBlockTexture(IRON_BARS).sprite(), TextureMapping.getBlockTexture(ANVIL).sprite(), blockModels));
+        createModel(blockModels, createFridge(COPPER_FRIDGE.get(), TextureMapping.getBlockTexture(COPPER_BLOCK).sprite(), TextureMapping.getBlockTexture(IRON_BARS).sprite(), TextureMapping.getBlockTexture(ANVIL).sprite(), blockModels));
+        createModel(blockModels, createFridge(EXPOSED_COPPER_FRIDGE.get(), TextureMapping.getBlockTexture(EXPOSED_COPPER).sprite(), TextureMapping.getBlockTexture(IRON_BARS).sprite(), TextureMapping.getBlockTexture(ANVIL).sprite(), blockModels));
+        createModel(blockModels, createFridge(WEATHERED_COPPER_FRIDGE.get(), TextureMapping.getBlockTexture(WEATHERED_COPPER).sprite(), TextureMapping.getBlockTexture(IRON_BARS).sprite(), TextureMapping.getBlockTexture(ANVIL).sprite(), blockModels));
+        createModel(blockModels, createFridge(OXIDIZED_COPPER_FRIDGE.get(), TextureMapping.getBlockTexture(OXIDIZED_COPPER).sprite(), TextureMapping.getBlockTexture(IRON_BARS).sprite(), TextureMapping.getBlockTexture(ANVIL).sprite(), blockModels));
+        createModel(blockModels, createFridge(WAXED_COPPER_FRIDGE.get(), TextureMapping.getBlockTexture(COPPER_BLOCK).sprite(), TextureMapping.getBlockTexture(IRON_BARS).sprite(), TextureMapping.getBlockTexture(ANVIL).sprite(), blockModels));
+        createModel(blockModels, createFridge(WAXED_EXPOSED_COPPER_FRIDGE.get(), TextureMapping.getBlockTexture(EXPOSED_COPPER).sprite(), TextureMapping.getBlockTexture(IRON_BARS).sprite(), TextureMapping.getBlockTexture(ANVIL).sprite(), blockModels));
+        createModel(blockModels, createFridge(WAXED_WEATHERED_COPPER_FRIDGE.get(), TextureMapping.getBlockTexture(WEATHERED_COPPER).sprite(), TextureMapping.getBlockTexture(IRON_BARS).sprite(), TextureMapping.getBlockTexture(ANVIL).sprite(), blockModels));
+        createModel(blockModels, createFridge(WAXED_OXIDIZED_COPPER_FRIDGE.get(), TextureMapping.getBlockTexture(OXIDIZED_COPPER).sprite(), TextureMapping.getBlockTexture(IRON_BARS).sprite(), TextureMapping.getBlockTexture(ANVIL).sprite(), blockModels));
 
         createTableware(blockModels);
         createToasters(blockModels);
 
-        createHedgeBlock(OAK_HEDGE.get(), TextureMapping.getBlockTexture(OAK_LEAVES), blockModels, -12012264);
-        createHedgeBlock(SPRUCE_HEDGE.get(), TextureMapping.getBlockTexture(SPRUCE_LEAVES), blockModels, -10380959);
-        createHedgeBlock(BIRCH_HEDGE.get(), TextureMapping.getBlockTexture(BIRCH_LEAVES), blockModels, -8345771);
-        createHedgeBlock(JUNGLE_HEDGE.get(), TextureMapping.getBlockTexture(JUNGLE_LEAVES), blockModels, -12012264);
-        createHedgeBlock(ACACIA_HEDGE.get(), TextureMapping.getBlockTexture(ACACIA_LEAVES), blockModels, -12012264);
-        createHedgeBlock(CHERRY_HEDGE.get(), TextureMapping.getBlockTexture(CHERRY_LEAVES), blockModels);
-        createHedgeBlock(DARK_OAK_HEDGE.get(), TextureMapping.getBlockTexture(DARK_OAK_LEAVES), blockModels, -12012264);
-        createHedgeBlock(PALE_OAK_HEDGE.get(), TextureMapping.getBlockTexture(PALE_OAK_LEAVES), blockModels);
-        createHedgeBlock(MANGROVE_HEDGE.get(), TextureMapping.getBlockTexture(MANGROVE_LEAVES), blockModels, -7158200);
-        createHedgeBlock(AZALEA_HEDGE.get(), TextureMapping.getBlockTexture(AZALEA_LEAVES), blockModels);
-        createHedgeBlock(FLOWERING_AZALEA_HEDGE.get(), TextureMapping.getBlockTexture(FLOWERING_AZALEA_LEAVES), blockModels);
+        createHedgeBlock(OAK_HEDGE.get(), TextureMapping.getBlockTexture(OAK_LEAVES).sprite(), blockModels, -12012264);
+        createHedgeBlock(SPRUCE_HEDGE.get(), TextureMapping.getBlockTexture(SPRUCE_LEAVES).sprite(), blockModels, -10380959);
+        createHedgeBlock(BIRCH_HEDGE.get(), TextureMapping.getBlockTexture(BIRCH_LEAVES).sprite(), blockModels, -8345771);
+        createHedgeBlock(JUNGLE_HEDGE.get(), TextureMapping.getBlockTexture(JUNGLE_LEAVES).sprite(), blockModels, -12012264);
+        createHedgeBlock(ACACIA_HEDGE.get(), TextureMapping.getBlockTexture(ACACIA_LEAVES).sprite(), blockModels, -12012264);
+        createHedgeBlock(CHERRY_HEDGE.get(), TextureMapping.getBlockTexture(CHERRY_LEAVES).sprite(), blockModels);
+        createHedgeBlock(DARK_OAK_HEDGE.get(), TextureMapping.getBlockTexture(DARK_OAK_LEAVES).sprite(), blockModels, -12012264);
+        createHedgeBlock(PALE_OAK_HEDGE.get(), TextureMapping.getBlockTexture(PALE_OAK_LEAVES).sprite(), blockModels);
+        createHedgeBlock(MANGROVE_HEDGE.get(), TextureMapping.getBlockTexture(MANGROVE_LEAVES).sprite(), blockModels, -7158200);
+        createHedgeBlock(AZALEA_HEDGE.get(), TextureMapping.getBlockTexture(AZALEA_LEAVES).sprite(), blockModels);
+        createHedgeBlock(FLOWERING_AZALEA_HEDGE.get(), TextureMapping.getBlockTexture(FLOWERING_AZALEA_LEAVES).sprite(), blockModels);
+
+        createCeilingLamps(blockModels);
 
         Collection<Block> blocks = BLOCKS.getEntries().stream().map(DeferredHolder::get).collect(Collectors.toList());
         blocks.forEach((block -> {
@@ -89,237 +94,257 @@ public class ModelGenerator extends ModelProvider {
     }
 
     private void createCurtains(BlockModelGenerators blockModels) {
-        WOOL_COLORS.forEach((wool, color) -> METALS.forEach((rod, name) -> createModel(blockModels, createCurtainBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(color+"_"+name+"_curtains")), TextureMapping.getBlockTexture(wool), TextureMapping.getBlockTexture(rod), blockModels))));
+        WOOL_COLORS.forEach((wool, color) -> METALS.forEach((rod, name) -> createModel(blockModels, createCurtainBlock(getBlockFromIdentifier(FabulousFurniture.prefix(color+"_"+name+"_curtains")), TextureMapping.getBlockTexture(wool).sprite(), TextureMapping.getBlockTexture(getBlockFromIdentifier(Identifier.parse(rod.builtInRegistryHolder().getKey().identifier().toString().replaceFirst("waxed_", "")))).sprite(), blockModels))));
     }
 
     private void createBirdbaths(BlockModelGenerators blockModels) {
         STONE_MATERIALS.forEach((block, s) -> {
             String stone_name = block.getDescriptionId().replaceFirst("block.minecraft.", "").replaceFirst("quartz_block", "quartz");
-            createModel(blockModels, createBirdbathBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(stone_name+"_birdbath")), TextureMapping.getBlockTexture(block, s), blockModels));
+            createModel(blockModels, createBirdbathBlock(getBlockFromIdentifier(FabulousFurniture.prefix(stone_name+"_birdbath")), TextureMapping.getBlockTexture(block, s).sprite(), blockModels));
         });
     }
 
     private void createTableware(BlockModelGenerators blockModels) {
         TABLEWARE_MATERIALS.forEach((block, suffix) -> {
             String top_name = block.getDescriptionId().replaceFirst("block.minecraft.", "").replaceFirst("quartz_block", "quartz");
-            createModel(blockModels, createTablewareBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(top_name+"_tableware")), TextureMapping.getBlockTexture(block, suffix), TextureMapping.getBlockTexture(ANCIENT_DEBRIS, "_top"), blockModels));
+            createModel(blockModels, createTablewareBlock(getBlockFromIdentifier(FabulousFurniture.prefix(top_name+"_tableware")), TextureMapping.getBlockTexture(block, suffix).sprite(), TextureMapping.getBlockTexture(ANCIENT_DEBRIS, "_top").sprite(), blockModels));
         });
     }
 
     private void createToasters(BlockModelGenerators blockModels) {
-        METALS.forEach((metal, name) -> createModel(blockModels, createToasterBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(name+"_toaster")), metal, TextureMapping.getBlockTexture(ANVIL), blockModels)));
+        METALS.forEach((metal, name) -> createModel(blockModels, createToasterBlock(getBlockFromIdentifier(FabulousFurniture.prefix(name+"_toaster")), metal.builtInRegistryHolder().getKey().identifier(), TextureMapping.getBlockTexture(ANVIL).sprite(), blockModels)));
     }
 
     private void createKitchenTiles(BlockModelGenerators blockModels) {
-        createModel(blockModels, createKitchenTiles(WHITE_LIGHT_GRAY_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(WHITE_CONCRETE), TextureMapping.getBlockTexture(LIGHT_GRAY_CONCRETE), blockModels));
-        createModel(blockModels, createKitchenTiles(WHITE_GRAY_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(WHITE_CONCRETE), TextureMapping.getBlockTexture(GRAY_CONCRETE), blockModels));
-        createModel(blockModels, createKitchenTiles(WHITE_BLACK_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(WHITE_CONCRETE), TextureMapping.getBlockTexture(BLACK_CONCRETE), blockModels));
-        createModel(blockModels, createKitchenTiles(WHITE_BROWN_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(WHITE_CONCRETE), TextureMapping.getBlockTexture(BROWN_CONCRETE), blockModels));
-        createModel(blockModels, createKitchenTiles(WHITE_RED_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(WHITE_CONCRETE), TextureMapping.getBlockTexture(RED_CONCRETE), blockModels));
-        createModel(blockModels, createKitchenTiles(WHITE_ORANGE_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(WHITE_CONCRETE), TextureMapping.getBlockTexture(ORANGE_CONCRETE), blockModels));
-        createModel(blockModels, createKitchenTiles(WHITE_YELLOW_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(WHITE_CONCRETE), TextureMapping.getBlockTexture(YELLOW_CONCRETE), blockModels));
-        createModel(blockModels, createKitchenTiles(WHITE_LIME_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(WHITE_CONCRETE), TextureMapping.getBlockTexture(LIME_CONCRETE), blockModels));
-        createModel(blockModels, createKitchenTiles(WHITE_GREEN_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(WHITE_CONCRETE), TextureMapping.getBlockTexture(GREEN_CONCRETE), blockModels));
-        createModel(blockModels, createKitchenTiles(WHITE_CYAN_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(WHITE_CONCRETE), TextureMapping.getBlockTexture(CYAN_CONCRETE), blockModels));
-        createModel(blockModels, createKitchenTiles(WHITE_LIGHT_BLUE_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(WHITE_CONCRETE), TextureMapping.getBlockTexture(LIGHT_BLUE_CONCRETE), blockModels));
-        createModel(blockModels, createKitchenTiles(WHITE_BLUE_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(WHITE_CONCRETE), TextureMapping.getBlockTexture(BLUE_CONCRETE), blockModels));
-        createModel(blockModels, createKitchenTiles(WHITE_PURPLE_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(WHITE_CONCRETE), TextureMapping.getBlockTexture(PURPLE_CONCRETE), blockModels));
-        createModel(blockModels, createKitchenTiles(WHITE_MAGENTA_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(WHITE_CONCRETE), TextureMapping.getBlockTexture(MAGENTA_CONCRETE), blockModels));
-        createModel(blockModels, createKitchenTiles(WHITE_PINK_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(WHITE_CONCRETE), TextureMapping.getBlockTexture(PINK_CONCRETE), blockModels));
+        createModel(blockModels, createKitchenTiles(WHITE_LIGHT_GRAY_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(WHITE_CONCRETE).sprite(), TextureMapping.getBlockTexture(LIGHT_GRAY_CONCRETE).sprite(), blockModels));
+        createModel(blockModels, createKitchenTiles(WHITE_GRAY_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(WHITE_CONCRETE).sprite(), TextureMapping.getBlockTexture(GRAY_CONCRETE).sprite(), blockModels));
+        createModel(blockModels, createKitchenTiles(WHITE_BLACK_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(WHITE_CONCRETE).sprite(), TextureMapping.getBlockTexture(BLACK_CONCRETE).sprite(), blockModels));
+        createModel(blockModels, createKitchenTiles(WHITE_BROWN_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(WHITE_CONCRETE).sprite(), TextureMapping.getBlockTexture(BROWN_CONCRETE).sprite(), blockModels));
+        createModel(blockModels, createKitchenTiles(WHITE_RED_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(WHITE_CONCRETE).sprite(), TextureMapping.getBlockTexture(RED_CONCRETE).sprite(), blockModels));
+        createModel(blockModels, createKitchenTiles(WHITE_ORANGE_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(WHITE_CONCRETE).sprite(), TextureMapping.getBlockTexture(ORANGE_CONCRETE).sprite(), blockModels));
+        createModel(blockModels, createKitchenTiles(WHITE_YELLOW_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(WHITE_CONCRETE).sprite(), TextureMapping.getBlockTexture(YELLOW_CONCRETE).sprite(), blockModels));
+        createModel(blockModels, createKitchenTiles(WHITE_LIME_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(WHITE_CONCRETE).sprite(), TextureMapping.getBlockTexture(LIME_CONCRETE).sprite(), blockModels));
+        createModel(blockModels, createKitchenTiles(WHITE_GREEN_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(WHITE_CONCRETE).sprite(), TextureMapping.getBlockTexture(GREEN_CONCRETE).sprite(), blockModels));
+        createModel(blockModels, createKitchenTiles(WHITE_CYAN_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(WHITE_CONCRETE).sprite(), TextureMapping.getBlockTexture(CYAN_CONCRETE).sprite(), blockModels));
+        createModel(blockModels, createKitchenTiles(WHITE_LIGHT_BLUE_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(WHITE_CONCRETE).sprite(), TextureMapping.getBlockTexture(LIGHT_BLUE_CONCRETE).sprite(), blockModels));
+        createModel(blockModels, createKitchenTiles(WHITE_BLUE_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(WHITE_CONCRETE).sprite(), TextureMapping.getBlockTexture(BLUE_CONCRETE).sprite(), blockModels));
+        createModel(blockModels, createKitchenTiles(WHITE_PURPLE_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(WHITE_CONCRETE).sprite(), TextureMapping.getBlockTexture(PURPLE_CONCRETE).sprite(), blockModels));
+        createModel(blockModels, createKitchenTiles(WHITE_MAGENTA_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(WHITE_CONCRETE).sprite(), TextureMapping.getBlockTexture(MAGENTA_CONCRETE).sprite(), blockModels));
+        createModel(blockModels, createKitchenTiles(WHITE_PINK_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(WHITE_CONCRETE).sprite(), TextureMapping.getBlockTexture(PINK_CONCRETE).sprite(), blockModels));
+    }
+
+    private void createCeilingLamps(BlockModelGenerators blockModels) {
+        CONCRETE_MATERIALS.forEach((concrete, color) -> createModel(blockModels, createCeilingLampBlock(getBlockFromIdentifier(FabulousFurniture.prefix(color.getName()+"_ceiling_lamp")), TextureMapping.getBlockTexture(REDSTONE_LAMP).sprite(), TextureMapping.getBlockTexture(REDSTONE_LAMP, "_on").sprite(), TextureMapping.getBlockTexture(concrete).sprite(), blockModels)));
     }
 
     private void generateWoodenFurniture(WoodType type, BlockModelGenerators blockModels) {
-        Block planks = getBlockFromResourceLocation(ResourceLocation.parse(type.name()+"_planks"));
+        Block planks = getBlockFromIdentifier(Identifier.parse(type.name()+"_planks"));
         Block log;
         Block strippedLog;
         String log_suffix;
         if (type == WoodType.CRIMSON || type == WoodType.WARPED) {
-            log = getBlockFromResourceLocation(ResourceLocation.parse(type.name()+"_stem"));
-            strippedLog = getBlockFromResourceLocation(ResourceLocation.parse("stripped_"+type.name()+"_stem"));
+            log = getBlockFromIdentifier(Identifier.parse(type.name()+"_stem"));
+            strippedLog = getBlockFromIdentifier(Identifier.parse("stripped_"+type.name()+"_stem"));
             log_suffix = "_stem";
         } else if (type == WoodType.BAMBOO) {
-            log = getBlockFromResourceLocation(ResourceLocation.parse(type.name()+"_block"));
-            strippedLog = getBlockFromResourceLocation(ResourceLocation.parse("stripped_"+type.name()+"_block"));
+            log = getBlockFromIdentifier(Identifier.parse(type.name()+"_block"));
+            strippedLog = getBlockFromIdentifier(Identifier.parse("stripped_"+type.name()+"_block"));
             log_suffix = "_block";
         } else {
-            log = getBlockFromResourceLocation(ResourceLocation.parse(type.name()+"_log"));
-            strippedLog = getBlockFromResourceLocation(ResourceLocation.parse("stripped_"+type.name()+"_log"));
+            log = getBlockFromIdentifier(Identifier.parse(type.name()+"_log"));
+            strippedLog = getBlockFromIdentifier(Identifier.parse("stripped_"+type.name()+"_log"));
             log_suffix = "_log";
         }
-        createModel(blockModels, createCrate(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+"_crate")), planks, log, blockModels));
+        createModel(blockModels, createCrate(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+"_crate")), planks, log, blockModels));
         STONE_MATERIALS.forEach(((block, s) -> {
             String top_name = block.getDescriptionId().replaceFirst("block.minecraft.", "").replaceFirst("quartz_block", "quartz");
-            createModel(blockModels, createKitchenCounter(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+"_"+top_name+"_kitchen_counter")), planks, TextureMapping.getBlockTexture(block, s), blockModels));
-            createModel(blockModels, createKitchenCounterShelf(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+"_"+top_name+"_kitchen_counter_shelf")), planks, TextureMapping.getBlockTexture(block, s), blockModels));
-            createModel(blockModels, createKitchenCounterDoor(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+"_"+top_name+"_kitchen_counter_door")), planks, TextureMapping.getBlockTexture(block, s), TextureMapping.getBlockTexture(log), blockModels));
-            createModel(blockModels, createKitchenCounterSmallDrawer(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+"_"+top_name+"_kitchen_counter_small_drawer")), planks, TextureMapping.getBlockTexture(block, s), TextureMapping.getBlockTexture(log), blockModels));
-            createModel(blockModels, createKitchenCounterBigDrawer(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+"_"+top_name+"_kitchen_counter_big_drawer")), planks, TextureMapping.getBlockTexture(block, s), TextureMapping.getBlockTexture(log), blockModels));
-            createModel(blockModels, createKitchenCounterSink(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+"_"+top_name+"_kitchen_counter_sink")), planks, TextureMapping.getBlockTexture(block, s), blockModels));
-            createModel(blockModels, createKitchenCounterSmoker(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+"_"+top_name+"_kitchen_counter_smoker")), planks, TextureMapping.getBlockTexture(block, s), TextureMapping.getBlockTexture(SMOKER, "_front"), TextureMapping.getBlockTexture(SMOKER, "_front_on"), blockModels));
-            createModel(blockModels, createKitchenCabinetDoor(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+"_"+top_name+"_kitchen_cabinet_door")), planks, TextureMapping.getBlockTexture(log), TextureMapping.getBlockTexture(block, s), blockModels));
-            createModel(blockModels, createKitchenCabinetGlassDoor(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+"_"+top_name+"_kitchen_cabinet_glass_door")), planks, TextureMapping.getBlockTexture(log), TextureMapping.getBlockTexture(block, s), blockModels));
-            createModel(blockModels, createKitchenCabinetSidewaysDoor(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+"_"+top_name+"_kitchen_cabinet_sideways_door")), planks, TextureMapping.getBlockTexture(log), TextureMapping.getBlockTexture(block, s), blockModels));
-            createModel(blockModels, createKitchenCabinetSidewaysGlassDoor(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+"_"+top_name+"_kitchen_cabinet_sideways_glass_door")), planks, TextureMapping.getBlockTexture(log), TextureMapping.getBlockTexture(block, s), blockModels));
+            createModel(blockModels, createKitchenCounter(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+"_"+top_name+"_kitchen_counter")), planks, TextureMapping.getBlockTexture(block, s).sprite(), blockModels));
+            createModel(blockModels, createKitchenCounterShelf(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+"_"+top_name+"_kitchen_counter_shelf")), planks, TextureMapping.getBlockTexture(block, s).sprite(), blockModels));
+            createModel(blockModels, createKitchenCounterDoor(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+"_"+top_name+"_kitchen_counter_door")), planks, TextureMapping.getBlockTexture(block, s).sprite(), TextureMapping.getBlockTexture(log).sprite(), blockModels));
+            createModel(blockModels, createKitchenCounterSmallDrawer(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+"_"+top_name+"_kitchen_counter_small_drawer")), planks, TextureMapping.getBlockTexture(block, s).sprite(), TextureMapping.getBlockTexture(log).sprite(), blockModels));
+            createModel(blockModels, createKitchenCounterBigDrawer(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+"_"+top_name+"_kitchen_counter_big_drawer")), planks, TextureMapping.getBlockTexture(block, s).sprite(), TextureMapping.getBlockTexture(log).sprite(), blockModels));
+            createModel(blockModels, createKitchenCounterSink(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+"_"+top_name+"_kitchen_counter_sink")), planks, TextureMapping.getBlockTexture(block, s).sprite(), blockModels));
+            createModel(blockModels, createKitchenCounterSmoker(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+"_"+top_name+"_kitchen_counter_smoker")), planks, TextureMapping.getBlockTexture(block, s).sprite(), TextureMapping.getBlockTexture(SMOKER, "_front").sprite(), TextureMapping.getBlockTexture(SMOKER, "_front_on").sprite(), blockModels));
+            createModel(blockModels, createKitchenCabinetDoor(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+"_"+top_name+"_kitchen_cabinet_door")), planks, TextureMapping.getBlockTexture(log).sprite(), TextureMapping.getBlockTexture(block, s).sprite(), blockModels));
+            createModel(blockModels, createKitchenCabinetGlassDoor(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+"_"+top_name+"_kitchen_cabinet_glass_door")), planks, TextureMapping.getBlockTexture(log).sprite(), TextureMapping.getBlockTexture(block, s).sprite(), blockModels));
+            createModel(blockModels, createKitchenCabinetSidewaysDoor(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+"_"+top_name+"_kitchen_cabinet_sideways_door")), planks, TextureMapping.getBlockTexture(log).sprite(), TextureMapping.getBlockTexture(block, s).sprite(), blockModels));
+            createModel(blockModels, createKitchenCabinetSidewaysGlassDoor(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+"_"+top_name+"_kitchen_cabinet_sideways_glass_door")), planks, TextureMapping.getBlockTexture(log).sprite(), TextureMapping.getBlockTexture(block, s).sprite(), blockModels));
 
-            createModel(blockModels, createKitchenCounter(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+log_suffix+"_"+top_name+"_kitchen_counter")), log, TextureMapping.getBlockTexture(block, s), blockModels));
-            createModel(blockModels, createKitchenCounterShelf(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+log_suffix+"_"+top_name+"_kitchen_counter_shelf")), log, TextureMapping.getBlockTexture(block, s), blockModels));
-            createModel(blockModels, createKitchenCounterDoor(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+log_suffix+"_"+top_name+"_kitchen_counter_door")), log, TextureMapping.getBlockTexture(block, s), TextureMapping.getBlockTexture(strippedLog), blockModels));
-            createModel(blockModels, createKitchenCounterSmallDrawer(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+log_suffix+"_"+top_name+"_kitchen_counter_small_drawer")), log, TextureMapping.getBlockTexture(block, s), TextureMapping.getBlockTexture(strippedLog), blockModels));
-            createModel(blockModels, createKitchenCounterBigDrawer(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+log_suffix+"_"+top_name+"_kitchen_counter_big_drawer")), log, TextureMapping.getBlockTexture(block, s), TextureMapping.getBlockTexture(strippedLog), blockModels));
-            createModel(blockModels, createKitchenCounterSink(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+log_suffix+"_"+top_name+"_kitchen_counter_sink")), log, TextureMapping.getBlockTexture(block, s), blockModels));
-            createModel(blockModels, createKitchenCounterSmoker(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+log_suffix+"_"+top_name+"_kitchen_counter_smoker")), log, TextureMapping.getBlockTexture(block, s), TextureMapping.getBlockTexture(SMOKER, "_front"), TextureMapping.getBlockTexture(SMOKER, "_front_on"), blockModels));
-            createModel(blockModels, createKitchenCabinetDoor(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+log_suffix+"_"+top_name+"_kitchen_cabinet_door")), log, TextureMapping.getBlockTexture(strippedLog), TextureMapping.getBlockTexture(block, s), blockModels));
-            createModel(blockModels, createKitchenCabinetGlassDoor(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+log_suffix+"_"+top_name+"_kitchen_cabinet_glass_door")), log, TextureMapping.getBlockTexture(strippedLog), TextureMapping.getBlockTexture(block, s), blockModels));
-            createModel(blockModels, createKitchenCabinetSidewaysDoor(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+log_suffix+"_"+top_name+"_kitchen_cabinet_sideways_door")), log, TextureMapping.getBlockTexture(strippedLog), TextureMapping.getBlockTexture(block, s), blockModels));
-            createModel(blockModels, createKitchenCabinetSidewaysGlassDoor(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+log_suffix+"_"+top_name+"_kitchen_cabinet_sideways_glass_door")), log, TextureMapping.getBlockTexture(strippedLog), TextureMapping.getBlockTexture(block, s), blockModels));
+            createModel(blockModels, createKitchenCounter(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+log_suffix+"_"+top_name+"_kitchen_counter")), log, TextureMapping.getBlockTexture(block, s).sprite(), blockModels));
+            createModel(blockModels, createKitchenCounterShelf(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+log_suffix+"_"+top_name+"_kitchen_counter_shelf")), log, TextureMapping.getBlockTexture(block, s).sprite(), blockModels));
+            createModel(blockModels, createKitchenCounterDoor(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+log_suffix+"_"+top_name+"_kitchen_counter_door")), log, TextureMapping.getBlockTexture(block, s).sprite(), TextureMapping.getBlockTexture(strippedLog).sprite(), blockModels));
+            createModel(blockModels, createKitchenCounterSmallDrawer(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+log_suffix+"_"+top_name+"_kitchen_counter_small_drawer")), log, TextureMapping.getBlockTexture(block, s).sprite(), TextureMapping.getBlockTexture(strippedLog).sprite(), blockModels));
+            createModel(blockModels, createKitchenCounterBigDrawer(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+log_suffix+"_"+top_name+"_kitchen_counter_big_drawer")), log, TextureMapping.getBlockTexture(block, s).sprite(), TextureMapping.getBlockTexture(strippedLog).sprite(), blockModels));
+            createModel(blockModels, createKitchenCounterSink(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+log_suffix+"_"+top_name+"_kitchen_counter_sink")), log, TextureMapping.getBlockTexture(block, s).sprite(), blockModels));
+            createModel(blockModels, createKitchenCounterSmoker(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+log_suffix+"_"+top_name+"_kitchen_counter_smoker")), log, TextureMapping.getBlockTexture(block, s).sprite(), TextureMapping.getBlockTexture(SMOKER, "_front").sprite(), TextureMapping.getBlockTexture(SMOKER, "_front_on").sprite(), blockModels));
+            createModel(blockModels, createKitchenCabinetDoor(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+log_suffix+"_"+top_name+"_kitchen_cabinet_door")), log, TextureMapping.getBlockTexture(strippedLog).sprite(), TextureMapping.getBlockTexture(block, s).sprite(), blockModels));
+            createModel(blockModels, createKitchenCabinetGlassDoor(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+log_suffix+"_"+top_name+"_kitchen_cabinet_glass_door")), log, TextureMapping.getBlockTexture(strippedLog).sprite(), TextureMapping.getBlockTexture(block, s).sprite(), blockModels));
+            createModel(blockModels, createKitchenCabinetSidewaysDoor(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+log_suffix+"_"+top_name+"_kitchen_cabinet_sideways_door")), log, TextureMapping.getBlockTexture(strippedLog).sprite(), TextureMapping.getBlockTexture(block, s).sprite(), blockModels));
+            createModel(blockModels, createKitchenCabinetSidewaysGlassDoor(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+log_suffix+"_"+top_name+"_kitchen_cabinet_sideways_glass_door")), log, TextureMapping.getBlockTexture(strippedLog).sprite(), TextureMapping.getBlockTexture(block, s).sprite(), blockModels));
 
-            createModel(blockModels, createKitchenCounter(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_"+top_name+"_kitchen_counter")), strippedLog, TextureMapping.getBlockTexture(block, s), blockModels));
-            createModel(blockModels, createKitchenCounterShelf(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_"+top_name+"_kitchen_counter_shelf")), strippedLog, TextureMapping.getBlockTexture(block, s), blockModels));
-            createModel(blockModels, createKitchenCounterDoor(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_"+top_name+"_kitchen_counter_door")), strippedLog, TextureMapping.getBlockTexture(block, s), TextureMapping.getBlockTexture(log), blockModels));
-            createModel(blockModels, createKitchenCounterSmallDrawer(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_"+top_name+"_kitchen_counter_small_drawer")), strippedLog, TextureMapping.getBlockTexture(block, s), TextureMapping.getBlockTexture(log), blockModels));
-            createModel(blockModels, createKitchenCounterBigDrawer(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_"+top_name+"_kitchen_counter_big_drawer")), strippedLog, TextureMapping.getBlockTexture(block, s), TextureMapping.getBlockTexture(log), blockModels));
-            createModel(blockModels, createKitchenCounterSink(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_"+top_name+"_kitchen_counter_sink")), strippedLog, TextureMapping.getBlockTexture(block, s), blockModels));
-            createModel(blockModels, createKitchenCounterSmoker(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_"+top_name+"_kitchen_counter_smoker")), strippedLog, TextureMapping.getBlockTexture(block, s), TextureMapping.getBlockTexture(SMOKER, "_front"), TextureMapping.getBlockTexture(SMOKER, "_front_on"), blockModels));
-            createModel(blockModels, createKitchenCabinetDoor(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_"+top_name+"_kitchen_cabinet_door")), strippedLog, TextureMapping.getBlockTexture(log), TextureMapping.getBlockTexture(block, s), blockModels));
-            createModel(blockModels, createKitchenCabinetGlassDoor(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_"+top_name+"_kitchen_cabinet_glass_door")), strippedLog, TextureMapping.getBlockTexture(log), TextureMapping.getBlockTexture(block, s), blockModels));
-            createModel(blockModels, createKitchenCabinetSidewaysDoor(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_"+top_name+"_kitchen_cabinet_sideways_door")), strippedLog, TextureMapping.getBlockTexture(log), TextureMapping.getBlockTexture(block, s), blockModels));
-            createModel(blockModels, createKitchenCabinetSidewaysGlassDoor(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_"+top_name+"_kitchen_cabinet_sideways_glass_door")), strippedLog, TextureMapping.getBlockTexture(log), TextureMapping.getBlockTexture(block, s), blockModels));
+            createModel(blockModels, createKitchenCounter(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_"+top_name+"_kitchen_counter")), strippedLog, TextureMapping.getBlockTexture(block, s).sprite(), blockModels));
+            createModel(blockModels, createKitchenCounterShelf(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_"+top_name+"_kitchen_counter_shelf")), strippedLog, TextureMapping.getBlockTexture(block, s).sprite(), blockModels));
+            createModel(blockModels, createKitchenCounterDoor(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_"+top_name+"_kitchen_counter_door")), strippedLog, TextureMapping.getBlockTexture(block, s).sprite(), TextureMapping.getBlockTexture(log).sprite(), blockModels));
+            createModel(blockModels, createKitchenCounterSmallDrawer(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_"+top_name+"_kitchen_counter_small_drawer")), strippedLog, TextureMapping.getBlockTexture(block, s).sprite(), TextureMapping.getBlockTexture(log).sprite(), blockModels));
+            createModel(blockModels, createKitchenCounterBigDrawer(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_"+top_name+"_kitchen_counter_big_drawer")), strippedLog, TextureMapping.getBlockTexture(block, s).sprite(), TextureMapping.getBlockTexture(log).sprite(), blockModels));
+            createModel(blockModels, createKitchenCounterSink(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_"+top_name+"_kitchen_counter_sink")), strippedLog, TextureMapping.getBlockTexture(block, s).sprite(), blockModels));
+            createModel(blockModels, createKitchenCounterSmoker(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_"+top_name+"_kitchen_counter_smoker")), strippedLog, TextureMapping.getBlockTexture(block, s).sprite(), TextureMapping.getBlockTexture(SMOKER, "_front").sprite(), TextureMapping.getBlockTexture(SMOKER, "_front_on").sprite(), blockModels));
+            createModel(blockModels, createKitchenCabinetDoor(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_"+top_name+"_kitchen_cabinet_door")), strippedLog, TextureMapping.getBlockTexture(log).sprite(), TextureMapping.getBlockTexture(block, s).sprite(), blockModels));
+            createModel(blockModels, createKitchenCabinetGlassDoor(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_"+top_name+"_kitchen_cabinet_glass_door")), strippedLog, TextureMapping.getBlockTexture(log).sprite(), TextureMapping.getBlockTexture(block, s).sprite(), blockModels));
+            createModel(blockModels, createKitchenCabinetSidewaysDoor(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_"+top_name+"_kitchen_cabinet_sideways_door")), strippedLog, TextureMapping.getBlockTexture(log).sprite(), TextureMapping.getBlockTexture(block, s).sprite(), blockModels));
+            createModel(blockModels, createKitchenCabinetSidewaysGlassDoor(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_"+top_name+"_kitchen_cabinet_sideways_glass_door")), strippedLog, TextureMapping.getBlockTexture(log).sprite(), TextureMapping.getBlockTexture(block, s).sprite(), blockModels));
 
-            createModel(blockModels, createKnifeBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+"_"+top_name+"_knife_block")), planks, TextureMapping.getBlockTexture(block, s), blockModels));
+            createModel(blockModels, createKnifeBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+"_"+top_name+"_knife_block")), planks, TextureMapping.getBlockTexture(block, s).sprite(), blockModels));
         }));
 
-        createModel(blockModels, createKitchenCabinet(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+"_kitchen_cabinet")), planks, blockModels));
-        createModel(blockModels, createKitchenCabinetShelf(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+"_kitchen_cabinet_shelf")), planks, blockModels));
-        createModel(blockModels, createKitchenShelf(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+"_kitchen_shelf")), planks, TextureMapping.getBlockTexture(CHAIN), blockModels));
+        createModel(blockModels, createKitchenCabinet(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+"_kitchen_cabinet")), planks, blockModels));
+        createModel(blockModels, createKitchenCabinet(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+log_suffix+"_kitchen_cabinet")), log, blockModels));
+        createModel(blockModels, createKitchenCabinet(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_kitchen_cabinet")), strippedLog, blockModels));
 
-        createModel(blockModels, createKitchenCabinet(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+log_suffix+"_kitchen_cabinet")), log, blockModels));
-        createModel(blockModels, createKitchenCabinetShelf(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+log_suffix+"_kitchen_cabinet_shelf")), log, blockModels));
-        createModel(blockModels, createKitchenShelf(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+log_suffix+"_kitchen_shelf")), log, TextureMapping.getBlockTexture(CHAIN), blockModels));
+        createModel(blockModels, createKitchenCabinetShelf(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+"_kitchen_cabinet_shelf")), planks, blockModels));
+        createModel(blockModels, createKitchenCabinetShelf(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+log_suffix+"_kitchen_cabinet_shelf")), log, blockModels));
+        createModel(blockModels, createKitchenCabinetShelf(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_kitchen_cabinet_shelf")), strippedLog, blockModels));
 
-        createModel(blockModels, createKitchenCabinet(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_kitchen_cabinet")), strippedLog, blockModels));
-        createModel(blockModels, createKitchenCabinetShelf(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_kitchen_cabinet_shelf")), strippedLog, blockModels));
-        createModel(blockModels, createKitchenShelf(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_kitchen_shelf")), strippedLog, TextureMapping.getBlockTexture(CHAIN), blockModels));
+        METALS.forEach((metal, name) -> {
+            if (metal != Blocks.GOLD_BLOCK && metal != Blocks.NETHERITE_BLOCK) {
+                createModel(blockModels, createKitchenShelf(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + "_" + name + "_kitchen_shelf")), planks, TextureMapping.getBlockTexture(getBlockFromIdentifier(Identifier.parse(name.replaceFirst("waxed_", "")+"_chain"))).sprite(), blockModels));
+                createModel(blockModels, createKitchenShelf(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + log_suffix + "_" + name + "_kitchen_shelf")), log, TextureMapping.getBlockTexture(getBlockFromIdentifier(Identifier.parse(name.replaceFirst("waxed_", "")+"_chain"))).sprite(), blockModels));
+                createModel(blockModels, createKitchenShelf(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_" + type.name() + log_suffix + "_" + name + "_kitchen_shelf")), strippedLog, TextureMapping.getBlockTexture(getBlockFromIdentifier(Identifier.parse(name.replaceFirst("waxed_", "")+"_chain"))).sprite(), blockModels));
+            }
+        });
 
-        createModel(blockModels, createTableBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+"_table")), planks, blockModels));
-        createModel(blockModels, createTableBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+log_suffix+"_table")), log, blockModels));
-        createModel(blockModels, createTableBlock(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_table")), strippedLog, blockModels));
+        createModel(blockModels, createTableBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+"_table")), planks, blockModels));
+        createModel(blockModels, createTableBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+log_suffix+"_table")), log, blockModels));
+        createModel(blockModels, createTableBlock(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_table")), strippedLog, blockModels));
 
-        createModel(blockModels, createBedsideTableBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+"_bedside_table")), planks, TextureMapping.getBlockTexture(log), TextureMapping.getBlockTexture(log), blockModels));
-        createModel(blockModels, createBedsideTableBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+log_suffix+"_bedside_table")), log, TextureMapping.getBlockTexture(strippedLog), TextureMapping.getBlockTexture(strippedLog), blockModels));
-        createModel(blockModels, createBedsideTableBlock(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_bedside_table")), strippedLog, TextureMapping.getBlockTexture(log), TextureMapping.getBlockTexture(log), blockModels));
+        createModel(blockModels, createCouchTableBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+"_couch_table")), planks, blockModels));
+        createModel(blockModels, createCouchTableBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+log_suffix+"_couch_table")), log, blockModels));
+        createModel(blockModels, createCouchTableBlock(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_couch_table")), strippedLog, blockModels));
 
-        createModel(blockModels, createCloset(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+"_closet")), TextureMapping.getBlockTexture(planks), TextureMapping.getBlockTexture(log), blockModels));
-        createModel(blockModels, createCloset(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+log_suffix+"_closet")), TextureMapping.getBlockTexture(log), TextureMapping.getBlockTexture(strippedLog), blockModels));
-        createModel(blockModels, createCloset(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_closet")), TextureMapping.getBlockTexture(strippedLog), TextureMapping.getBlockTexture(log), blockModels));
+        createModel(blockModels, createBedsideTableBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+"_bedside_table")), planks, TextureMapping.getBlockTexture(log).sprite(), TextureMapping.getBlockTexture(log).sprite(), blockModels));
+        createModel(blockModels, createBedsideTableBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+log_suffix+"_bedside_table")), log, TextureMapping.getBlockTexture(strippedLog).sprite(), TextureMapping.getBlockTexture(strippedLog).sprite(), blockModels));
+        createModel(blockModels, createBedsideTableBlock(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_bedside_table")), strippedLog, TextureMapping.getBlockTexture(log).sprite(), TextureMapping.getBlockTexture(log).sprite(), blockModels));
 
-        createModel(blockModels, createFlowerBoxBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+"_flower_box")), TextureMapping.getBlockTexture(planks), TextureMapping.getBlockTexture(planks), blockModels));
-        createModel(blockModels, createFlowerBoxBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+log_suffix+"_flower_box")), TextureMapping.getBlockTexture(log), TextureMapping.getBlockTexture(log, "_top"), blockModels));
-        createModel(blockModels, createFlowerBoxBlock(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_flower_box")), TextureMapping.getBlockTexture(strippedLog), TextureMapping.getBlockTexture(strippedLog, "_top"), blockModels));
+        createModel(blockModels, createCloset(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+"_closet")), TextureMapping.getBlockTexture(planks).sprite(), TextureMapping.getBlockTexture(log).sprite(), blockModels));
+        createModel(blockModels, createCloset(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+log_suffix+"_closet")), TextureMapping.getBlockTexture(log).sprite(), TextureMapping.getBlockTexture(strippedLog).sprite(), blockModels));
+        createModel(blockModels, createCloset(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_closet")), TextureMapping.getBlockTexture(strippedLog).sprite(), TextureMapping.getBlockTexture(log).sprite(), blockModels));
 
-        createModel(blockModels, createFlowerBoxInnerCornerBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+"_flower_box_inner_corner")), TextureMapping.getBlockTexture(planks), TextureMapping.getBlockTexture(planks), blockModels));
-        createModel(blockModels, createFlowerBoxInnerCornerBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+log_suffix+"_flower_box_inner_corner")), TextureMapping.getBlockTexture(log), TextureMapping.getBlockTexture(log, "_top"), blockModels));
-        createModel(blockModels, createFlowerBoxInnerCornerBlock(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_flower_box_inner_corner")), TextureMapping.getBlockTexture(strippedLog), TextureMapping.getBlockTexture(strippedLog, "_top"), blockModels));
+        createModel(blockModels, createFlowerBoxBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+"_flower_box")), TextureMapping.getBlockTexture(planks).sprite(), TextureMapping.getBlockTexture(planks).sprite(), blockModels));
+        createModel(blockModels, createFlowerBoxBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+log_suffix+"_flower_box")), TextureMapping.getBlockTexture(log).sprite(), TextureMapping.getBlockTexture(log, "_top").sprite(), blockModels));
+        createModel(blockModels, createFlowerBoxBlock(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_flower_box")), TextureMapping.getBlockTexture(strippedLog).sprite(), TextureMapping.getBlockTexture(strippedLog, "_top").sprite(), blockModels));
 
-        createModel(blockModels, createFlowerBoxOuterCornerBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+"_flower_box_outer_corner")), TextureMapping.getBlockTexture(planks), TextureMapping.getBlockTexture(planks), blockModels));
-        createModel(blockModels, createFlowerBoxOuterCornerBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+log_suffix+"_flower_box_outer_corner")), TextureMapping.getBlockTexture(log), TextureMapping.getBlockTexture(log, "_top"), blockModels));
-        createModel(blockModels, createFlowerBoxOuterCornerBlock(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_flower_box_outer_corner")), TextureMapping.getBlockTexture(strippedLog), TextureMapping.getBlockTexture(strippedLog, "_top"), blockModels));
+        createModel(blockModels, createFlowerBoxInnerCornerBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+"_flower_box_inner_corner")), TextureMapping.getBlockTexture(planks).sprite(), TextureMapping.getBlockTexture(planks).sprite(), blockModels));
+        createModel(blockModels, createFlowerBoxInnerCornerBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+log_suffix+"_flower_box_inner_corner")), TextureMapping.getBlockTexture(log).sprite(), TextureMapping.getBlockTexture(log, "_top").sprite(), blockModels));
+        createModel(blockModels, createFlowerBoxInnerCornerBlock(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_flower_box_inner_corner")), TextureMapping.getBlockTexture(strippedLog).sprite(), TextureMapping.getBlockTexture(strippedLog, "_top").sprite(), blockModels));
 
-        createModel(blockModels, createFlowerBoxBigBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+"_flower_box_big")), TextureMapping.getBlockTexture(planks), TextureMapping.getBlockTexture(planks), blockModels));
-        createModel(blockModels, createFlowerBoxBigBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+log_suffix+"_flower_box_big")), TextureMapping.getBlockTexture(log), TextureMapping.getBlockTexture(log, "_top"), blockModels));
-        createModel(blockModels, createFlowerBoxBigBlock(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_flower_box_big")), TextureMapping.getBlockTexture(strippedLog), TextureMapping.getBlockTexture(strippedLog, "_top"), blockModels));
+        createModel(blockModels, createFlowerBoxOuterCornerBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+"_flower_box_outer_corner")), TextureMapping.getBlockTexture(planks).sprite(), TextureMapping.getBlockTexture(planks).sprite(), blockModels));
+        createModel(blockModels, createFlowerBoxOuterCornerBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+log_suffix+"_flower_box_outer_corner")), TextureMapping.getBlockTexture(log).sprite(), TextureMapping.getBlockTexture(log, "_top").sprite(), blockModels));
+        createModel(blockModels, createFlowerBoxOuterCornerBlock(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_flower_box_outer_corner")), TextureMapping.getBlockTexture(strippedLog).sprite(), TextureMapping.getBlockTexture(strippedLog, "_top").sprite(), blockModels));
 
-        createModel(blockModels, createTrashBinBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+"_trash_bin")), TextureMapping.getBlockTexture(planks), blockModels));
-        createModel(blockModels, createTrashBinBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+log_suffix+"_trash_bin")), TextureMapping.getBlockTexture(log), blockModels));
-        createModel(blockModels, createTrashBinBlock(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_trash_bin")), TextureMapping.getBlockTexture(strippedLog), blockModels));
+        createModel(blockModels, createFlowerBoxBigBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+"_flower_box_big")), TextureMapping.getBlockTexture(planks).sprite(), TextureMapping.getBlockTexture(planks).sprite(), blockModels));
+        createModel(blockModels, createFlowerBoxBigBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+log_suffix+"_flower_box_big")), TextureMapping.getBlockTexture(log).sprite(), TextureMapping.getBlockTexture(log, "_top").sprite(), blockModels));
+        createModel(blockModels, createFlowerBoxBigBlock(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_flower_box_big")), TextureMapping.getBlockTexture(strippedLog).sprite(), TextureMapping.getBlockTexture(strippedLog, "_top").sprite(), blockModels));
+
+        createModel(blockModels, createTrashBinBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+"_trash_bin")), TextureMapping.getBlockTexture(planks).sprite(), blockModels));
+        createModel(blockModels, createTrashBinBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+log_suffix+"_trash_bin")), TextureMapping.getBlockTexture(log).sprite(), blockModels));
+        createModel(blockModels, createTrashBinBlock(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_trash_bin")), TextureMapping.getBlockTexture(strippedLog).sprite(), blockModels));
 
         for (WoodType type2 : WOOD_TYPES) {
-            Block planks2 = getBlockFromResourceLocation(ResourceLocation.parse(type2.name()+"_planks"));
+            Block planks2 = getBlockFromIdentifier(Identifier.parse(type2.name()+"_planks"));
             Block log2;
             Block strippedLog2;
             String log_suffix2;
             if (type2 == WoodType.CRIMSON || type2 == WoodType.WARPED) {
-                log2 = getBlockFromResourceLocation(ResourceLocation.parse(type2.name()+"_stem"));
-                strippedLog2 = getBlockFromResourceLocation(ResourceLocation.parse("stripped_"+type2.name()+"_stem"));
+                log2 = getBlockFromIdentifier(Identifier.parse(type2.name()+"_stem"));
+                strippedLog2 = getBlockFromIdentifier(Identifier.parse("stripped_"+type2.name()+"_stem"));
                 log_suffix2 = "_stem";
             } else if (type2 == WoodType.BAMBOO) {
-                log2 = getBlockFromResourceLocation(ResourceLocation.parse(type2.name()+"_block"));
-                strippedLog2 = getBlockFromResourceLocation(ResourceLocation.parse("stripped_"+type2.name()+"_block"));
+                log2 = getBlockFromIdentifier(Identifier.parse(type2.name()+"_block"));
+                strippedLog2 = getBlockFromIdentifier(Identifier.parse("stripped_"+type2.name()+"_block"));
                 log_suffix2 = "_block";
             } else {
-                log2 = getBlockFromResourceLocation(ResourceLocation.parse(type2.name()+"_log"));
-                strippedLog2 = getBlockFromResourceLocation(ResourceLocation.parse("stripped_"+type2.name()+"_log"));
+                log2 = getBlockFromIdentifier(Identifier.parse(type2.name()+"_log"));
+                strippedLog2 = getBlockFromIdentifier(Identifier.parse("stripped_"+type2.name()+"_log"));
                 log_suffix2 = "_log";
             }
 
-            createModel(blockModels, createBirdhouseBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+"_"+type2.name()+"_birdhouse")), TextureMapping.getBlockTexture(log), TextureMapping.getBlockTexture(log, "_top"), TextureMapping.getBlockTexture(planks), TextureMapping.getBlockTexture(planks2), blockModels));
-            createModel(blockModels, createBirdhouseBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+log_suffix+"_"+type2.name()+"_birdhouse")), TextureMapping.getBlockTexture(log), TextureMapping.getBlockTexture(log, "_top"), TextureMapping.getBlockTexture(log), TextureMapping.getBlockTexture(planks2), blockModels));
-            createModel(blockModels, createBirdhouseBlock(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_"+type2.name()+"_birdhouse")), TextureMapping.getBlockTexture(log), TextureMapping.getBlockTexture(log, "_top"), TextureMapping.getBlockTexture(strippedLog), TextureMapping.getBlockTexture(planks2), blockModels));
-            createModel(blockModels, createBirdhouseBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+"_"+type2.name()+log_suffix2+"_birdhouse")), TextureMapping.getBlockTexture(log), TextureMapping.getBlockTexture(log, "_top"), TextureMapping.getBlockTexture(planks), TextureMapping.getBlockTexture(log2), blockModels));
-            createModel(blockModels, createBirdhouseBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+log_suffix+"_"+type2.name()+log_suffix2+"_birdhouse")), TextureMapping.getBlockTexture(log), TextureMapping.getBlockTexture(log, "_top"), TextureMapping.getBlockTexture(log), TextureMapping.getBlockTexture(log2), blockModels));
-            createModel(blockModels, createBirdhouseBlock(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_"+type2.name()+log_suffix2+"_birdhouse")), TextureMapping.getBlockTexture(log), TextureMapping.getBlockTexture(log, "_top"), TextureMapping.getBlockTexture(strippedLog), TextureMapping.getBlockTexture(log2), blockModels));
-            createModel(blockModels, createBirdhouseBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+"_stripped_"+type2.name()+log_suffix2+"_birdhouse")), TextureMapping.getBlockTexture(log), TextureMapping.getBlockTexture(log, "_top"), TextureMapping.getBlockTexture(planks), TextureMapping.getBlockTexture(strippedLog2), blockModels));
-            createModel(blockModels, createBirdhouseBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+log_suffix+"_stripped_"+type2.name()+log_suffix2+"_birdhouse")), TextureMapping.getBlockTexture(log), TextureMapping.getBlockTexture(log, "_top"), TextureMapping.getBlockTexture(log), TextureMapping.getBlockTexture(strippedLog2), blockModels));
-            createModel(blockModels, createBirdhouseBlock(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_stripped_"+type2.name()+log_suffix2+"_birdhouse")), TextureMapping.getBlockTexture(log), TextureMapping.getBlockTexture(log, "_top"), TextureMapping.getBlockTexture(strippedLog), TextureMapping.getBlockTexture(strippedLog2), blockModels));
+            createModel(blockModels, createBirdhouseBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+"_"+type2.name()+"_birdhouse")), TextureMapping.getBlockTexture(log).sprite(), TextureMapping.getBlockTexture(log, "_top").sprite(), TextureMapping.getBlockTexture(planks).sprite(), TextureMapping.getBlockTexture(planks2).sprite(), blockModels));
+            createModel(blockModels, createBirdhouseBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+log_suffix+"_"+type2.name()+"_birdhouse")), TextureMapping.getBlockTexture(log).sprite(), TextureMapping.getBlockTexture(log, "_top").sprite(), TextureMapping.getBlockTexture(log).sprite(), TextureMapping.getBlockTexture(planks2).sprite(), blockModels));
+            createModel(blockModels, createBirdhouseBlock(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_"+type2.name()+"_birdhouse")), TextureMapping.getBlockTexture(log).sprite(), TextureMapping.getBlockTexture(log, "_top").sprite(), TextureMapping.getBlockTexture(strippedLog).sprite(), TextureMapping.getBlockTexture(planks2).sprite(), blockModels));
+            createModel(blockModels, createBirdhouseBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+"_"+type2.name()+log_suffix2+"_birdhouse")), TextureMapping.getBlockTexture(log).sprite(), TextureMapping.getBlockTexture(log, "_top").sprite(), TextureMapping.getBlockTexture(planks).sprite(), TextureMapping.getBlockTexture(log2).sprite(), blockModels));
+            createModel(blockModels, createBirdhouseBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+log_suffix+"_"+type2.name()+log_suffix2+"_birdhouse")), TextureMapping.getBlockTexture(log).sprite(), TextureMapping.getBlockTexture(log, "_top").sprite(), TextureMapping.getBlockTexture(log).sprite(), TextureMapping.getBlockTexture(log2).sprite(), blockModels));
+            createModel(blockModels, createBirdhouseBlock(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_"+type2.name()+log_suffix2+"_birdhouse")), TextureMapping.getBlockTexture(log).sprite(), TextureMapping.getBlockTexture(log, "_top").sprite(), TextureMapping.getBlockTexture(strippedLog).sprite(), TextureMapping.getBlockTexture(log2).sprite(), blockModels));
+            createModel(blockModels, createBirdhouseBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+"_stripped_"+type2.name()+log_suffix2+"_birdhouse")), TextureMapping.getBlockTexture(log).sprite(), TextureMapping.getBlockTexture(log, "_top").sprite(), TextureMapping.getBlockTexture(planks).sprite(), TextureMapping.getBlockTexture(strippedLog2).sprite(), blockModels));
+            createModel(blockModels, createBirdhouseBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+log_suffix+"_stripped_"+type2.name()+log_suffix2+"_birdhouse")), TextureMapping.getBlockTexture(log).sprite(), TextureMapping.getBlockTexture(log, "_top").sprite(), TextureMapping.getBlockTexture(log).sprite(), TextureMapping.getBlockTexture(strippedLog2).sprite(), blockModels));
+            createModel(blockModels, createBirdhouseBlock(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_stripped_"+type2.name()+log_suffix2+"_birdhouse")), TextureMapping.getBlockTexture(log).sprite(), TextureMapping.getBlockTexture(log, "_top").sprite(), TextureMapping.getBlockTexture(strippedLog).sprite(), TextureMapping.getBlockTexture(strippedLog2).sprite(), blockModels));
 
-            createModel(blockModels, createHangingBirdhouseBlock(getBlockFromResourceLocation(FabulousFurniture.prefix("hanging_"+type.name()+"_"+type2.name()+"_birdhouse")), TextureMapping.getBlockTexture(planks), TextureMapping.getBlockTexture(planks2), blockModels));
-            createModel(blockModels, createHangingBirdhouseBlock(getBlockFromResourceLocation(FabulousFurniture.prefix("hanging_"+type.name()+log_suffix+"_"+type2.name()+"_birdhouse")), TextureMapping.getBlockTexture(log), TextureMapping.getBlockTexture(planks2), blockModels));
-            createModel(blockModels, createHangingBirdhouseBlock(getBlockFromResourceLocation(FabulousFurniture.prefix("hanging_stripped_"+type.name()+log_suffix+"_"+type2.name()+"_birdhouse")), TextureMapping.getBlockTexture(strippedLog), TextureMapping.getBlockTexture(planks2), blockModels));
-            createModel(blockModels, createHangingBirdhouseBlock(getBlockFromResourceLocation(FabulousFurniture.prefix("hanging_"+type.name()+"_"+type2.name()+log_suffix2+"_birdhouse")), TextureMapping.getBlockTexture(planks), TextureMapping.getBlockTexture(log2), blockModels));
-            createModel(blockModels, createHangingBirdhouseBlock(getBlockFromResourceLocation(FabulousFurniture.prefix("hanging_"+type.name()+log_suffix+"_"+type2.name()+log_suffix2+"_birdhouse")), TextureMapping.getBlockTexture(log), TextureMapping.getBlockTexture(log2), blockModels));
-            createModel(blockModels, createHangingBirdhouseBlock(getBlockFromResourceLocation(FabulousFurniture.prefix("hanging_stripped_"+type.name()+log_suffix+"_"+type2.name()+log_suffix2+"_birdhouse")), TextureMapping.getBlockTexture(strippedLog), TextureMapping.getBlockTexture(log2), blockModels));
-            createModel(blockModels, createHangingBirdhouseBlock(getBlockFromResourceLocation(FabulousFurniture.prefix("hanging_"+type.name()+"_stripped_"+type2.name()+log_suffix2+"_birdhouse")), TextureMapping.getBlockTexture(planks), TextureMapping.getBlockTexture(strippedLog2), blockModels));
-            createModel(blockModels, createHangingBirdhouseBlock(getBlockFromResourceLocation(FabulousFurniture.prefix("hanging_"+type.name()+log_suffix+"_stripped_"+type2.name()+log_suffix2+"_birdhouse")), TextureMapping.getBlockTexture(log), TextureMapping.getBlockTexture(strippedLog2), blockModels));
-            createModel(blockModels, createHangingBirdhouseBlock(getBlockFromResourceLocation(FabulousFurniture.prefix("hanging_stripped_"+type.name()+log_suffix+"_stripped_"+type2.name()+log_suffix2+"_birdhouse")), TextureMapping.getBlockTexture(strippedLog), TextureMapping.getBlockTexture(strippedLog2), blockModels));
+            createModel(blockModels, createHangingBirdhouseBlock(getBlockFromIdentifier(FabulousFurniture.prefix("hanging_"+type.name()+"_"+type2.name()+"_birdhouse")), TextureMapping.getBlockTexture(planks).sprite(), TextureMapping.getBlockTexture(planks2).sprite(), blockModels));
+            createModel(blockModels, createHangingBirdhouseBlock(getBlockFromIdentifier(FabulousFurniture.prefix("hanging_"+type.name()+log_suffix+"_"+type2.name()+"_birdhouse")), TextureMapping.getBlockTexture(log).sprite(), TextureMapping.getBlockTexture(planks2).sprite(), blockModels));
+            createModel(blockModels, createHangingBirdhouseBlock(getBlockFromIdentifier(FabulousFurniture.prefix("hanging_stripped_"+type.name()+log_suffix+"_"+type2.name()+"_birdhouse")), TextureMapping.getBlockTexture(strippedLog).sprite(), TextureMapping.getBlockTexture(planks2).sprite(), blockModels));
+            createModel(blockModels, createHangingBirdhouseBlock(getBlockFromIdentifier(FabulousFurniture.prefix("hanging_"+type.name()+"_"+type2.name()+log_suffix2+"_birdhouse")), TextureMapping.getBlockTexture(planks).sprite(), TextureMapping.getBlockTexture(log2).sprite(), blockModels));
+            createModel(blockModels, createHangingBirdhouseBlock(getBlockFromIdentifier(FabulousFurniture.prefix("hanging_"+type.name()+log_suffix+"_"+type2.name()+log_suffix2+"_birdhouse")), TextureMapping.getBlockTexture(log).sprite(), TextureMapping.getBlockTexture(log2).sprite(), blockModels));
+            createModel(blockModels, createHangingBirdhouseBlock(getBlockFromIdentifier(FabulousFurniture.prefix("hanging_stripped_"+type.name()+log_suffix+"_"+type2.name()+log_suffix2+"_birdhouse")), TextureMapping.getBlockTexture(strippedLog).sprite(), TextureMapping.getBlockTexture(log2).sprite(), blockModels));
+            createModel(blockModels, createHangingBirdhouseBlock(getBlockFromIdentifier(FabulousFurniture.prefix("hanging_"+type.name()+"_stripped_"+type2.name()+log_suffix2+"_birdhouse")), TextureMapping.getBlockTexture(planks).sprite(), TextureMapping.getBlockTexture(strippedLog2).sprite(), blockModels));
+            createModel(blockModels, createHangingBirdhouseBlock(getBlockFromIdentifier(FabulousFurniture.prefix("hanging_"+type.name()+log_suffix+"_stripped_"+type2.name()+log_suffix2+"_birdhouse")), TextureMapping.getBlockTexture(log).sprite(), TextureMapping.getBlockTexture(strippedLog2).sprite(), blockModels));
+            createModel(blockModels, createHangingBirdhouseBlock(getBlockFromIdentifier(FabulousFurniture.prefix("hanging_stripped_"+type.name()+log_suffix+"_stripped_"+type2.name()+log_suffix2+"_birdhouse")), TextureMapping.getBlockTexture(strippedLog).sprite(), TextureMapping.getBlockTexture(strippedLog2).sprite(), blockModels));
         }
 
         METALS.forEach((metal, name) -> {
-            if (metal != Blocks.COPPER_BLOCK) {
-                createModel(blockModels, createBenchBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name() + "_" + name + "_bench")), planks, TextureMapping.getBlockTexture(metal), blockModels));
-                createModel(blockModels, createBenchBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name() + log_suffix + "_" + name + "_bench")), log, TextureMapping.getBlockTexture(metal), blockModels));
-                createModel(blockModels, createBenchBlock(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_" + type.name() + log_suffix + "_" + name + "_bench")), strippedLog, TextureMapping.getBlockTexture(metal), blockModels));
-            } else {
-                createModel(blockModels, createBenchBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name() + "_waxed_" + name + "_bench")), planks, TextureMapping.getBlockTexture(metal), blockModels));
-                createModel(blockModels, createBenchBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name() + log_suffix + "_waxed_" + name + "_bench")), log, TextureMapping.getBlockTexture(metal), blockModels));
-                createModel(blockModels, createBenchBlock(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_" + type.name() + log_suffix + "_waxed_" + name + "_bench")), strippedLog, TextureMapping.getBlockTexture(metal), blockModels));
-                createModel(blockModels, createBenchBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name() + "_waxed_exposed_" + name + "_bench")), planks, TextureMapping.getBlockTexture(EXPOSED_COPPER), blockModels));
-                createModel(blockModels, createBenchBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name() + log_suffix + "_waxed_exposed_" + name + "_bench")), log, TextureMapping.getBlockTexture(EXPOSED_COPPER), blockModels));
-                createModel(blockModels, createBenchBlock(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_" + type.name() + log_suffix + "_waxed_exposed_" + name + "_bench")), strippedLog, TextureMapping.getBlockTexture(EXPOSED_COPPER), blockModels));
-                createModel(blockModels, createBenchBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name() + "_waxed_weathered_" + name + "_bench")), planks, TextureMapping.getBlockTexture(WEATHERED_COPPER), blockModels));
-                createModel(blockModels, createBenchBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name() + log_suffix + "_waxed_weathered_" + name + "_bench")), log, TextureMapping.getBlockTexture(WEATHERED_COPPER), blockModels));
-                createModel(blockModels, createBenchBlock(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_" + type.name() + log_suffix + "_waxed_weathered_" + name + "_bench")), strippedLog, TextureMapping.getBlockTexture(WEATHERED_COPPER), blockModels));
-                createModel(blockModels, createBenchBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name() + "_waxed_oxidized_" + name + "_bench")), planks, TextureMapping.getBlockTexture(OXIDIZED_COPPER), blockModels));
-                createModel(blockModels, createBenchBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name() + log_suffix + "_waxed_oxidized_" + name + "_bench")), log, TextureMapping.getBlockTexture(OXIDIZED_COPPER), blockModels));
-                createModel(blockModels, createBenchBlock(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_" + type.name() + log_suffix + "_waxed_oxidized_" + name + "_bench")), strippedLog, TextureMapping.getBlockTexture(OXIDIZED_COPPER), blockModels));
+            if (!name.contains("copper")) {
+                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + "_" + name + "_bench")), planks, TextureMapping.getBlockTexture(metal).sprite(), blockModels));
+                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + log_suffix + "_" + name + "_bench")), log, TextureMapping.getBlockTexture(metal).sprite(), blockModels));
+                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_" + type.name() + log_suffix + "_" + name + "_bench")), strippedLog, TextureMapping.getBlockTexture(metal).sprite(), blockModels));
+            } else if (metal == Blocks.COPPER_BLOCK){
+                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + "_waxed_" + name + "_bench")), planks, TextureMapping.getBlockTexture(metal).sprite(), blockModels));
+                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + log_suffix + "_waxed_" + name + "_bench")), log, TextureMapping.getBlockTexture(metal).sprite(), blockModels));
+                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_" + type.name() + log_suffix + "_waxed_" + name + "_bench")), strippedLog, TextureMapping.getBlockTexture(metal).sprite(), blockModels));
+                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + "_waxed_exposed_" + name + "_bench")), planks, TextureMapping.getBlockTexture(EXPOSED_COPPER).sprite(), blockModels));
+                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + log_suffix + "_waxed_exposed_" + name + "_bench")), log, TextureMapping.getBlockTexture(EXPOSED_COPPER).sprite(), blockModels));
+                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_" + type.name() + log_suffix + "_waxed_exposed_" + name + "_bench")), strippedLog, TextureMapping.getBlockTexture(EXPOSED_COPPER).sprite(), blockModels));
+                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + "_waxed_weathered_" + name + "_bench")), planks, TextureMapping.getBlockTexture(WEATHERED_COPPER).sprite(), blockModels));
+                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + log_suffix + "_waxed_weathered_" + name + "_bench")), log, TextureMapping.getBlockTexture(WEATHERED_COPPER).sprite(), blockModels));
+                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_" + type.name() + log_suffix + "_waxed_weathered_" + name + "_bench")), strippedLog, TextureMapping.getBlockTexture(WEATHERED_COPPER).sprite(), blockModels));
+                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + "_waxed_oxidized_" + name + "_bench")), planks, TextureMapping.getBlockTexture(OXIDIZED_COPPER).sprite(), blockModels));
+                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + log_suffix + "_waxed_oxidized_" + name + "_bench")), log, TextureMapping.getBlockTexture(OXIDIZED_COPPER).sprite(), blockModels));
+                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_" + type.name() + log_suffix + "_waxed_oxidized_" + name + "_bench")), strippedLog, TextureMapping.getBlockTexture(OXIDIZED_COPPER).sprite(), blockModels));
 
-                createModel(blockModels, createBenchBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name() + "_" +  name + "_bench")), planks, TextureMapping.getBlockTexture(metal), blockModels));
-                createModel(blockModels, createBenchBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name() + log_suffix + "_" + name + "_bench")), log, TextureMapping.getBlockTexture(metal), blockModels));
-                createModel(blockModels, createBenchBlock(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_" + type.name() + log_suffix + "_" + name + "_bench")), strippedLog, TextureMapping.getBlockTexture(metal), blockModels));
-                createModel(blockModels, createBenchBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name() + "_exposed_" + name + "_bench")), planks, TextureMapping.getBlockTexture(EXPOSED_COPPER), blockModels));
-                createModel(blockModels, createBenchBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name() + log_suffix + "_exposed_" + name + "_bench")), log, TextureMapping.getBlockTexture(EXPOSED_COPPER), blockModels));
-                createModel(blockModels, createBenchBlock(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_" + type.name() + log_suffix + "_exposed_" + name + "_bench")), strippedLog, TextureMapping.getBlockTexture(EXPOSED_COPPER), blockModels));
-                createModel(blockModels, createBenchBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name() + "_weathered_" + name + "_bench")), planks, TextureMapping.getBlockTexture(WEATHERED_COPPER), blockModels));
-                createModel(blockModels, createBenchBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name() + log_suffix + "_weathered_" + name + "_bench")), log, TextureMapping.getBlockTexture(WEATHERED_COPPER), blockModels));
-                createModel(blockModels, createBenchBlock(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_" + type.name() + log_suffix + "_weathered_" + name + "_bench")), strippedLog, TextureMapping.getBlockTexture(WEATHERED_COPPER), blockModels));
-                createModel(blockModels, createBenchBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name() + "_oxidized_" + name + "_bench")), planks, TextureMapping.getBlockTexture(OXIDIZED_COPPER), blockModels));
-                createModel(blockModels, createBenchBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name() + log_suffix + "_oxidized_" + name + "_bench")), log, TextureMapping.getBlockTexture(OXIDIZED_COPPER), blockModels));
-                createModel(blockModels, createBenchBlock(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_" + type.name() + log_suffix + "_oxidized_" + name + "_bench")), strippedLog, TextureMapping.getBlockTexture(OXIDIZED_COPPER), blockModels));
+                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + "_" +  name + "_bench")), planks, TextureMapping.getBlockTexture(metal).sprite(), blockModels));
+                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + log_suffix + "_" + name + "_bench")), log, TextureMapping.getBlockTexture(metal).sprite(), blockModels));
+                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_" + type.name() + log_suffix + "_" + name + "_bench")), strippedLog, TextureMapping.getBlockTexture(metal).sprite(), blockModels));
+                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + "_exposed_" + name + "_bench")), planks, TextureMapping.getBlockTexture(EXPOSED_COPPER).sprite(), blockModels));
+                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + log_suffix + "_exposed_" + name + "_bench")), log, TextureMapping.getBlockTexture(EXPOSED_COPPER).sprite(), blockModels));
+                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_" + type.name() + log_suffix + "_exposed_" + name + "_bench")), strippedLog, TextureMapping.getBlockTexture(EXPOSED_COPPER).sprite(), blockModels));
+                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + "_weathered_" + name + "_bench")), planks, TextureMapping.getBlockTexture(WEATHERED_COPPER).sprite(), blockModels));
+                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + log_suffix + "_weathered_" + name + "_bench")), log, TextureMapping.getBlockTexture(WEATHERED_COPPER).sprite(), blockModels));
+                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_" + type.name() + log_suffix + "_weathered_" + name + "_bench")), strippedLog, TextureMapping.getBlockTexture(WEATHERED_COPPER).sprite(), blockModels));
+                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + "_oxidized_" + name + "_bench")), planks, TextureMapping.getBlockTexture(OXIDIZED_COPPER).sprite(), blockModels));
+                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + log_suffix + "_oxidized_" + name + "_bench")), log, TextureMapping.getBlockTexture(OXIDIZED_COPPER).sprite(), blockModels));
+                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_" + type.name() + log_suffix + "_oxidized_" + name + "_bench")), strippedLog, TextureMapping.getBlockTexture(OXIDIZED_COPPER).sprite(), blockModels));
             }
         });
 
         WOOL_COLORS.forEach((block, color) -> BlockFamilies.getAllFamilies().toList().forEach(blockFamily -> {
             if (blockFamily.getBaseBlock() == planks) {
-                createModel(blockModels, createChairBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(color+"_"+type.name()+"_chair")), planks, TextureMapping.getBlockTexture(blockFamily.get(BlockFamily.Variant.TRAPDOOR)), TextureMapping.getBlockTexture(block), blockModels));
-                createModel(blockModels, createChairBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(color+"_"+type.name()+log_suffix+"_chair")), log, TextureMapping.getBlockTexture(blockFamily.get(BlockFamily.Variant.TRAPDOOR)), TextureMapping.getBlockTexture(block), blockModels));
-                createModel(blockModels, createChairBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(color+"_stripped_"+type.name()+log_suffix+"_chair")), strippedLog, TextureMapping.getBlockTexture(blockFamily.get(BlockFamily.Variant.TRAPDOOR)), TextureMapping.getBlockTexture(block), blockModels));
-                createModel(blockModels, createLampBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(color+"_"+type.name()+"_lamp")), planks, TextureMapping.getBlockTexture(log), TextureMapping.getBlockTexture(log, "_top"), TextureMapping.getBlockTexture(strippedLog), TextureMapping.getBlockTexture(REDSTONE_LAMP), TextureMapping.getBlockTexture(REDSTONE_LAMP, "_on"), TextureMapping.getBlockTexture(block), blockModels));
-                createModel(blockModels, createWoodenBedBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(color+"_"+type.name()+"_bed")), TextureMapping.getBlockTexture(planks), TextureMapping.getBlockTexture(block), TextureMapping.getBlockTexture(blockFamily.get(BlockFamily.Variant.TRAPDOOR)), blockModels));
-                createModel(blockModels, createWoodenBedBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(color+"_"+type.name()+log_suffix+"_bed")), TextureMapping.getBlockTexture(log), TextureMapping.getBlockTexture(block), TextureMapping.getBlockTexture(blockFamily.get(BlockFamily.Variant.TRAPDOOR)), blockModels));
-                createModel(blockModels, createWoodenBedBlock(getBlockFromResourceLocation(FabulousFurniture.prefix(color+"_stripped_"+type.name()+log_suffix+"_bed")), TextureMapping.getBlockTexture(strippedLog), TextureMapping.getBlockTexture(block), TextureMapping.getBlockTexture(blockFamily.get(BlockFamily.Variant.TRAPDOOR)), blockModels));
+                createModel(blockModels, createChairBlock(getBlockFromIdentifier(FabulousFurniture.prefix(color+"_"+type.name()+"_chair")), planks, TextureMapping.getBlockTexture(blockFamily.get(BlockFamily.Variant.TRAPDOOR)).sprite(), TextureMapping.getBlockTexture(block).sprite(), blockModels));
+                createModel(blockModels, createChairBlock(getBlockFromIdentifier(FabulousFurniture.prefix(color+"_"+type.name()+log_suffix+"_chair")), log, TextureMapping.getBlockTexture(blockFamily.get(BlockFamily.Variant.TRAPDOOR)).sprite(), TextureMapping.getBlockTexture(block).sprite(), blockModels));
+                createModel(blockModels, createChairBlock(getBlockFromIdentifier(FabulousFurniture.prefix(color+"_stripped_"+type.name()+log_suffix+"_chair")), strippedLog, TextureMapping.getBlockTexture(blockFamily.get(BlockFamily.Variant.TRAPDOOR)).sprite(), TextureMapping.getBlockTexture(block).sprite(), blockModels));
+                createModel(blockModels, createLampBlock(getBlockFromIdentifier(FabulousFurniture.prefix(color+"_"+type.name()+"_lamp")), planks, TextureMapping.getBlockTexture(log).sprite(), TextureMapping.getBlockTexture(log, "_top").sprite(), TextureMapping.getBlockTexture(strippedLog).sprite(), TextureMapping.getBlockTexture(REDSTONE_LAMP).sprite(), TextureMapping.getBlockTexture(REDSTONE_LAMP, "_on").sprite(), TextureMapping.getBlockTexture(block).sprite(), blockModels));
+                createModel(blockModels, createWoodenBedBlock(getBlockFromIdentifier(FabulousFurniture.prefix(color+"_"+type.name()+"_bed")), TextureMapping.getBlockTexture(planks).sprite(), TextureMapping.getBlockTexture(block).sprite(), TextureMapping.getBlockTexture(blockFamily.get(BlockFamily.Variant.TRAPDOOR)).sprite(), blockModels));
+                createModel(blockModels, createWoodenBedBlock(getBlockFromIdentifier(FabulousFurniture.prefix(color+"_"+type.name()+log_suffix+"_bed")), TextureMapping.getBlockTexture(log).sprite(), TextureMapping.getBlockTexture(block).sprite(), TextureMapping.getBlockTexture(blockFamily.get(BlockFamily.Variant.TRAPDOOR)).sprite(), blockModels));
+                createModel(blockModels, createWoodenBedBlock(getBlockFromIdentifier(FabulousFurniture.prefix(color+"_stripped_"+type.name()+log_suffix+"_bed")), TextureMapping.getBlockTexture(strippedLog).sprite(), TextureMapping.getBlockTexture(block).sprite(), TextureMapping.getBlockTexture(blockFamily.get(BlockFamily.Variant.TRAPDOOR)).sprite(), blockModels));
+
+                createModel(blockModels, createCouch(getBlockFromIdentifier(FabulousFurniture.prefix(color.getName()+"_"+type.name()+"_couch")), planks, TextureMapping.getBlockTexture(block).sprite(), blockModels));
+                createModel(blockModels, createCouch(getBlockFromIdentifier(FabulousFurniture.prefix(color.getName()+"_"+type.name()+log_suffix+"_couch")), log, TextureMapping.getBlockTexture(block).sprite(), blockModels));
+                createModel(blockModels, createCouch(getBlockFromIdentifier(FabulousFurniture.prefix(color.getName()+"_stripped_"+type.name()+log_suffix+"_couch")), strippedLog, TextureMapping.getBlockTexture(block).sprite(), blockModels));
+
+                createModel(blockModels, createFootstoolBlock(getBlockFromIdentifier(FabulousFurniture.prefix(color.getName()+"_"+type.name()+"_footstool")), TextureMapping.getBlockTexture(planks).sprite(), TextureMapping.getBlockTexture(block).sprite(), blockModels));
+                createModel(blockModels, createFootstoolBlock(getBlockFromIdentifier(FabulousFurniture.prefix(color.getName()+"_"+type.name()+log_suffix+"_footstool")), TextureMapping.getBlockTexture(log).sprite(), TextureMapping.getBlockTexture(block).sprite(), blockModels));
+                createModel(blockModels, createFootstoolBlock(getBlockFromIdentifier(FabulousFurniture.prefix(color.getName()+"_stripped_"+type.name()+log_suffix+"_footstool")), TextureMapping.getBlockTexture(strippedLog).sprite(), TextureMapping.getBlockTexture(block).sprite(), blockModels));
             }
         }));
     }
     
-    private Block getBlockFromResourceLocation(ResourceLocation location) {
+    private Block getBlockFromIdentifier(Identifier location) {
         return BuiltInRegistries.BLOCK.getValue(location);
     }
 
@@ -328,45 +353,45 @@ public class ModelGenerator extends ModelProvider {
         return MultiVariantGenerator.dispatch(block, variant.with(Y_ROT.withValue(Quadrant.R90)));
     }
 
-    private MultiVariantGenerator createKitchenTiles(Block block, ResourceLocation tile_base, ResourceLocation tile_2, BlockModelGenerators blockModels) {
-        return BlockModelGenerators.createSimpleBlock(block, BlockModelGenerators.plainVariant(ModelTemplates.KITCHEN_TILES.create(block, new TextureMapping().put(TextureSlot.PARTICLE, tile_base).put(TextureSlots.TILE_BASE, tile_base).put(TextureSlots.TILE_2, tile_2), blockModels.modelOutput)));
+    private MultiVariantGenerator createKitchenTiles(Block block, Identifier tile_base, Identifier tile_2, BlockModelGenerators blockModels) {
+        return BlockModelGenerators.createSimpleBlock(block, BlockModelGenerators.plainVariant(ModelTemplates.KITCHEN_TILES.create(block, new TextureMapping().put(TextureSlot.PARTICLE, new Material(tile_base)).put(TextureSlots.TILE_BASE, new Material(tile_base)).put(TextureSlots.TILE_2, new Material(tile_2)), blockModels.modelOutput)));
     }
 
-    private MultiVariantGenerator createKitchenCounter(Block block, Block counter, ResourceLocation top, BlockModelGenerators blockModels) {
-        MultiVariant straight = BlockModelGenerators.plainVariant(ModelTemplates.KITCHEN_COUNTER.create(block, new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(counter)).put(TextureSlots.COUNTER, TextureMapping.getBlockTexture(counter)).put(TextureSlots.TOP, top), blockModels.modelOutput));
-        MultiVariant innerCorner = BlockModelGenerators.plainVariant(ModelTemplates.KITCHEN_COUNTER_INNER_CORNER.create(block, new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(counter)).put(TextureSlots.COUNTER, TextureMapping.getBlockTexture(counter)).put(TextureSlots.TOP, top), blockModels.modelOutput));
-        MultiVariant outerCorner = BlockModelGenerators.plainVariant(ModelTemplates.KITCHEN_COUNTER_OUTER_CORNER.create(block, new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(counter)).put(TextureSlots.COUNTER, TextureMapping.getBlockTexture(counter)).put(TextureSlots.TOP, top), blockModels.modelOutput));
+    private MultiVariantGenerator createKitchenCounter(Block block, Block counter, Identifier top, BlockModelGenerators blockModels) {
+        MultiVariant straight = BlockModelGenerators.plainVariant(ModelTemplates.KITCHEN_COUNTER.create(block, new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(counter)).put(TextureSlots.COUNTER, TextureMapping.getBlockTexture(counter)).put(TextureSlots.TOP, new Material(top)), blockModels.modelOutput));
+        MultiVariant innerCorner = BlockModelGenerators.plainVariant(ModelTemplates.KITCHEN_COUNTER_INNER_CORNER.create(block, new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(counter)).put(TextureSlots.COUNTER, TextureMapping.getBlockTexture(counter)).put(TextureSlots.TOP, new Material(top)), blockModels.modelOutput));
+        MultiVariant outerCorner = BlockModelGenerators.plainVariant(ModelTemplates.KITCHEN_COUNTER_OUTER_CORNER.create(block, new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(counter)).put(TextureSlots.COUNTER, TextureMapping.getBlockTexture(counter)).put(TextureSlots.TOP, new Material(top)), blockModels.modelOutput));
 
         return MultiVariantGenerator.dispatch(block).with(PropertyDispatch.initial(BlockStateProperties.HORIZONTAL_FACING, KitchenCounterBlock.SHAPE)
-                .select(Direction.EAST, CounterShape.STRAIGHT, straight.with(Y_ROT.withValue(Quadrant.R180)).with(UV_LOCK.withValue(true)))
+                .select(Direction.EAST, CounterShape.STRAIGHT, straight.with(Y_ROT.withValue(Quadrant.R180)).with(VariantMutator.UV_LOCK.withValue(true)))
                 .select(Direction.WEST, CounterShape.STRAIGHT, straight)
-                .select(Direction.SOUTH, CounterShape.STRAIGHT, straight.with(Y_ROT.withValue(Quadrant.R270)).with(UV_LOCK.withValue(true)))
-                .select(Direction.NORTH, CounterShape.STRAIGHT, straight.with(Y_ROT.withValue(Quadrant.R90)).with(UV_LOCK.withValue(true)))
-                .select(Direction.EAST, CounterShape.OUTER_RIGHT, outerCorner.with(Y_ROT.withValue(Quadrant.R180)).with(UV_LOCK.withValue(true)))
+                .select(Direction.SOUTH, CounterShape.STRAIGHT, straight.with(Y_ROT.withValue(Quadrant.R270)).with(VariantMutator.UV_LOCK.withValue(true)))
+                .select(Direction.NORTH, CounterShape.STRAIGHT, straight.with(Y_ROT.withValue(Quadrant.R90)).with(VariantMutator.UV_LOCK.withValue(true)))
+                .select(Direction.EAST, CounterShape.OUTER_RIGHT, outerCorner.with(Y_ROT.withValue(Quadrant.R180)).with(VariantMutator.UV_LOCK.withValue(true)))
                 .select(Direction.WEST, CounterShape.OUTER_RIGHT, outerCorner)
-                .select(Direction.SOUTH, CounterShape.OUTER_RIGHT, outerCorner.with(Y_ROT.withValue(Quadrant.R270)).with(UV_LOCK.withValue(true)))
-                .select(Direction.NORTH, CounterShape.OUTER_RIGHT, outerCorner.with(Y_ROT.withValue(Quadrant.R90)).with(UV_LOCK.withValue(true)))
-                .select(Direction.EAST, CounterShape.OUTER_LEFT, outerCorner.with(Y_ROT.withValue(Quadrant.R90)).with(UV_LOCK.withValue(true)))
-                .select(Direction.WEST, CounterShape.OUTER_LEFT, outerCorner.with(Y_ROT.withValue(Quadrant.R270)).with(UV_LOCK.withValue(true)))
-                .select(Direction.SOUTH, CounterShape.OUTER_LEFT, outerCorner.with(Y_ROT.withValue(Quadrant.R180)).with(UV_LOCK.withValue(true)))
+                .select(Direction.SOUTH, CounterShape.OUTER_RIGHT, outerCorner.with(Y_ROT.withValue(Quadrant.R270)).with(VariantMutator.UV_LOCK.withValue(true)))
+                .select(Direction.NORTH, CounterShape.OUTER_RIGHT, outerCorner.with(Y_ROT.withValue(Quadrant.R90)).with(VariantMutator.UV_LOCK.withValue(true)))
+                .select(Direction.EAST, CounterShape.OUTER_LEFT, outerCorner.with(Y_ROT.withValue(Quadrant.R90)).with(VariantMutator.UV_LOCK.withValue(true)))
+                .select(Direction.WEST, CounterShape.OUTER_LEFT, outerCorner.with(Y_ROT.withValue(Quadrant.R270)).with(VariantMutator.UV_LOCK.withValue(true)))
+                .select(Direction.SOUTH, CounterShape.OUTER_LEFT, outerCorner.with(Y_ROT.withValue(Quadrant.R180)).with(VariantMutator.UV_LOCK.withValue(true)))
                 .select(Direction.NORTH, CounterShape.OUTER_LEFT, outerCorner)
-                .select(Direction.EAST, CounterShape.INNER_RIGHT, innerCorner.with(Y_ROT.withValue(Quadrant.R180)).with(UV_LOCK.withValue(true)))
+                .select(Direction.EAST, CounterShape.INNER_RIGHT, innerCorner.with(Y_ROT.withValue(Quadrant.R180)).with(VariantMutator.UV_LOCK.withValue(true)))
                 .select(Direction.WEST, CounterShape.INNER_RIGHT, innerCorner)
-                .select(Direction.SOUTH, CounterShape.INNER_RIGHT, innerCorner.with(Y_ROT.withValue(Quadrant.R270)).with(UV_LOCK.withValue(true)))
-                .select(Direction.NORTH, CounterShape.INNER_RIGHT, innerCorner.with(Y_ROT.withValue(Quadrant.R90)).with(UV_LOCK.withValue(true)))
-                .select(Direction.EAST, CounterShape.INNER_LEFT, innerCorner.with(Y_ROT.withValue(Quadrant.R90)).with(UV_LOCK.withValue(true)))
-                .select(Direction.WEST, CounterShape.INNER_LEFT, innerCorner.with(Y_ROT.withValue(Quadrant.R270)).with(UV_LOCK.withValue(true)))
-                .select(Direction.SOUTH, CounterShape.INNER_LEFT, innerCorner.with(Y_ROT.withValue(Quadrant.R180)).with(UV_LOCK.withValue(true)))
+                .select(Direction.SOUTH, CounterShape.INNER_RIGHT, innerCorner.with(Y_ROT.withValue(Quadrant.R270)).with(VariantMutator.UV_LOCK.withValue(true)))
+                .select(Direction.NORTH, CounterShape.INNER_RIGHT, innerCorner.with(Y_ROT.withValue(Quadrant.R90)).with(VariantMutator.UV_LOCK.withValue(true)))
+                .select(Direction.EAST, CounterShape.INNER_LEFT, innerCorner.with(Y_ROT.withValue(Quadrant.R90)).with(VariantMutator.UV_LOCK.withValue(true)))
+                .select(Direction.WEST, CounterShape.INNER_LEFT, innerCorner.with(Y_ROT.withValue(Quadrant.R270)).with(VariantMutator.UV_LOCK.withValue(true)))
+                .select(Direction.SOUTH, CounterShape.INNER_LEFT, innerCorner.with(Y_ROT.withValue(Quadrant.R180)).with(VariantMutator.UV_LOCK.withValue(true)))
                 .select(Direction.NORTH, CounterShape.INNER_LEFT, innerCorner));
     }
 
-    private MultiVariantGenerator createKitchenCounterShelf(Block block, Block counter, ResourceLocation top, BlockModelGenerators blockModels) {
-        MultiVariant variant = BlockModelGenerators.plainVariant(ModelTemplates.KITCHEN_COUNTER_SHELF.create(block, new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(counter)).put(TextureSlots.COUNTER, TextureMapping.getBlockTexture(counter)).put(TextureSlots.TOP, top), blockModels.modelOutput));
-        return MultiVariantGenerator.dispatch(block, variant).with(ROTATION_HORIZONTAL_FACING);
+    private MultiVariantGenerator createKitchenCounterShelf(Block block, Block counter, Identifier top, BlockModelGenerators blockModels) {
+        MultiVariant variant = BlockModelGenerators.plainVariant(ModelTemplates.KITCHEN_COUNTER_SHELF.create(block, new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(counter)).put(TextureSlots.COUNTER, TextureMapping.getBlockTexture(counter)).put(TextureSlots.TOP, new Material(top)), blockModels.modelOutput));
+        return MultiVariantGenerator.dispatch(block, variant).with(ROTATION_HORIZONTAL_FACING_UV_LOCKED);
     }
 
-    private MultiVariantGenerator createKitchenCounterDoor(Block block, Block counter, ResourceLocation top, ResourceLocation door, BlockModelGenerators blockModels) {
-        TextureMapping mapping = new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(counter)).put(TextureSlots.COUNTER, TextureMapping.getBlockTexture(counter)).put(TextureSlots.TOP, top).put(TextureSlots.DOOR, door);
+    private MultiVariantGenerator createKitchenCounterDoor(Block block, Block counter, Identifier top, Identifier door, BlockModelGenerators blockModels) {
+        TextureMapping mapping = new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(counter)).put(TextureSlots.COUNTER, TextureMapping.getBlockTexture(counter)).put(TextureSlots.TOP, new Material(top)).put(TextureSlots.DOOR, new Material(door));
         MultiVariant closed = BlockModelGenerators.plainVariant(ModelTemplates.KITCHEN_COUNTER_DOOR.create(block, mapping, blockModels.modelOutput));
         MultiVariant open = BlockModelGenerators.plainVariant(ModelTemplates.KITCHEN_COUNTER_DOOR_OPEN.create(block, mapping, blockModels.modelOutput));
         MultiVariant closed_mirrored = BlockModelGenerators.plainVariant(ModelTemplates.KITCHEN_COUNTER_DOOR_MIRRORED.create(block, mapping, blockModels.modelOutput));
@@ -377,42 +402,42 @@ public class ModelGenerator extends ModelProvider {
                         .select(DoorHingeSide.LEFT, true, open_mirrored)
                         .select(DoorHingeSide.RIGHT, false, closed)
                         .select(DoorHingeSide.RIGHT, true, open)
-        ).with(ROTATION_HORIZONTAL_FACING);
+        ).with(ROTATION_HORIZONTAL_FACING_UV_LOCKED);
     }
 
-    private MultiVariantGenerator createKitchenCounterSmallDrawer(Block block, Block counter, ResourceLocation top, ResourceLocation door, BlockModelGenerators blockModels) {
-        TextureMapping mapping = new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(counter)).put(TextureSlots.COUNTER, TextureMapping.getBlockTexture(counter)).put(TextureSlots.TOP, top).put(TextureSlots.DOOR, door);
+    private MultiVariantGenerator createKitchenCounterSmallDrawer(Block block, Block counter, Identifier top, Identifier door, BlockModelGenerators blockModels) {
+        TextureMapping mapping = new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(counter)).put(TextureSlots.COUNTER, TextureMapping.getBlockTexture(counter)).put(TextureSlots.TOP, new Material(top)).put(TextureSlots.DOOR, new Material(door));
         MultiVariant closed = BlockModelGenerators.plainVariant(ModelTemplates.KITCHEN_COUNTER_SMALL_DRAWER.create(block, mapping, blockModels.modelOutput));
         MultiVariant open = BlockModelGenerators.plainVariant(ModelTemplates.KITCHEN_COUNTER_SMALL_DRAWER_OPEN.create(block, mapping, blockModels.modelOutput));
         return MultiVariantGenerator.dispatch(block).with(
                 PropertyDispatch.initial(KitchenCounterContainerBaseBlock.OPEN)
                         .select(false, closed)
                         .select(true, open)
-        ).with(ROTATION_HORIZONTAL_FACING);
+        ).with(ROTATION_HORIZONTAL_FACING_UV_LOCKED);
     }
 
-    private MultiVariantGenerator createKitchenCounterBigDrawer(Block block, Block counter, ResourceLocation top, ResourceLocation door, BlockModelGenerators blockModels) {
-        TextureMapping mapping = new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(counter)).put(TextureSlots.COUNTER, TextureMapping.getBlockTexture(counter)).put(TextureSlots.TOP, top).put(TextureSlots.DOOR, door);
+    private MultiVariantGenerator createKitchenCounterBigDrawer(Block block, Block counter, Identifier top, Identifier door, BlockModelGenerators blockModels) {
+        TextureMapping mapping = new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(counter)).put(TextureSlots.COUNTER, TextureMapping.getBlockTexture(counter)).put(TextureSlots.TOP, new Material(top)).put(TextureSlots.DOOR, new Material(door));
         MultiVariant closed = BlockModelGenerators.plainVariant(ModelTemplates.KITCHEN_COUNTER_BIG_DRAWER.create(block, mapping, blockModels.modelOutput));
         MultiVariant open = BlockModelGenerators.plainVariant(ModelTemplates.KITCHEN_COUNTER_BIG_DRAWER_OPEN.create(block, mapping, blockModels.modelOutput));
         return MultiVariantGenerator.dispatch(block).with(
                 PropertyDispatch.initial(KitchenCounterContainerBaseBlock.OPEN)
                         .select(false, closed)
                         .select(true, open)
-        ).with(ROTATION_HORIZONTAL_FACING);
+        ).with(ROTATION_HORIZONTAL_FACING_UV_LOCKED);
     }
 
-    private MultiVariantGenerator createKitchenCounterSink(Block block, Block counter, ResourceLocation top, BlockModelGenerators blockModels) {
-        TextureMapping baseMapping = new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(counter)).put(TextureSlots.COUNTER, TextureMapping.getBlockTexture(counter)).put(TextureSlots.TOP, top).put(TextureSlots.FAUCET, TextureMapping.getBlockTexture(ANVIL));
-        TextureMapping fillMapping = baseMapping.put(TextureSlots.WATER, TextureMapping.getBlockTexture(WATER).withSuffix("_still"));
+    private MultiVariantGenerator createKitchenCounterSink(Block block, Block counter, Identifier top, BlockModelGenerators blockModels) {
+        TextureMapping baseMapping = new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(counter)).put(TextureSlots.COUNTER, TextureMapping.getBlockTexture(counter)).put(TextureSlots.TOP, new Material(top)).put(TextureSlots.FAUCET, TextureMapping.getBlockTexture(ANVIL));
+        TextureMapping fillMapping = baseMapping.put(TextureSlots.WATER, TextureMapping.getBlockTexture(WATER, "_still"));
         MultiVariant empty = BlockModelGenerators.plainVariant(ModelTemplates.KITCHEN_COUNTER_SINK_EMPTY.create(block, baseMapping, blockModels.modelOutput));
-        MultiVariant empty_on = BlockModelGenerators.plainVariant(ModelTemplates.KITCHEN_COUNTER_SINK_EMPTY_ON.create(block, baseMapping.put(TextureSlots.STREAM, TextureMapping.getBlockTexture(WATER).withSuffix("_flow")), blockModels.modelOutput));
+        MultiVariant empty_on = BlockModelGenerators.plainVariant(ModelTemplates.KITCHEN_COUNTER_SINK_EMPTY_ON.create(block, baseMapping.put(TextureSlots.STREAM, TextureMapping.getBlockTexture(WATER, "_flow")), blockModels.modelOutput));
         MultiVariant level_1 = BlockModelGenerators.plainVariant(ModelTemplates.KITCHEN_COUNTER_SINK_LEVEL_1.create(block, fillMapping, blockModels.modelOutput));
-        MultiVariant level_1_on = BlockModelGenerators.plainVariant(ModelTemplates.KITCHEN_COUNTER_SINK_LEVEL_1_ON.create(block, fillMapping.put(TextureSlots.STREAM, TextureMapping.getBlockTexture(WATER).withSuffix("_flow")), blockModels.modelOutput));
+        MultiVariant level_1_on = BlockModelGenerators.plainVariant(ModelTemplates.KITCHEN_COUNTER_SINK_LEVEL_1_ON.create(block, fillMapping.put(TextureSlots.STREAM, TextureMapping.getBlockTexture(WATER, "_flow")), blockModels.modelOutput));
         MultiVariant level_2 = BlockModelGenerators.plainVariant(ModelTemplates.KITCHEN_COUNTER_SINK_LEVEL_2.create(block, fillMapping, blockModels.modelOutput));
-        MultiVariant level_2_on = BlockModelGenerators.plainVariant(ModelTemplates.KITCHEN_COUNTER_SINK_LEVEL_2_ON.create(block, fillMapping.put(TextureSlots.STREAM, TextureMapping.getBlockTexture(WATER).withSuffix("_flow")), blockModels.modelOutput));
+        MultiVariant level_2_on = BlockModelGenerators.plainVariant(ModelTemplates.KITCHEN_COUNTER_SINK_LEVEL_2_ON.create(block, fillMapping.put(TextureSlots.STREAM, TextureMapping.getBlockTexture(WATER, "_flow")), blockModels.modelOutput));
         MultiVariant level_3 = BlockModelGenerators.plainVariant(ModelTemplates.KITCHEN_COUNTER_SINK_LEVEL_3.create(block, fillMapping, blockModels.modelOutput));
-        MultiVariant level_3_on = BlockModelGenerators.plainVariant(ModelTemplates.KITCHEN_COUNTER_SINK_LEVEL_3_ON.create(block, fillMapping.put(TextureSlots.STREAM, TextureMapping.getBlockTexture(WATER).withSuffix("_flow")), blockModels.modelOutput));
+        MultiVariant level_3_on = BlockModelGenerators.plainVariant(ModelTemplates.KITCHEN_COUNTER_SINK_LEVEL_3_ON.create(block, fillMapping.put(TextureSlots.STREAM, TextureMapping.getBlockTexture(WATER, "_flow")), blockModels.modelOutput));
         return MultiVariantGenerator.dispatch(block).with(
                 PropertyDispatch.initial(KitchenCounterSinkBlock.ON, KitchenCounterSinkBlock.LEVEL)
                         .select(true, 0, empty_on)
@@ -423,17 +448,17 @@ public class ModelGenerator extends ModelProvider {
                         .select(false, 2, level_2)
                         .select(true, 3, level_3_on)
                         .select(false, 3, level_3)
-        ).with(ROTATION_HORIZONTAL_FACING);
+        ).with(ROTATION_HORIZONTAL_FACING_UV_LOCKED);
     }
 
-    private MultiVariantGenerator createKitchenCounterSmoker(Block block, Block counter, ResourceLocation top, ResourceLocation furnace, ResourceLocation furnace_lit, BlockModelGenerators blockModels) {
-        MultiVariant unlit = BlockModelGenerators.plainVariant(ModelTemplates.KITCHEN_COUNTER_SMOKER.create(block, new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(counter)).put(TextureSlots.COUNTER, TextureMapping.getBlockTexture(counter)).put(TextureSlots.TOP, top).put(TextureSlots.FURNACE, furnace), blockModels.modelOutput));
-        MultiVariant lit = BlockModelGenerators.plainVariant(ModelTemplates.KITCHEN_COUNTER_SMOKER_LIT.create(block, new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(counter)).put(TextureSlots.COUNTER, TextureMapping.getBlockTexture(counter)).put(TextureSlots.TOP, top).put(TextureSlots.FURNACE, furnace_lit), blockModels.modelOutput));
+    private MultiVariantGenerator createKitchenCounterSmoker(Block block, Block counter, Identifier top, Identifier furnace, Identifier furnace_lit, BlockModelGenerators blockModels) {
+        MultiVariant unlit = BlockModelGenerators.plainVariant(ModelTemplates.KITCHEN_COUNTER_SMOKER.create(block, new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(counter)).put(TextureSlots.COUNTER, TextureMapping.getBlockTexture(counter)).put(TextureSlots.TOP, new Material(top)).put(TextureSlots.FURNACE, new Material(furnace)), blockModels.modelOutput));
+        MultiVariant lit = BlockModelGenerators.plainVariant(ModelTemplates.KITCHEN_COUNTER_SMOKER_LIT.create(block, new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(counter)).put(TextureSlots.COUNTER, TextureMapping.getBlockTexture(counter)).put(TextureSlots.TOP, new Material(top)).put(TextureSlots.FURNACE, new Material(furnace_lit)), blockModels.modelOutput));
         return MultiVariantGenerator.dispatch(block).with(
                 PropertyDispatch.initial(SmokerBlock.LIT)
                         .select(false, unlit)
                         .select(true, lit)
-        ).with(ROTATION_HORIZONTAL_FACING);
+        ).with(ROTATION_HORIZONTAL_FACING_UV_LOCKED);
     }
 
     private MultiVariantGenerator createKitchenCabinet(Block block, Block cabinet, BlockModelGenerators blockModels) {
@@ -442,57 +467,57 @@ public class ModelGenerator extends ModelProvider {
         MultiVariant innerCorner = BlockModelGenerators.plainVariant(ModelTemplates.KITCHEN_CABINET_OUTER_CORNER.create(block, new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(cabinet)).put(TextureSlots.CABINET, TextureMapping.getBlockTexture(cabinet)), blockModels.modelOutput));
 
         return MultiVariantGenerator.dispatch(block).with(PropertyDispatch.initial(BlockStateProperties.HORIZONTAL_FACING, KitchenCabinetBlock.SHAPE)
-                .select(Direction.EAST, CounterShape.STRAIGHT, straight.with(Y_ROT.withValue(Quadrant.R180)).with(UV_LOCK.withValue(true)))
+                .select(Direction.EAST, CounterShape.STRAIGHT, straight.with(Y_ROT.withValue(Quadrant.R180)).with(VariantMutator.UV_LOCK.withValue(true)))
                 .select(Direction.WEST, CounterShape.STRAIGHT, straight)
-                .select(Direction.SOUTH, CounterShape.STRAIGHT, straight.with(Y_ROT.withValue(Quadrant.R270)).with(UV_LOCK.withValue(true)))
-                .select(Direction.NORTH, CounterShape.STRAIGHT, straight.with(Y_ROT.withValue(Quadrant.R90)).with(UV_LOCK.withValue(true)))
-                .select(Direction.EAST, CounterShape.OUTER_RIGHT, outerCorner.with(Y_ROT.withValue(Quadrant.R180)).with(UV_LOCK.withValue(true)))
+                .select(Direction.SOUTH, CounterShape.STRAIGHT, straight.with(Y_ROT.withValue(Quadrant.R270)).with(VariantMutator.UV_LOCK.withValue(true)))
+                .select(Direction.NORTH, CounterShape.STRAIGHT, straight.with(Y_ROT.withValue(Quadrant.R90)).with(VariantMutator.UV_LOCK.withValue(true)))
+                .select(Direction.EAST, CounterShape.OUTER_RIGHT, outerCorner.with(Y_ROT.withValue(Quadrant.R180)).with(VariantMutator.UV_LOCK.withValue(true)))
                 .select(Direction.WEST, CounterShape.OUTER_RIGHT, outerCorner)
-                .select(Direction.SOUTH, CounterShape.OUTER_RIGHT, outerCorner.with(Y_ROT.withValue(Quadrant.R270)).with(UV_LOCK.withValue(true)))
-                .select(Direction.NORTH, CounterShape.OUTER_RIGHT, outerCorner.with(Y_ROT.withValue(Quadrant.R90)).with(UV_LOCK.withValue(true)))
-                .select(Direction.EAST, CounterShape.OUTER_LEFT, outerCorner.with(Y_ROT.withValue(Quadrant.R90)).with(UV_LOCK.withValue(true)))
-                .select(Direction.WEST, CounterShape.OUTER_LEFT, outerCorner.with(Y_ROT.withValue(Quadrant.R270)).with(UV_LOCK.withValue(true)))
-                .select(Direction.SOUTH, CounterShape.OUTER_LEFT, outerCorner.with(Y_ROT.withValue(Quadrant.R180)).with(UV_LOCK.withValue(true)))
+                .select(Direction.SOUTH, CounterShape.OUTER_RIGHT, outerCorner.with(Y_ROT.withValue(Quadrant.R270)).with(VariantMutator.UV_LOCK.withValue(true)))
+                .select(Direction.NORTH, CounterShape.OUTER_RIGHT, outerCorner.with(Y_ROT.withValue(Quadrant.R90)).with(VariantMutator.UV_LOCK.withValue(true)))
+                .select(Direction.EAST, CounterShape.OUTER_LEFT, outerCorner.with(Y_ROT.withValue(Quadrant.R90)).with(VariantMutator.UV_LOCK.withValue(true)))
+                .select(Direction.WEST, CounterShape.OUTER_LEFT, outerCorner.with(Y_ROT.withValue(Quadrant.R270)).with(VariantMutator.UV_LOCK.withValue(true)))
+                .select(Direction.SOUTH, CounterShape.OUTER_LEFT, outerCorner.with(Y_ROT.withValue(Quadrant.R180)).with(VariantMutator.UV_LOCK.withValue(true)))
                 .select(Direction.NORTH, CounterShape.OUTER_LEFT, outerCorner)
-                .select(Direction.EAST, CounterShape.INNER_RIGHT, innerCorner.with(Y_ROT.withValue(Quadrant.R180)).with(UV_LOCK.withValue(true)))
+                .select(Direction.EAST, CounterShape.INNER_RIGHT, innerCorner.with(Y_ROT.withValue(Quadrant.R180)).with(VariantMutator.UV_LOCK.withValue(true)))
                 .select(Direction.WEST, CounterShape.INNER_RIGHT, innerCorner)
-                .select(Direction.SOUTH, CounterShape.INNER_RIGHT, innerCorner.with(Y_ROT.withValue(Quadrant.R270)).with(UV_LOCK.withValue(true)))
-                .select(Direction.NORTH, CounterShape.INNER_RIGHT, innerCorner.with(Y_ROT.withValue(Quadrant.R90)).with(UV_LOCK.withValue(true)))
-                .select(Direction.EAST, CounterShape.INNER_LEFT, innerCorner.with(Y_ROT.withValue(Quadrant.R90)).with(UV_LOCK.withValue(true)))
-                .select(Direction.WEST, CounterShape.INNER_LEFT, innerCorner.with(Y_ROT.withValue(Quadrant.R270)).with(UV_LOCK.withValue(true)))
-                .select(Direction.SOUTH, CounterShape.INNER_LEFT, innerCorner.with(Y_ROT.withValue(Quadrant.R180)).with(UV_LOCK.withValue(true)))
+                .select(Direction.SOUTH, CounterShape.INNER_RIGHT, innerCorner.with(Y_ROT.withValue(Quadrant.R270)).with(VariantMutator.UV_LOCK.withValue(true)))
+                .select(Direction.NORTH, CounterShape.INNER_RIGHT, innerCorner.with(Y_ROT.withValue(Quadrant.R90)).with(VariantMutator.UV_LOCK.withValue(true)))
+                .select(Direction.EAST, CounterShape.INNER_LEFT, innerCorner.with(Y_ROT.withValue(Quadrant.R90)).with(VariantMutator.UV_LOCK.withValue(true)))
+                .select(Direction.WEST, CounterShape.INNER_LEFT, innerCorner.with(Y_ROT.withValue(Quadrant.R270)).with(VariantMutator.UV_LOCK.withValue(true)))
+                .select(Direction.SOUTH, CounterShape.INNER_LEFT, innerCorner.with(Y_ROT.withValue(Quadrant.R180)).with(VariantMutator.UV_LOCK.withValue(true)))
                 .select(Direction.NORTH, CounterShape.INNER_LEFT, innerCorner));
     }
 
     private MultiVariantGenerator createKitchenCabinetShelf(Block block, Block cabinet, BlockModelGenerators blockModels) {
         MultiVariant model = BlockModelGenerators.plainVariant(ModelTemplates.KITCHEN_CABINET_SHELF.create(block, new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(cabinet)).put(TextureSlots.CABINET, TextureMapping.getBlockTexture(cabinet)), blockModels.modelOutput));
-        return MultiVariantGenerator.dispatch(block, model).with(ROTATION_HORIZONTAL_FACING);
+        return MultiVariantGenerator.dispatch(block, model).with(ROTATION_HORIZONTAL_FACING_UV_LOCKED);
     }
 
-    private MultiVariantGenerator createKitchenCabinetDoor(Block block, Block cabinet, ResourceLocation door, ResourceLocation handle, BlockModelGenerators blockModels) {
-        TextureMapping mapping = new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(cabinet)).put(TextureSlots.CABINET, TextureMapping.getBlockTexture(cabinet)).put(TextureSlots.DOOR, door).put(TextureSlots.HANDLE, handle);
+    private MultiVariantGenerator createKitchenCabinetDoor(Block block, Block cabinet, Identifier door, Identifier handle, BlockModelGenerators blockModels) {
+        TextureMapping mapping = new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(cabinet)).put(TextureSlots.CABINET, TextureMapping.getBlockTexture(cabinet)).put(TextureSlots.DOOR, new Material(door)).put(TextureSlots.HANDLE, new Material(handle));
         MultiVariant closed = BlockModelGenerators.plainVariant(ModelTemplates.KITCHEN_CABINET_DOOR.create(block, mapping, blockModels.modelOutput));
         MultiVariant open = BlockModelGenerators.plainVariant(ModelTemplates.KITCHEN_CABINET_DOOR_OPEN.create(block, mapping, blockModels.modelOutput));
         return MultiVariantGenerator.dispatch(block).with(
                 PropertyDispatch.initial(KitchenCounterContainerBaseBlock.OPEN)
                         .select(false, closed)
                         .select(true, open)
-        ).with(ROTATION_HORIZONTAL_FACING);
+        ).with(ROTATION_HORIZONTAL_FACING_UV_LOCKED);
     }
 
-    private MultiVariantGenerator createKitchenCabinetGlassDoor(Block block, Block cabinet, ResourceLocation door, ResourceLocation handle, BlockModelGenerators blockModels) {
-        TextureMapping mapping = new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(cabinet)).put(TextureSlots.CABINET, TextureMapping.getBlockTexture(cabinet)).put(TextureSlots.DOOR, door).put(TextureSlots.HANDLE, handle).put(TextureSlots.GLASS, TextureMapping.getBlockTexture(GLASS));
+    private MultiVariantGenerator createKitchenCabinetGlassDoor(Block block, Block cabinet, Identifier door, Identifier handle, BlockModelGenerators blockModels) {
+        TextureMapping mapping = new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(cabinet)).put(TextureSlots.CABINET, TextureMapping.getBlockTexture(cabinet)).put(TextureSlots.DOOR, new Material(door)).put(TextureSlots.HANDLE, new Material(handle)).put(TextureSlots.GLASS, TextureMapping.getBlockTexture(GLASS));
         MultiVariant closed = BlockModelGenerators.plainVariant(ModelTemplates.KITCHEN_CABINET_GLASS_DOOR.create(block, mapping, blockModels.modelOutput));
         MultiVariant open = BlockModelGenerators.plainVariant(ModelTemplates.KITCHEN_CABINET_GLASS_DOOR_OPEN.create(block, mapping, blockModels.modelOutput));
         return MultiVariantGenerator.dispatch(block).with(
                 PropertyDispatch.initial(KitchenCounterContainerBaseBlock.OPEN)
                         .select(false, closed)
                         .select(true, open)
-        ).with(ROTATION_HORIZONTAL_FACING);
+        ).with(ROTATION_HORIZONTAL_FACING_UV_LOCKED);
     }
 
-    private MultiVariantGenerator createKitchenCabinetSidewaysDoor(Block block, Block cabinet, ResourceLocation door, ResourceLocation handle, BlockModelGenerators blockModels) {
-        TextureMapping mapping = new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(cabinet)).put(TextureSlots.CABINET, TextureMapping.getBlockTexture(cabinet)).put(TextureSlots.DOOR, door).put(TextureSlots.HANDLE, handle);
+    private MultiVariantGenerator createKitchenCabinetSidewaysDoor(Block block, Block cabinet, Identifier door, Identifier handle, BlockModelGenerators blockModels) {
+        TextureMapping mapping = new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(cabinet)).put(TextureSlots.CABINET, TextureMapping.getBlockTexture(cabinet)).put(TextureSlots.DOOR, new Material(door)).put(TextureSlots.HANDLE, new Material(handle));
         MultiVariant closed = BlockModelGenerators.plainVariant(ModelTemplates.KITCHEN_CABINET_DOOR_SIDEWAYS.create(block, mapping, blockModels.modelOutput));
         MultiVariant open = BlockModelGenerators.plainVariant(ModelTemplates.KITCHEN_CABINET_DOOR_SIDEWAYS_OPEN.create(block, mapping, blockModels.modelOutput));
         MultiVariant closed_mirrored = BlockModelGenerators.plainVariant(ModelTemplates.KITCHEN_CABINET_DOOR_SIDEWAYS_MIRRORED.create(block, mapping, blockModels.modelOutput));
@@ -503,11 +528,11 @@ public class ModelGenerator extends ModelProvider {
                         .select(DoorHingeSide.LEFT, true, open_mirrored)
                         .select(DoorHingeSide.RIGHT, false, closed)
                         .select(DoorHingeSide.RIGHT, true, open)
-        ).with(ROTATION_HORIZONTAL_FACING);
+        ).with(ROTATION_HORIZONTAL_FACING_UV_LOCKED);
     }
 
-    private MultiVariantGenerator createKitchenCabinetSidewaysGlassDoor(Block block, Block cabinet, ResourceLocation door, ResourceLocation handle, BlockModelGenerators blockModels) {
-        TextureMapping mapping = new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(cabinet)).put(TextureSlots.CABINET, TextureMapping.getBlockTexture(cabinet)).put(TextureSlots.DOOR, door).put(TextureSlots.HANDLE, handle).put(TextureSlots.GLASS, TextureMapping.getBlockTexture(GLASS));
+    private MultiVariantGenerator createKitchenCabinetSidewaysGlassDoor(Block block, Block cabinet, Identifier door, Identifier handle, BlockModelGenerators blockModels) {
+        TextureMapping mapping = new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(cabinet)).put(TextureSlots.CABINET, TextureMapping.getBlockTexture(cabinet)).put(TextureSlots.DOOR, new Material(door)).put(TextureSlots.HANDLE, new Material(handle)).put(TextureSlots.GLASS, TextureMapping.getBlockTexture(GLASS));
         MultiVariant closed = BlockModelGenerators.plainVariant(ModelTemplates.KITCHEN_CABINET_GLASS_DOOR_SIDEWAYS.create(block, mapping, blockModels.modelOutput));
         MultiVariant open = BlockModelGenerators.plainVariant(ModelTemplates.KITCHEN_CABINET_GLASS_DOOR_SIDEWAYS_OPEN.create(block, mapping, blockModels.modelOutput));
         MultiVariant closed_mirrored = BlockModelGenerators.plainVariant(ModelTemplates.KITCHEN_CABINET_GLASS_DOOR_SIDEWAYS_MIRRORED.create(block, mapping, blockModels.modelOutput));
@@ -518,11 +543,11 @@ public class ModelGenerator extends ModelProvider {
                         .select(DoorHingeSide.LEFT, true, open_mirrored)
                         .select(DoorHingeSide.RIGHT, false, closed)
                         .select(DoorHingeSide.RIGHT, true, open)
-        ).with(ROTATION_HORIZONTAL_FACING);
+        ).with(ROTATION_HORIZONTAL_FACING_UV_LOCKED);
     }
 
-    private MultiVariantGenerator createKitchenShelf(Block block, Block planks, ResourceLocation chain, BlockModelGenerators blockModels) {
-        TextureMapping mapping = new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(planks)).put(TextureSlots.PLANKS, TextureMapping.getBlockTexture(planks)).put(TextureSlots.CHAIN, chain);
+    private MultiVariantGenerator createKitchenShelf(Block block, Block planks, Identifier chain, BlockModelGenerators blockModels) {
+        TextureMapping mapping = new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(planks)).put(TextureSlots.PLANKS, TextureMapping.getBlockTexture(planks)).put(TextureSlots.CHAIN, new Material(chain));
         MultiVariant single = BlockModelGenerators.plainVariant(ModelTemplates.KITCHEN_SHELF_SINGLE.create(block, mapping, blockModels.modelOutput));
         MultiVariant left = BlockModelGenerators.plainVariant(ModelTemplates.KITCHEN_SHELF_LEFT.create(block, mapping, blockModels.modelOutput));
         MultiVariant right = BlockModelGenerators.plainVariant(ModelTemplates.KITCHEN_SHELF_RIGHT.create(block, mapping, blockModels.modelOutput));
@@ -536,9 +561,9 @@ public class ModelGenerator extends ModelProvider {
         ).with(ROTATION_HORIZONTAL_FACING);
     }
 
-    private MultiVariantGenerator createFridge(Block block, ResourceLocation fridge, ResourceLocation bars, ResourceLocation handle, BlockModelGenerators blockModels) {
-        TextureMapping mapping_bottom = new TextureMapping().put(TextureSlot.PARTICLE, fridge).put(TextureSlots.FRIDGE, fridge).put(TextureSlots.BARS, bars).put(TextureSlots.HANDLE, handle);
-        TextureMapping mapping_top = new TextureMapping().put(TextureSlot.PARTICLE, fridge).put(TextureSlots.FRIDGE, fridge).put(TextureSlots.HANDLE, handle);
+    private MultiVariantGenerator createFridge(Block block, Identifier fridge, Identifier bars, Identifier handle, BlockModelGenerators blockModels) {
+        TextureMapping mapping_bottom = new TextureMapping().put(TextureSlot.PARTICLE, new Material(fridge)).put(TextureSlots.FRIDGE, new Material(fridge)).put(TextureSlots.BARS, new Material(bars)).put(TextureSlots.HANDLE, new Material(handle));
+        TextureMapping mapping_top = new TextureMapping().put(TextureSlot.PARTICLE, new Material(fridge)).put(TextureSlots.FRIDGE, new Material(fridge)).put(TextureSlots.HANDLE, new Material(handle));
         MultiVariant bottom = BlockModelGenerators.plainVariant(ModelTemplates.FRIDGE_BOTTOM.create(block, mapping_bottom, blockModels.modelOutput));
         MultiVariant bottom_open = BlockModelGenerators.plainVariant(ModelTemplates.FRIDGE_BOTTOM_OPEN.create(block, mapping_bottom, blockModels.modelOutput));
         MultiVariant bottom_mirrored = BlockModelGenerators.plainVariant(ModelTemplates.FRIDGE_BOTTOM_MIRRORED.create(block, mapping_bottom, blockModels.modelOutput));
@@ -547,7 +572,7 @@ public class ModelGenerator extends ModelProvider {
         MultiVariant top_open = BlockModelGenerators.plainVariant(ModelTemplates.FRIDGE_TOP_OPEN.create(block, mapping_top, blockModels.modelOutput));
         MultiVariant top_mirrored = BlockModelGenerators.plainVariant(ModelTemplates.FRIDGE_TOP_MIRRORED.create(block, mapping_top, blockModels.modelOutput));
         MultiVariant top_mirrored_open = BlockModelGenerators.plainVariant(ModelTemplates.FRIDGE_TOP_MIRRORED_OPEN.create(block, mapping_top, blockModels.modelOutput));
-        ResourceLocation item = ModelTemplates.FRIDGE_INVENTORY.create(block, mapping_top, blockModels.modelOutput);
+        Identifier item = ModelTemplates.FRIDGE_INVENTORY.create(block, mapping_top, blockModels.modelOutput);
         blockModels.registerSimpleItemModel(block, item);
         return MultiVariantGenerator.dispatch(block).with(
                 PropertyDispatch.initial(FridgeBlock.HALF, FridgeBlock.HINGE, FridgeBlock.OPEN)
@@ -562,23 +587,23 @@ public class ModelGenerator extends ModelProvider {
         ).with(ROTATION_HORIZONTAL_FACING);
     }
 
-    private MultiVariantGenerator createKnifeBlock(Block block, Block blockTexture, ResourceLocation stand, BlockModelGenerators blockModels) {
-        MultiVariant model = BlockModelGenerators.plainVariant(ModelTemplates.KNIFE_BLOCK.create(block, new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(blockTexture)).put(TextureSlots.BLOCK, TextureMapping.getBlockTexture(blockTexture)).put(TextureSlots.STAND, stand).put(TextureSlots.HANDLE, TextureMapping.getBlockTexture(ANVIL)).put(TextureSlots.KNIFE, TextureMapping.getBlockTexture(IRON_BLOCK)), blockModels.modelOutput));
+    private MultiVariantGenerator createKnifeBlock(Block block, Block blockTexture, Identifier stand, BlockModelGenerators blockModels) {
+        MultiVariant model = BlockModelGenerators.plainVariant(ModelTemplates.KNIFE_BLOCK.create(block, new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(blockTexture)).put(TextureSlots.BLOCK, TextureMapping.getBlockTexture(blockTexture)).put(TextureSlots.STAND, new Material(stand)).put(TextureSlots.HANDLE, TextureMapping.getBlockTexture(ANVIL)).put(TextureSlots.KNIFE, TextureMapping.getBlockTexture(IRON_BLOCK)), blockModels.modelOutput));
         return MultiVariantGenerator.dispatch(block, model).with(ROTATION_HORIZONTAL_FACING);
     }
 
-    private MultiVariantGenerator createTablewareBlock(Block block, ResourceLocation tableware, ResourceLocation liquid, BlockModelGenerators blockModels) {
-        MultiVariant model = BlockModelGenerators.plainVariant(ModelTemplates.TABLEWARE.create(block, new TextureMapping().put(TextureSlot.PARTICLE, tableware).put(TextureSlots.TABLEWARE, tableware).put(TextureSlots.LIQUID, liquid), blockModels.modelOutput));
+    private MultiVariantGenerator createTablewareBlock(Block block, Identifier tableware, Identifier liquid, BlockModelGenerators blockModels) {
+        MultiVariant model = BlockModelGenerators.plainVariant(ModelTemplates.TABLEWARE.create(block, new TextureMapping().put(TextureSlot.PARTICLE, new Material(tableware)).put(TextureSlots.TABLEWARE, new Material(tableware)).put(TextureSlots.LIQUID, new Material(liquid)), blockModels.modelOutput));
         return MultiVariantGenerator.dispatch(block, model).with(ROTATION_HORIZONTAL_FACING);
     }
 
-    private MultiVariantGenerator createToasterBlock(Block block, Block blockTexture, ResourceLocation bottom, BlockModelGenerators blockModels) {
-        MultiVariant model = BlockModelGenerators.plainVariant(ModelTemplates.TOASTER.create(block, new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(blockTexture)).put(TextureSlots.TOASTER, TextureMapping.getBlockTexture(blockTexture)).put(TextureSlot.BOTTOM, bottom), blockModels.modelOutput));
+    private MultiVariantGenerator createToasterBlock(Block block, Identifier blockTexture, Identifier bottom, BlockModelGenerators blockModels) {
+        MultiVariant model = BlockModelGenerators.plainVariant(ModelTemplates.TOASTER.create(block, new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(getBlockFromIdentifier(Identifier.parse(blockTexture.toString().replaceFirst("waxed_", ""))))).put(TextureSlots.TOASTER, TextureMapping.getBlockTexture(getBlockFromIdentifier(Identifier.parse(blockTexture.toString().replaceFirst("waxed_", ""))))).put(TextureSlot.BOTTOM, new Material(bottom)), blockModels.modelOutput));
         return MultiVariantGenerator.dispatch(block, model).with(ROTATION_HORIZONTAL_FACING);
     }
 
-    private MultiVariantGenerator createChairBlock(Block block, Block chair, ResourceLocation decoration, ResourceLocation wool, BlockModelGenerators blockModels) {
-        MultiVariant model = BlockModelGenerators.plainVariant(ModelTemplates.CHAIR.create(block, new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(chair)).put(TextureSlots.CHAIR, TextureMapping.getBlockTexture(chair)).put(TextureSlots.DECORATION, decoration).put(TextureSlots.WOOL, wool), blockModels.modelOutput));
+    private MultiVariantGenerator createChairBlock(Block block, Block chair, Identifier decoration, Identifier wool, BlockModelGenerators blockModels) {
+        MultiVariant model = BlockModelGenerators.plainVariant(ModelTemplates.CHAIR.create(block, new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(chair)).put(TextureSlots.CHAIR, TextureMapping.getBlockTexture(chair)).put(TextureSlots.DECORATION, new Material(decoration)).put(TextureSlots.WOOL, new Material(wool)), blockModels.modelOutput));
         return MultiVariantGenerator.dispatch(block, model).with(ROTATION_HORIZONTAL_FACING);
     }
 
@@ -615,8 +640,8 @@ public class ModelGenerator extends ModelProvider {
         );
     }
 
-    private MultiVariantGenerator createCurtainBlock(Block block, ResourceLocation wool, ResourceLocation curtain_rod, BlockModelGenerators blockModels) {
-        TextureMapping mapping = new TextureMapping().put(TextureSlot.PARTICLE, wool).put(TextureSlots.WOOL, wool).put(TextureSlots.CURTAIN_ROD, curtain_rod);
+    private MultiVariantGenerator createCurtainBlock(Block block, Identifier wool, Identifier curtain_rod, BlockModelGenerators blockModels) {
+        TextureMapping mapping = new TextureMapping().put(TextureSlot.PARTICLE, new Material(wool)).put(TextureSlots.WOOL, new Material(wool)).put(TextureSlots.CURTAIN_ROD, new Material(curtain_rod));
         MultiVariant small_closed = BlockModelGenerators.plainVariant(ModelTemplates.CURTAIN_SMALL_CLOSED.create(block, mapping, blockModels.modelOutput));
         MultiVariant small_single_open = BlockModelGenerators.plainVariant(ModelTemplates.CURTAIN_SMALL_SINGLE_OPEN.create(block, mapping, blockModels.modelOutput));
         MultiVariant small_left_open = BlockModelGenerators.plainVariant(ModelTemplates.CURTAIN_SMALL_LEFT_OPEN.create(block, mapping, blockModels.modelOutput));
@@ -662,8 +687,8 @@ public class ModelGenerator extends ModelProvider {
         ).with(ROTATION_HORIZONTAL_FACING);
     }
 
-    private MultiVariantGenerator createBedsideTableBlock(Block block, Block counter, ResourceLocation top, ResourceLocation door, BlockModelGenerators blockModels) {
-        TextureMapping mapping = new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(counter)).put(TextureSlots.COUNTER, TextureMapping.getBlockTexture(counter)).put(TextureSlots.TOP, top).put(TextureSlots.DOOR, door);
+    private MultiVariantGenerator createBedsideTableBlock(Block block, Block counter, Identifier top, Identifier door, BlockModelGenerators blockModels) {
+        TextureMapping mapping = new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(counter)).put(TextureSlots.COUNTER, TextureMapping.getBlockTexture(counter)).put(TextureSlots.TOP, new Material(top)).put(TextureSlots.DOOR, new Material(door));
         MultiVariant closed = BlockModelGenerators.plainVariant(ModelTemplates.BEDSIDE_TABLE.create(block, mapping, blockModels.modelOutput));
         MultiVariant open = BlockModelGenerators.plainVariant(ModelTemplates.BEDSIDE_TABLE_OPEN.create(block, mapping, blockModels.modelOutput));
         return MultiVariantGenerator.dispatch(block).with(
@@ -673,14 +698,14 @@ public class ModelGenerator extends ModelProvider {
         ).with(ROTATION_HORIZONTAL_FACING);
     }
 
-    private MultiVariantGenerator createCloset(Block block, ResourceLocation closet, ResourceLocation door, BlockModelGenerators blockModels) {
-        TextureMapping mapping_bottom = new TextureMapping().put(TextureSlot.PARTICLE, closet).put(TextureSlots.CLOSET, closet).put(TextureSlots.DOOR, door);
-        TextureMapping mapping_top = new TextureMapping().put(TextureSlot.PARTICLE, closet).put(TextureSlots.CLOSET, closet).put(TextureSlots.DOOR, door);
+    private MultiVariantGenerator createCloset(Block block, Identifier closet, Identifier door, BlockModelGenerators blockModels) {
+        TextureMapping mapping_bottom = new TextureMapping().put(TextureSlot.PARTICLE, new Material(closet)).put(TextureSlots.CLOSET, new Material(closet)).put(TextureSlots.DOOR, new Material(door));
+        TextureMapping mapping_top = new TextureMapping().put(TextureSlot.PARTICLE, new Material(closet)).put(TextureSlots.CLOSET, new Material(closet)).put(TextureSlots.DOOR, new Material(door));
         MultiVariant bottom = BlockModelGenerators.plainVariant(ModelTemplates.CLOSET_BOTTOM.create(block, mapping_bottom, blockModels.modelOutput));
         MultiVariant bottom_open = BlockModelGenerators.plainVariant(ModelTemplates.CLOSET_BOTTOM_OPEN.create(block, mapping_bottom, blockModels.modelOutput));
         MultiVariant top = BlockModelGenerators.plainVariant(ModelTemplates.CLOSET_TOP.create(block, mapping_top, blockModels.modelOutput));
         MultiVariant top_open = BlockModelGenerators.plainVariant(ModelTemplates.CLOSET_TOP_OPEN.create(block, mapping_top, blockModels.modelOutput));
-        ResourceLocation item = ModelTemplates.CLOSET_INVENTORY.create(block, mapping_top, blockModels.modelOutput);
+        Identifier item = ModelTemplates.CLOSET_INVENTORY.create(block, mapping_top, blockModels.modelOutput);
         blockModels.registerSimpleItemModel(block, item);
         return MultiVariantGenerator.dispatch(block).with(
                 PropertyDispatch.initial(ClosetBlock.HALF, ClosetBlock.OPEN)
@@ -691,13 +716,13 @@ public class ModelGenerator extends ModelProvider {
         ).with(ROTATION_HORIZONTAL_FACING);
     }
 
-    private MultiVariantGenerator createLampBlock(Block block, Block planks, ResourceLocation log, ResourceLocation log_top, ResourceLocation stripped_log, ResourceLocation lamp, ResourceLocation lamp_on, ResourceLocation wool, BlockModelGenerators blockModels) {
-        MultiVariant model_single = BlockModelGenerators.plainVariant(ModelTemplates.LAMP_SINGLE.create(block, new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(planks)).put(TextureSlots.PLANKS, TextureMapping.getBlockTexture(planks)).put(TextureSlots.LOG, log).put(TextureSlots.LOG_TOP, log_top).put(TextureSlots.STRIPPED_LOG, stripped_log).put(TextureSlots.LAMP, lamp).put(TextureSlots.WOOL, wool), blockModels.modelOutput));
-        MultiVariant model_single_on = BlockModelGenerators.plainVariant(ModelTemplates.LAMP_SINGLE_ON.create(block, new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(planks)).put(TextureSlots.PLANKS, TextureMapping.getBlockTexture(planks)).put(TextureSlots.LOG, log).put(TextureSlots.LOG_TOP, log_top).put(TextureSlots.STRIPPED_LOG, stripped_log).put(TextureSlots.LAMP, lamp_on).put(TextureSlots.WOOL, wool), blockModels.modelOutput));
-        MultiVariant model_top = BlockModelGenerators.plainVariant(ModelTemplates.LAMP_TOP.create(block, new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(planks)).put(TextureSlots.PLANKS, TextureMapping.getBlockTexture(planks)).put(TextureSlots.LOG, log).put(TextureSlots.LAMP, lamp).put(TextureSlots.WOOL, wool), blockModels.modelOutput));
-        MultiVariant model_top_on = BlockModelGenerators.plainVariant(ModelTemplates.LAMP_TOP_ON.create(block, new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(planks)).put(TextureSlots.PLANKS, TextureMapping.getBlockTexture(planks)).put(TextureSlots.LOG, log).put(TextureSlots.LAMP, lamp_on).put(TextureSlots.WOOL, wool), blockModels.modelOutput));
-        MultiVariant model_middle = BlockModelGenerators.plainVariant(ModelTemplates.LAMP_MIDDLE.create(block, new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(planks)).put(TextureSlots.PLANKS, TextureMapping.getBlockTexture(planks)).put(TextureSlots.LOG, log), blockModels.modelOutput));
-        MultiVariant model_bottom = BlockModelGenerators.plainVariant(ModelTemplates.LAMP_BOTTOM.create(block, new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(planks)).put(TextureSlots.LOG, log).put(TextureSlots.LOG_TOP, log_top).put(TextureSlots.STRIPPED_LOG, stripped_log), blockModels.modelOutput));
+    private MultiVariantGenerator createLampBlock(Block block, Block planks, Identifier log, Identifier log_top, Identifier stripped_log, Identifier lamp, Identifier lamp_on, Identifier wool, BlockModelGenerators blockModels) {
+        MultiVariant model_single = BlockModelGenerators.plainVariant(ModelTemplates.LAMP_SINGLE.create(block, new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(planks)).put(TextureSlots.PLANKS, TextureMapping.getBlockTexture(planks)).put(TextureSlots.LOG, new Material(log)).put(TextureSlots.LOG_TOP, new Material(log_top)).put(TextureSlots.STRIPPED_LOG, new Material(stripped_log)).put(TextureSlots.LAMP, new Material(lamp)).put(TextureSlots.WOOL, new Material(wool)), blockModels.modelOutput));
+        MultiVariant model_single_on = BlockModelGenerators.plainVariant(ModelTemplates.LAMP_SINGLE_ON.create(block, new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(planks)).put(TextureSlots.PLANKS, TextureMapping.getBlockTexture(planks)).put(TextureSlots.LOG, new Material(log)).put(TextureSlots.LOG_TOP, new Material(log_top)).put(TextureSlots.STRIPPED_LOG, new Material(stripped_log)).put(TextureSlots.LAMP, new Material(lamp_on)).put(TextureSlots.WOOL, new Material(wool)), blockModels.modelOutput));
+        MultiVariant model_top = BlockModelGenerators.plainVariant(ModelTemplates.LAMP_TOP.create(block, new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(planks)).put(TextureSlots.PLANKS, TextureMapping.getBlockTexture(planks)).put(TextureSlots.LOG, new Material(log)).put(TextureSlots.LAMP, new Material(lamp)).put(TextureSlots.WOOL, new Material(wool)), blockModels.modelOutput));
+        MultiVariant model_top_on = BlockModelGenerators.plainVariant(ModelTemplates.LAMP_TOP_ON.create(block, new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(planks)).put(TextureSlots.PLANKS, TextureMapping.getBlockTexture(planks)).put(TextureSlots.LOG, new Material(log)).put(TextureSlots.LAMP, new Material(lamp_on)).put(TextureSlots.WOOL, new Material(wool)), blockModels.modelOutput));
+        MultiVariant model_middle = BlockModelGenerators.plainVariant(ModelTemplates.LAMP_MIDDLE.create(block, new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(planks)).put(TextureSlots.PLANKS, TextureMapping.getBlockTexture(planks)).put(TextureSlots.LOG, new Material(log)), blockModels.modelOutput));
+        MultiVariant model_bottom = BlockModelGenerators.plainVariant(ModelTemplates.LAMP_BOTTOM.create(block, new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(planks)).put(TextureSlots.LOG, new Material(log)).put(TextureSlots.LOG_TOP, new Material(log_top)).put(TextureSlots.STRIPPED_LOG, new Material(stripped_log)), blockModels.modelOutput));
         return MultiVariantGenerator.dispatch(block).with(
                 PropertyDispatch.initial(LampBlock.ON, LampBlock.PART)
                         .select(true, LampPart.SINGLE, model_single_on)
@@ -711,8 +736,28 @@ public class ModelGenerator extends ModelProvider {
         );
     }
 
-    private MultiVariantGenerator createWoodenBedBlock(Block block, ResourceLocation wood, ResourceLocation wool, ResourceLocation decoration, BlockModelGenerators blockModels) {
-        TextureMapping mapping = new TextureMapping().put(TextureSlot.PARTICLE, wood).put(TextureSlots.WOOD, wood).put(TextureSlots.WOOL, wool).put(TextureSlots.DECORATION, decoration);
+    private MultiVariantGenerator createCeilingLampBlock(Block block, Identifier lamp, Identifier lamp_on, Identifier concrete, BlockModelGenerators blockModels) {
+        MultiVariant model_single = BlockModelGenerators.plainVariant(ModelTemplates.CEILING_LAMP_SINGLE.create(block, new TextureMapping().put(TextureSlot.PARTICLE, new Material(concrete)).put(TextureSlots.CONCRETE, new Material(concrete)).put(TextureSlots.CABLE, TextureMapping.getBlockTexture(COAL_BLOCK)).put(TextureSlots.LAMP, new Material(lamp)), blockModels.modelOutput));
+        MultiVariant model_single_on = BlockModelGenerators.plainVariant(ModelTemplates.CEILING_LAMP_SINGLE_ON.create(block, new TextureMapping().put(TextureSlot.PARTICLE, new Material(concrete)).put(TextureSlots.CONCRETE, new Material(concrete)).put(TextureSlots.CABLE, TextureMapping.getBlockTexture(COAL_BLOCK)).put(TextureSlots.LAMP, new Material(lamp_on)), blockModels.modelOutput));
+        MultiVariant model_top = BlockModelGenerators.plainVariant(ModelTemplates.CEILING_LAMP_TOP.create(block, new TextureMapping().put(TextureSlot.PARTICLE, new Material(concrete)).put(TextureSlots.CONCRETE, new Material(concrete)).put(TextureSlots.CABLE, TextureMapping.getBlockTexture(COAL_BLOCK)), blockModels.modelOutput));
+        MultiVariant model_middle = BlockModelGenerators.plainVariant(ModelTemplates.CEILING_LAMP_MIDDLE.create(block, new TextureMapping().put(TextureSlot.PARTICLE, new Material(concrete)).put(TextureSlots.CABLE, TextureMapping.getBlockTexture(COAL_BLOCK)), blockModels.modelOutput));
+        MultiVariant model_bottom = BlockModelGenerators.plainVariant(ModelTemplates.CEILING_LAMP_BOTTOM.create(block, new TextureMapping().put(TextureSlot.PARTICLE, new Material(concrete)).put(TextureSlots.CABLE, TextureMapping.getBlockTexture(COAL_BLOCK)).put(TextureSlots.LAMP, new Material(lamp)), blockModels.modelOutput));
+        MultiVariant model_bottom_on = BlockModelGenerators.plainVariant(ModelTemplates.CEILING_LAMP_BOTTOM_ON.create(block, new TextureMapping().put(TextureSlot.PARTICLE, new Material(concrete)).put(TextureSlots.CABLE, TextureMapping.getBlockTexture(COAL_BLOCK)).put(TextureSlots.LAMP, new Material(lamp_on)), blockModels.modelOutput));
+        return MultiVariantGenerator.dispatch(block).with(
+                PropertyDispatch.initial(CeilingLampBlock.ON, CeilingLampBlock.PART)
+                        .select(true, LampPart.SINGLE, model_single_on)
+                        .select(false, LampPart.SINGLE, model_single)
+                        .select(true, LampPart.TOP, model_top)
+                        .select(false, LampPart.TOP, model_top)
+                        .select(true, LampPart.MIDDLE, model_middle)
+                        .select(false, LampPart.MIDDLE, model_middle)
+                        .select(true, LampPart.BOTTOM, model_bottom_on)
+                        .select(false, LampPart.BOTTOM, model_bottom)
+        );
+    }
+
+    private MultiVariantGenerator createWoodenBedBlock(Block block, Identifier wood, Identifier wool, Identifier decoration, BlockModelGenerators blockModels) {
+        TextureMapping mapping = new TextureMapping().put(TextureSlot.PARTICLE, new Material(wood)).put(TextureSlots.WOOD, new Material(wood)).put(TextureSlots.WOOL, new Material(wool)).put(TextureSlots.DECORATION, new Material(decoration));
         MultiVariant head_single = BlockModelGenerators.plainVariant(ModelTemplates.WOODEN_BED_HEAD_SINGLE.create(block, mapping, blockModels.modelOutput));
         MultiVariant head_left = BlockModelGenerators.plainVariant(ModelTemplates.WOODEN_BED_HEAD_LEFT.create(block, mapping, blockModels.modelOutput));
         MultiVariant head_right = BlockModelGenerators.plainVariant(ModelTemplates.WOODEN_BED_HEAD_RIGHT.create(block, mapping, blockModels.modelOutput));
@@ -721,7 +766,7 @@ public class ModelGenerator extends ModelProvider {
         MultiVariant foot_left = BlockModelGenerators.plainVariant(ModelTemplates.WOODEN_BED_FOOT_LEFT.create(block, mapping, blockModels.modelOutput));
         MultiVariant foot_right = BlockModelGenerators.plainVariant(ModelTemplates.WOODEN_BED_FOOT_RIGHT.create(block, mapping, blockModels.modelOutput));
         MultiVariant foot_middle = BlockModelGenerators.plainVariant(ModelTemplates.WOODEN_BED_FOOT_MIDDLE.create(block, mapping, blockModels.modelOutput));
-        ResourceLocation inventory = ModelTemplates.WOODEN_BED_INVENTORY.create(block, mapping, blockModels.modelOutput);
+        Identifier inventory = ModelTemplates.WOODEN_BED_INVENTORY.create(block, mapping, blockModels.modelOutput);
         blockModels.registerSimpleItemModel(block, inventory);
         return MultiVariantGenerator.dispatch(block).with(
                 PropertyDispatch.initial(WoodenBedBlock.PART, WoodenBedBlock.SHAPE, WoodenBedBlock.OCCUPIED)
@@ -744,8 +789,8 @@ public class ModelGenerator extends ModelProvider {
         ).with(ROTATION_HORIZONTAL_FACING_ALT);
     }
 
-    private MultiVariantGenerator createBenchBlock(Block block, Block wood, ResourceLocation metal, BlockModelGenerators blockModels) {
-        TextureMapping mapping = new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(wood)).put(TextureSlots.WOOD, TextureMapping.getBlockTexture(wood)).put(TextureSlots.METAL, metal);
+    private MultiVariantGenerator createBenchBlock(Block block, Block wood, Identifier metal, BlockModelGenerators blockModels) {
+        TextureMapping mapping = new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(wood)).put(TextureSlots.WOOD, TextureMapping.getBlockTexture(wood)).put(TextureSlots.METAL, new Material(metal));
         MultiVariant single = BlockModelGenerators.plainVariant(ModelTemplates.BENCH_SINGLE.create(block, mapping, blockModels.modelOutput));
         MultiVariant left = BlockModelGenerators.plainVariant(ModelTemplates.BENCH_LEFT.create(block, mapping, blockModels.modelOutput));
         MultiVariant right = BlockModelGenerators.plainVariant(ModelTemplates.BENCH_RIGHT.create(block, mapping, blockModels.modelOutput));
@@ -759,9 +804,9 @@ public class ModelGenerator extends ModelProvider {
         ).with(ROTATION_HORIZONTAL_FACING);
     }
 
-    private MultiVariantGenerator createFlowerBoxBlock(Block block, ResourceLocation wood, ResourceLocation wood_top, BlockModelGenerators blockModels) {
-        MultiVariant top = BlockModelGenerators.plainVariant(ModelTemplates.FLOWER_BOX_TOP.create(block, new TextureMapping().put(TextureSlot.PARTICLE, wood).put(TextureSlots.DIRT, TextureMapping.getBlockTexture(DIRT)).put(TextureSlots.WOOD, wood).put(TextureSlots.WOOD_TOP, wood_top), blockModels.modelOutput));
-        MultiVariant bottom = BlockModelGenerators.plainVariant(ModelTemplates.FLOWER_BOX_BOTTOM.create(block, new TextureMapping().put(TextureSlot.PARTICLE, wood).put(TextureSlots.DIRT, TextureMapping.getBlockTexture(DIRT)).put(TextureSlots.WOOD, wood).put(TextureSlots.WOOD_TOP, wood_top), blockModels.modelOutput));
+    private MultiVariantGenerator createFlowerBoxBlock(Block block, Identifier wood, Identifier wood_top, BlockModelGenerators blockModels) {
+        MultiVariant top = BlockModelGenerators.plainVariant(ModelTemplates.FLOWER_BOX_TOP.create(block, new TextureMapping().put(TextureSlot.PARTICLE, new Material(wood)).put(TextureSlots.DIRT, TextureMapping.getBlockTexture(DIRT)).put(TextureSlots.WOOD, new Material(wood)).put(TextureSlots.WOOD_TOP, new Material(wood_top)), blockModels.modelOutput));
+        MultiVariant bottom = BlockModelGenerators.plainVariant(ModelTemplates.FLOWER_BOX_BOTTOM.create(block, new TextureMapping().put(TextureSlot.PARTICLE, new Material(wood)).put(TextureSlots.DIRT, TextureMapping.getBlockTexture(DIRT)).put(TextureSlots.WOOD, new Material(wood)).put(TextureSlots.WOOD_TOP, new Material(wood_top)), blockModels.modelOutput));
         return MultiVariantGenerator.dispatch(block).with(
                 PropertyDispatch.initial(FlowerBoxBlock.HALF)
                         .select(Half.TOP, top)
@@ -769,9 +814,9 @@ public class ModelGenerator extends ModelProvider {
         ).with(ROTATION_HORIZONTAL_FACING);
     }
 
-    private MultiVariantGenerator createFlowerBoxInnerCornerBlock(Block block, ResourceLocation wood, ResourceLocation wood_top, BlockModelGenerators blockModels) {
-        MultiVariant top = BlockModelGenerators.plainVariant(ModelTemplates.FLOWER_BOX_TOP_INNER_CORNER.create(block, new TextureMapping().put(TextureSlot.PARTICLE, wood).put(TextureSlots.DIRT, TextureMapping.getBlockTexture(DIRT)).put(TextureSlots.WOOD, wood).put(TextureSlots.WOOD_TOP, wood_top), blockModels.modelOutput));
-        MultiVariant bottom = BlockModelGenerators.plainVariant(ModelTemplates.FLOWER_BOX_BOTTOM_INNER_CORNER.create(block, new TextureMapping().put(TextureSlot.PARTICLE, wood).put(TextureSlots.DIRT, TextureMapping.getBlockTexture(DIRT)).put(TextureSlots.WOOD, wood).put(TextureSlots.WOOD_TOP, wood_top), blockModels.modelOutput));
+    private MultiVariantGenerator createFlowerBoxInnerCornerBlock(Block block, Identifier wood, Identifier wood_top, BlockModelGenerators blockModels) {
+        MultiVariant top = BlockModelGenerators.plainVariant(ModelTemplates.FLOWER_BOX_TOP_INNER_CORNER.create(block, new TextureMapping().put(TextureSlot.PARTICLE, new Material(wood)).put(TextureSlots.DIRT, TextureMapping.getBlockTexture(DIRT)).put(TextureSlots.WOOD, new Material(wood)).put(TextureSlots.WOOD_TOP, new Material(wood_top)), blockModels.modelOutput));
+        MultiVariant bottom = BlockModelGenerators.plainVariant(ModelTemplates.FLOWER_BOX_BOTTOM_INNER_CORNER.create(block, new TextureMapping().put(TextureSlot.PARTICLE, new Material(wood)).put(TextureSlots.DIRT, TextureMapping.getBlockTexture(DIRT)).put(TextureSlots.WOOD, new Material(wood)).put(TextureSlots.WOOD_TOP, new Material(wood_top)), blockModels.modelOutput));
         return MultiVariantGenerator.dispatch(block).with(
                 PropertyDispatch.initial(FlowerBoxBlock.HALF)
                         .select(Half.TOP, top)
@@ -779,9 +824,9 @@ public class ModelGenerator extends ModelProvider {
         ).with(ROTATION_HORIZONTAL_FACING);
     }
 
-    private MultiVariantGenerator createFlowerBoxOuterCornerBlock(Block block, ResourceLocation wood, ResourceLocation wood_top, BlockModelGenerators blockModels) {
-        MultiVariant top = BlockModelGenerators.plainVariant(ModelTemplates.FLOWER_BOX_TOP_OUTER_CORNER.create(block, new TextureMapping().put(TextureSlot.PARTICLE, wood).put(TextureSlots.DIRT, TextureMapping.getBlockTexture(DIRT)).put(TextureSlots.WOOD, wood).put(TextureSlots.WOOD_TOP, wood_top), blockModels.modelOutput));
-        MultiVariant bottom = BlockModelGenerators.plainVariant(ModelTemplates.FLOWER_BOX_BOTTOM_OUTER_CORNER.create(block, new TextureMapping().put(TextureSlot.PARTICLE, wood).put(TextureSlots.DIRT, TextureMapping.getBlockTexture(DIRT)).put(TextureSlots.WOOD, wood).put(TextureSlots.WOOD_TOP, wood_top), blockModels.modelOutput));
+    private MultiVariantGenerator createFlowerBoxOuterCornerBlock(Block block, Identifier wood, Identifier wood_top, BlockModelGenerators blockModels) {
+        MultiVariant top = BlockModelGenerators.plainVariant(ModelTemplates.FLOWER_BOX_TOP_OUTER_CORNER.create(block, new TextureMapping().put(TextureSlot.PARTICLE, new Material(wood)).put(TextureSlots.DIRT, TextureMapping.getBlockTexture(DIRT)).put(TextureSlots.WOOD, new Material(wood)).put(TextureSlots.WOOD_TOP, new Material(wood_top)), blockModels.modelOutput));
+        MultiVariant bottom = BlockModelGenerators.plainVariant(ModelTemplates.FLOWER_BOX_BOTTOM_OUTER_CORNER.create(block, new TextureMapping().put(TextureSlot.PARTICLE, new Material(wood)).put(TextureSlots.DIRT, TextureMapping.getBlockTexture(DIRT)).put(TextureSlots.WOOD, new Material(wood)).put(TextureSlots.WOOD_TOP, new Material(wood_top)), blockModels.modelOutput));
         return MultiVariantGenerator.dispatch(block).with(
                 PropertyDispatch.initial(FlowerBoxBlock.HALF)
                         .select(Half.TOP, top)
@@ -789,9 +834,9 @@ public class ModelGenerator extends ModelProvider {
         ).with(ROTATION_HORIZONTAL_FACING);
     }
 
-    private MultiVariantGenerator createFlowerBoxBigBlock(Block block, ResourceLocation wood, ResourceLocation wood_top, BlockModelGenerators blockModels) {
-        MultiVariant top = BlockModelGenerators.plainVariant(ModelTemplates.FLOWER_BOX_TOP_BIG.create(block, new TextureMapping().put(TextureSlot.PARTICLE, wood).put(TextureSlots.DIRT, TextureMapping.getBlockTexture(DIRT)).put(TextureSlots.WOOD, wood).put(TextureSlots.WOOD_TOP, wood_top), blockModels.modelOutput));
-        MultiVariant bottom = BlockModelGenerators.plainVariant(ModelTemplates.FLOWER_BOX_BOTTOM_BIG.create(block, new TextureMapping().put(TextureSlot.PARTICLE, wood).put(TextureSlots.DIRT, TextureMapping.getBlockTexture(DIRT)).put(TextureSlots.WOOD, wood).put(TextureSlots.WOOD_TOP, wood_top), blockModels.modelOutput));
+    private MultiVariantGenerator createFlowerBoxBigBlock(Block block, Identifier wood, Identifier wood_top, BlockModelGenerators blockModels) {
+        MultiVariant top = BlockModelGenerators.plainVariant(ModelTemplates.FLOWER_BOX_TOP_BIG.create(block, new TextureMapping().put(TextureSlot.PARTICLE, new Material(wood)).put(TextureSlots.DIRT, TextureMapping.getBlockTexture(DIRT)).put(TextureSlots.WOOD, new Material(wood)).put(TextureSlots.WOOD_TOP, new Material(wood_top)), blockModels.modelOutput));
+        MultiVariant bottom = BlockModelGenerators.plainVariant(ModelTemplates.FLOWER_BOX_BOTTOM_BIG.create(block, new TextureMapping().put(TextureSlot.PARTICLE, new Material(wood)).put(TextureSlots.DIRT, TextureMapping.getBlockTexture(DIRT)).put(TextureSlots.WOOD, new Material(wood)).put(TextureSlots.WOOD_TOP, new Material(wood_top)), blockModels.modelOutput));
         return MultiVariantGenerator.dispatch(block).with(
                 PropertyDispatch.initial(FlowerBoxBlock.HALF)
                         .select(Half.TOP, top)
@@ -799,20 +844,20 @@ public class ModelGenerator extends ModelProvider {
         ).with(ROTATION_HORIZONTAL_FACING);
     }
 
-    private MultiVariantGenerator createTrashBinBlock(Block block, ResourceLocation wood, BlockModelGenerators blockModels) {
-        MultiVariant model = BlockModelGenerators.plainVariant(ModelTemplates.TRASH_BIN.create(block, new TextureMapping().put(TextureSlot.PARTICLE, wood).put(TextureSlots.METAL, TextureMapping.getBlockTexture(ANVIL)).put(TextureSlots.WOOD, wood), blockModels.modelOutput));
+    private MultiVariantGenerator createTrashBinBlock(Block block, Identifier wood, BlockModelGenerators blockModels) {
+        MultiVariant model = BlockModelGenerators.plainVariant(ModelTemplates.TRASH_BIN.create(block, new TextureMapping().put(TextureSlot.PARTICLE, new Material(wood)).put(TextureSlots.METAL, TextureMapping.getBlockTexture(ANVIL)).put(TextureSlots.WOOD, new Material(wood)), blockModels.modelOutput));
         return MultiVariantGenerator.dispatch(block, model);
     }
 
-    private MultiVariantGenerator createBirdbathBlock(Block block, ResourceLocation stone, BlockModelGenerators blockModels) {
-        MultiVariant model = BlockModelGenerators.plainVariant(ModelTemplates.BIRDBATH.create(block, new TextureMapping().put(TextureSlot.PARTICLE, stone).put(TextureSlots.STONE, stone).put(TextureSlots.WATER, TextureMapping.getBlockTexture(WATER).withSuffix("_still")), blockModels.modelOutput));
+    private MultiVariantGenerator createBirdbathBlock(Block block, Identifier stone, BlockModelGenerators blockModels) {
+        MultiVariant model = BlockModelGenerators.plainVariant(ModelTemplates.BIRDBATH.create(block, new TextureMapping().put(TextureSlot.PARTICLE, new Material(stone)).put(TextureSlots.STONE, new Material(stone)).put(TextureSlots.WATER, TextureMapping.getBlockTexture(WATER, "_still")), blockModels.modelOutput));
         return MultiVariantGenerator.dispatch(block, model);
     }
 
-    private MultiVariantGenerator createBirdhouseBlock(Block block, ResourceLocation log, ResourceLocation log_top, ResourceLocation planks, ResourceLocation roof, BlockModelGenerators blockModels) {
-        MultiVariant top = BlockModelGenerators.plainVariant(ModelTemplates.BIRDHOUSE_TOP.create(block, new TextureMapping().put(TextureSlot.PARTICLE, planks).put(TextureSlots.LOG, log).put(TextureSlots.PLANKS, planks).put(TextureSlots.ROOF, roof), blockModels.modelOutput));
-        MultiVariant bottom = BlockModelGenerators.plainVariant(ModelTemplates.BIRDHOUSE_BOTTOM.create(block, new TextureMapping().put(TextureSlot.PARTICLE, log).put(TextureSlots.LOG, log).put(TextureSlots.LOG_TOP, log_top), blockModels.modelOutput));
-        ResourceLocation inventory = ModelTemplates.BIRDHOUSE_INVENTORY.create(block, new TextureMapping().put(TextureSlots.LOG, log).put(TextureSlots.LOG_TOP, log_top).put(TextureSlots.PLANKS, planks).put(TextureSlots.ROOF, roof), blockModels.modelOutput);
+    private MultiVariantGenerator createBirdhouseBlock(Block block, Identifier log, Identifier log_top, Identifier planks, Identifier roof, BlockModelGenerators blockModels) {
+        MultiVariant top = BlockModelGenerators.plainVariant(ModelTemplates.BIRDHOUSE_TOP.create(block, new TextureMapping().put(TextureSlot.PARTICLE, new Material(planks)).put(TextureSlots.LOG, new Material(log)).put(TextureSlots.PLANKS, new Material(planks)).put(TextureSlots.ROOF, new Material(roof)), blockModels.modelOutput));
+        MultiVariant bottom = BlockModelGenerators.plainVariant(ModelTemplates.BIRDHOUSE_BOTTOM.create(block, new TextureMapping().put(TextureSlot.PARTICLE, new Material(log)).put(TextureSlots.LOG, new Material(log)).put(TextureSlots.LOG_TOP, new Material(log_top)), blockModels.modelOutput));
+        Identifier inventory = ModelTemplates.BIRDHOUSE_INVENTORY.create(block, new TextureMapping().put(TextureSlots.LOG, new Material(log)).put(TextureSlots.LOG_TOP, new Material(log_top)).put(TextureSlots.PLANKS, new Material(planks)).put(TextureSlots.ROOF, new Material(roof)), blockModels.modelOutput);
         blockModels.registerSimpleItemModel(block, inventory);
         return MultiVariantGenerator.dispatch(block).with(
                 PropertyDispatch.initial(BirdhouseBlock.HALF)
@@ -821,32 +866,113 @@ public class ModelGenerator extends ModelProvider {
         ).with(ROTATION_HORIZONTAL_FACING);
     }
 
-    private MultiVariantGenerator createHangingBirdhouseBlock(Block block, ResourceLocation planks, ResourceLocation roof, BlockModelGenerators blockModels) {
-        MultiVariant model = BlockModelGenerators.plainVariant(ModelTemplates.HANGING_BIRDHOUSE.create(block, new TextureMapping().put(TextureSlot.PARTICLE, planks).put(TextureSlots.PLANKS, planks).put(TextureSlots.ROOF, roof), blockModels.modelOutput));
+    private MultiVariantGenerator createHangingBirdhouseBlock(Block block, Identifier planks, Identifier roof, BlockModelGenerators blockModels) {
+        MultiVariant model = BlockModelGenerators.plainVariant(ModelTemplates.HANGING_BIRDHOUSE.create(block, new TextureMapping().put(TextureSlot.PARTICLE, new Material(planks)).put(TextureSlots.PLANKS, new Material(planks)).put(TextureSlots.ROOF, new Material(roof)), blockModels.modelOutput));
         return MultiVariantGenerator.dispatch(block, model).with(ROTATION_HORIZONTAL_FACING);
     }
 
-    private void createHedgeBlock(Block block, ResourceLocation leaves, BlockModelGenerators blockModels) {
+    private void createHedgeBlock(Block block, Identifier leaves, BlockModelGenerators blockModels) {
         createHedgeBlock(block, leaves, blockModels, 0);
     }
 
-    private void createHedgeBlock(Block block, ResourceLocation leaves, BlockModelGenerators blockModels, int tint) {
+    private void createHedgeBlock(Block block, Identifier leaves, BlockModelGenerators blockModels, int tint) {
         MultiVariant multivariant = BlockModelGenerators.plainVariant(
-                ModelTemplates.HEDGE_POST.create(block, new TextureMapping().put(TextureSlot.PARTICLE, leaves).put(TextureSlot.WALL, leaves), blockModels.modelOutput)
+                ModelTemplates.HEDGE_POST.create(block, new TextureMapping().put(TextureSlot.PARTICLE, new Material(leaves)).put(TextureSlot.WALL, new Material(leaves)), blockModels.modelOutput)
         );
         MultiVariant multivariant1 = BlockModelGenerators.plainVariant(
-                ModelTemplates.HEDGE_LOW_SIDE.create(block, new TextureMapping().put(TextureSlot.PARTICLE, leaves).put(TextureSlot.WALL, leaves), blockModels.modelOutput)
+                ModelTemplates.HEDGE_LOW_SIDE.create(block, new TextureMapping().put(TextureSlot.PARTICLE, new Material(leaves)).put(TextureSlot.WALL, new Material(leaves)), blockModels.modelOutput)
         );
         MultiVariant multivariant2 = BlockModelGenerators.plainVariant(
-                ModelTemplates.HEDGE_TALL_SIDE.create(block, new TextureMapping().put(TextureSlot.PARTICLE, leaves).put(TextureSlot.WALL, leaves), blockModels.modelOutput)
+                ModelTemplates.HEDGE_TALL_SIDE.create(block, new TextureMapping().put(TextureSlot.PARTICLE, new Material(leaves)).put(TextureSlot.WALL, new Material(leaves)), blockModels.modelOutput)
         );
         blockModels.blockStateOutput.accept(BlockModelGenerators.createWall(block, multivariant, multivariant1, multivariant2));
-        ResourceLocation inventory = ModelTemplates.HEDGE_INVENTORY.create(block, new TextureMapping().put(TextureSlot.PARTICLE, leaves).put(TextureSlot.WALL, leaves), blockModels.modelOutput);
+        Identifier inventory = ModelTemplates.HEDGE_INVENTORY.create(block, new TextureMapping().put(TextureSlot.PARTICLE, new Material(leaves)).put(TextureSlot.WALL, new Material(leaves)), blockModels.modelOutput);
         if (tint != 0) {
             blockModels.registerSimpleTintedItemModel(block, inventory, ItemModelUtils.constantTint(tint));
         } else {
             blockModels.registerSimpleItemModel(block, inventory);
         }
+    }
+
+    private MultiVariantGenerator createCouch(Block block, Block wood, Identifier wool, BlockModelGenerators blockModels) {
+        MultiVariant single = BlockModelGenerators.plainVariant(ModelTemplates.COUCH_SINGLE.create(block, new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(wood)).put(TextureSlots.WOOD, TextureMapping.getBlockTexture(wood)).put(TextureSlots.WOOL, new Material(wool)), blockModels.modelOutput));
+        MultiVariant middle = BlockModelGenerators.plainVariant(ModelTemplates.COUCH_MIDDLE.create(block, new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(wood)).put(TextureSlots.WOOD, TextureMapping.getBlockTexture(wood)).put(TextureSlots.WOOL, new Material(wool)), blockModels.modelOutput));
+        MultiVariant right = BlockModelGenerators.plainVariant(ModelTemplates.COUCH_RIGHT.create(block, new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(wood)).put(TextureSlots.WOOD, TextureMapping.getBlockTexture(wood)).put(TextureSlots.WOOL, new Material(wool)), blockModels.modelOutput));
+        MultiVariant left = BlockModelGenerators.plainVariant(ModelTemplates.COUCH_LEFT.create(block, new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(wood)).put(TextureSlots.WOOD, TextureMapping.getBlockTexture(wood)).put(TextureSlots.WOOL, new Material(wool)), blockModels.modelOutput));
+        MultiVariant innerCorner = BlockModelGenerators.plainVariant(ModelTemplates.COUCH_INNER_CORNER.create(block, new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(wood)).put(TextureSlots.WOOD, TextureMapping.getBlockTexture(wood)).put(TextureSlots.WOOL, new Material(wool)), blockModels.modelOutput));
+        MultiVariant outerCorner = BlockModelGenerators.plainVariant(ModelTemplates.COUCH_OUTER_CORNER.create(block, new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(wood)).put(TextureSlots.WOOD, TextureMapping.getBlockTexture(wood)).put(TextureSlots.WOOL, new Material(wool)), blockModels.modelOutput));
+
+        return MultiVariantGenerator.dispatch(block).with(PropertyDispatch.initial(BlockStateProperties.HORIZONTAL_FACING, CouchBlock.SHAPE)
+                .select(Direction.EAST, CouchShape.SINGLE, single.with(Y_ROT.withValue(Quadrant.R180)).with(VariantMutator.UV_LOCK.withValue(true)))
+                .select(Direction.WEST, CouchShape.SINGLE, single)
+                .select(Direction.SOUTH, CouchShape.SINGLE, single.with(Y_ROT.withValue(Quadrant.R270)).with(VariantMutator.UV_LOCK.withValue(true)))
+                .select(Direction.NORTH, CouchShape.SINGLE, single.with(Y_ROT.withValue(Quadrant.R90)).with(VariantMutator.UV_LOCK.withValue(true)))
+                .select(Direction.EAST, CouchShape.MIDDLE, middle.with(Y_ROT.withValue(Quadrant.R180)).with(VariantMutator.UV_LOCK.withValue(true)))
+                .select(Direction.WEST, CouchShape.MIDDLE, middle)
+                .select(Direction.SOUTH, CouchShape.MIDDLE, middle.with(Y_ROT.withValue(Quadrant.R270)).with(VariantMutator.UV_LOCK.withValue(true)))
+                .select(Direction.NORTH, CouchShape.MIDDLE, middle.with(Y_ROT.withValue(Quadrant.R90)).with(VariantMutator.UV_LOCK.withValue(true)))
+                .select(Direction.EAST, CouchShape.RIGHT, right.with(Y_ROT.withValue(Quadrant.R180)).with(VariantMutator.UV_LOCK.withValue(true)))
+                .select(Direction.WEST, CouchShape.RIGHT, right)
+                .select(Direction.SOUTH, CouchShape.RIGHT, right.with(Y_ROT.withValue(Quadrant.R270)).with(VariantMutator.UV_LOCK.withValue(true)))
+                .select(Direction.NORTH, CouchShape.RIGHT, right.with(Y_ROT.withValue(Quadrant.R90)).with(VariantMutator.UV_LOCK.withValue(true)))
+                .select(Direction.EAST, CouchShape.LEFT, left.with(Y_ROT.withValue(Quadrant.R180)).with(VariantMutator.UV_LOCK.withValue(true)))
+                .select(Direction.WEST, CouchShape.LEFT, left)
+                .select(Direction.SOUTH, CouchShape.LEFT, left.with(Y_ROT.withValue(Quadrant.R270)).with(VariantMutator.UV_LOCK.withValue(true)))
+                .select(Direction.NORTH, CouchShape.LEFT, left.with(Y_ROT.withValue(Quadrant.R90)).with(VariantMutator.UV_LOCK.withValue(true)))
+                .select(Direction.EAST, CouchShape.OUTER_RIGHT, outerCorner.with(Y_ROT.withValue(Quadrant.R180)).with(VariantMutator.UV_LOCK.withValue(true)))
+                .select(Direction.WEST, CouchShape.OUTER_RIGHT, outerCorner)
+                .select(Direction.SOUTH, CouchShape.OUTER_RIGHT, outerCorner.with(Y_ROT.withValue(Quadrant.R270)).with(VariantMutator.UV_LOCK.withValue(true)))
+                .select(Direction.NORTH, CouchShape.OUTER_RIGHT, outerCorner.with(Y_ROT.withValue(Quadrant.R90)).with(VariantMutator.UV_LOCK.withValue(true)))
+                .select(Direction.EAST, CouchShape.OUTER_LEFT, outerCorner.with(Y_ROT.withValue(Quadrant.R90)).with(VariantMutator.UV_LOCK.withValue(true)))
+                .select(Direction.WEST, CouchShape.OUTER_LEFT, outerCorner.with(Y_ROT.withValue(Quadrant.R270)).with(VariantMutator.UV_LOCK.withValue(true)))
+                .select(Direction.SOUTH, CouchShape.OUTER_LEFT, outerCorner.with(Y_ROT.withValue(Quadrant.R180)).with(VariantMutator.UV_LOCK.withValue(true)))
+                .select(Direction.NORTH, CouchShape.OUTER_LEFT, outerCorner)
+                .select(Direction.EAST, CouchShape.INNER_RIGHT, innerCorner.with(Y_ROT.withValue(Quadrant.R180)).with(VariantMutator.UV_LOCK.withValue(true)))
+                .select(Direction.WEST, CouchShape.INNER_RIGHT, innerCorner)
+                .select(Direction.SOUTH, CouchShape.INNER_RIGHT, innerCorner.with(Y_ROT.withValue(Quadrant.R270)).with(VariantMutator.UV_LOCK.withValue(true)))
+                .select(Direction.NORTH, CouchShape.INNER_RIGHT, innerCorner.with(Y_ROT.withValue(Quadrant.R90)).with(VariantMutator.UV_LOCK.withValue(true)))
+                .select(Direction.EAST, CouchShape.INNER_LEFT, innerCorner.with(Y_ROT.withValue(Quadrant.R90)).with(VariantMutator.UV_LOCK.withValue(true)))
+                .select(Direction.WEST, CouchShape.INNER_LEFT, innerCorner.with(Y_ROT.withValue(Quadrant.R270)).with(VariantMutator.UV_LOCK.withValue(true)))
+                .select(Direction.SOUTH, CouchShape.INNER_LEFT, innerCorner.with(Y_ROT.withValue(Quadrant.R180)).with(VariantMutator.UV_LOCK.withValue(true)))
+                .select(Direction.NORTH, CouchShape.INNER_LEFT, innerCorner));
+    }
+
+    private MultiVariantGenerator createFootstoolBlock(Block block, Identifier wood, Identifier wool, BlockModelGenerators blockModels) {
+        MultiVariant model = BlockModelGenerators.plainVariant(ModelTemplates.FOOTSTOOL.create(block, new TextureMapping().put(TextureSlot.PARTICLE, new Material(wood, false)).put(TextureSlots.WOOD, new Material(wood, false)).put(TextureSlots.WOOL, new Material(wool, false)), blockModels.modelOutput));
+        return MultiVariantGenerator.dispatch(block, model);
+    }
+
+    private MultiVariantGenerator createCouchTableBlock(Block block, Block planks, BlockModelGenerators blockModels) {
+        TextureMapping mapping = new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(planks)).put(TextureSlots.PLANKS, TextureMapping.getBlockTexture(planks));
+        MultiVariant single = BlockModelGenerators.plainVariant(ModelTemplates.COUCH_TABLE_SINGLE.create(block, mapping, blockModels.modelOutput));
+        MultiVariant middle = BlockModelGenerators.plainVariant(ModelTemplates.COUCH_TABLE_MIDDLE.create(block, mapping, blockModels.modelOutput));
+        MultiVariant north = BlockModelGenerators.plainVariant(ModelTemplates.COUCH_TABLE_NORTH.create(block, mapping, blockModels.modelOutput));
+        MultiVariant east = BlockModelGenerators.plainVariant(ModelTemplates.COUCH_TABLE_EAST.create(block, mapping, blockModels.modelOutput));
+        MultiVariant south = BlockModelGenerators.plainVariant(ModelTemplates.COUCH_TABLE_SOUTH.create(block, mapping, blockModels.modelOutput));
+        MultiVariant west = BlockModelGenerators.plainVariant(ModelTemplates.COUCH_TABLE_WEST.create(block, mapping, blockModels.modelOutput));
+        MultiVariant north_east = BlockModelGenerators.plainVariant(ModelTemplates.COUCH_TABLE_NORTH_EAST.create(block, mapping, blockModels.modelOutput));
+        MultiVariant north_west = BlockModelGenerators.plainVariant(ModelTemplates.COUCH_TABLE_NORTH_WEST.create(block, mapping, blockModels.modelOutput));
+        MultiVariant south_east = BlockModelGenerators.plainVariant(ModelTemplates.COUCH_TABLE_SOUTH_EAST.create(block, mapping, blockModels.modelOutput));
+        MultiVariant south_west = BlockModelGenerators.plainVariant(ModelTemplates.COUCH_TABLE_SOUTH_WEST.create(block, mapping, blockModels.modelOutput));
+        return MultiVariantGenerator.dispatch(block).with(
+                PropertyDispatch.initial(CouchTableBlock.NORTH, CouchTableBlock.EAST, CouchTableBlock.SOUTH, CouchTableBlock.WEST)
+                        .select(false, false, false, false, single)
+                        .select(true, true, true, true, middle)
+                        .select(true, false, true, false, middle)
+                        .select(false, true, false, true, middle)
+                        .select(true, false, false, false, south)
+                        .select(false, true, false, false, west)
+                        .select(false, false, true, false, north)
+                        .select(false, false, false, true, east)
+                        .select(true, true, false, false, south_west)
+                        .select(false, true, true, false, north_west)
+                        .select(false, false, true, true, north_east)
+                        .select(true, false, false, true, south_east)
+                        .select(true, true, true, false, middle)
+                        .select(false, true, true, true, middle)
+                        .select(true, false, true, true, middle)
+                        .select(true, true, false, true, middle)
+        );
     }
 
     private void createModel(BlockModelGenerators blockModels, MultiVariantGenerator generator) {
@@ -875,8 +1001,14 @@ public class ModelGenerator extends ModelProvider {
         return BuiltInRegistries.ITEM.listElements().filter((holder) -> false);
     }
 
+    static {
+        ROTATION_HORIZONTAL_FACING_UV_LOCKED = PropertyDispatch.modify(BlockStateProperties.HORIZONTAL_FACING).select(Direction.EAST, Y_ROT.withValue(Quadrant.R90).then(VariantMutator.UV_LOCK.withValue(true))).select(Direction.SOUTH, Y_ROT.withValue(Quadrant.R180).then(VariantMutator.UV_LOCK.withValue(true))).select(Direction.WEST, Y_ROT.withValue(Quadrant.R270).then(VariantMutator.UV_LOCK.withValue(true))).select(Direction.NORTH, NOP);
+    }
+
     public static class TextureSlots {
         public static final TextureSlot BLOCK = TextureSlot.create("block");
+        public static final TextureSlot CONCRETE = TextureSlot.create("concrete");
+        public static final TextureSlot CABLE = TextureSlot.create("cable");
         public static final TextureSlot STAND = TextureSlot.create("stand");
         public static final TextureSlot PLANKS = TextureSlot.create("planks");
         public static final TextureSlot DIRT = TextureSlot.create("dirt");
@@ -1048,9 +1180,9 @@ public class ModelGenerator extends ModelProvider {
         public static final ModelTemplate TRASH_BIN = getTemplate("trash_bin_template", Optional.empty(), TextureSlot.PARTICLE, TextureSlots.METAL, TextureSlots.WOOD);
         public static final ModelTemplate BIRDBATH = getTemplate("birdbath_template", Optional.empty(), TextureSlot.PARTICLE, TextureSlots.STONE, TextureSlots.WATER);
 
-        public static final ModelTemplate HEDGE_POST = getTemplate("hedge_post_template", Optional.of("_post"), TextureSlot.WALL).extend().renderType("cutout_mipped").build();
-        public static final ModelTemplate HEDGE_LOW_SIDE = getTemplate("hedge_side_template", Optional.of("_side"), TextureSlot.WALL).extend().renderType("cutout_mipped").build();
-        public static final ModelTemplate HEDGE_TALL_SIDE = getTemplate("hedge_side_tall_template", Optional.of("_side_tall"), TextureSlot.WALL).extend().renderType("cutout_mipped").build();
+        public static final ModelTemplate HEDGE_POST = getTemplate("hedge_post_template", Optional.of("_post"), TextureSlot.WALL).extend().build();
+        public static final ModelTemplate HEDGE_LOW_SIDE = getTemplate("hedge_side_template", Optional.of("_side"), TextureSlot.WALL).extend().build();
+        public static final ModelTemplate HEDGE_TALL_SIDE = getTemplate("hedge_side_tall_template", Optional.of("_side_tall"), TextureSlot.WALL).extend().build();
         public static final ModelTemplate HEDGE_INVENTORY = getTemplate("hedge_inventory_template", Optional.of("_inventory"), TextureSlot.WALL);
 
         public static final ModelTemplate BIRDHOUSE_BOTTOM = getTemplate("birdhouse_bottom_template", Optional.of("_bottom"), TextureSlot.PARTICLE, TextureSlots.LOG, TextureSlots.LOG_TOP);
@@ -1058,6 +1190,33 @@ public class ModelGenerator extends ModelProvider {
         public static final ModelTemplate BIRDHOUSE_INVENTORY = getTemplate("birdhouse_inventory_template", Optional.of("_inventory"), TextureSlots.LOG, TextureSlots.LOG_TOP, TextureSlots.PLANKS, TextureSlots.ROOF);
 
         public static final ModelTemplate HANGING_BIRDHOUSE = getTemplate("hanging_birdhouse_template", Optional.empty(), TextureSlot.PARTICLE, TextureSlots.PLANKS, TextureSlots.ROOF);
+
+        public static final ModelTemplate COUCH_SINGLE = getTemplate("couch_single_template", Optional.of("_single"), TextureSlot.PARTICLE, TextureSlots.WOOD, TextureSlots.WOOL);
+        public static final ModelTemplate COUCH_MIDDLE = getTemplate("couch_middle_template", Optional.of("_middle"), TextureSlot.PARTICLE, TextureSlots.WOOD, TextureSlots.WOOL);
+        public static final ModelTemplate COUCH_RIGHT = getTemplate("couch_right_template", Optional.of("_right"), TextureSlot.PARTICLE, TextureSlots.WOOD, TextureSlots.WOOL);
+        public static final ModelTemplate COUCH_LEFT = getTemplate("couch_left_template", Optional.of("_left"), TextureSlot.PARTICLE, TextureSlots.WOOD, TextureSlots.WOOL);
+        public static final ModelTemplate COUCH_INNER_CORNER = getTemplate("couch_inner_corner_template", Optional.of("_inner_corner"), TextureSlot.PARTICLE, TextureSlots.WOOD, TextureSlots.WOOL);
+        public static final ModelTemplate COUCH_OUTER_CORNER = getTemplate("couch_outer_corner_template", Optional.of("_outer_corner"), TextureSlot.PARTICLE, TextureSlots.WOOD, TextureSlots.WOOL);
+
+        public static final ModelTemplate FOOTSTOOL = getTemplate("footstool_template", Optional.empty(), TextureSlot.PARTICLE, TextureSlots.WOOD, TextureSlots.WOOL);
+
+        public static final ModelTemplate COUCH_TABLE_SINGLE = getTemplate("couch_table_single_template", Optional.of("_single"), TextureSlot.PARTICLE, TextureSlots.PLANKS);
+        public static final ModelTemplate COUCH_TABLE_MIDDLE = getTemplate("couch_table_middle_template", Optional.of("_middle"), TextureSlot.PARTICLE, TextureSlots.PLANKS);
+        public static final ModelTemplate COUCH_TABLE_NORTH = getTemplate("couch_table_north_template", Optional.of("_north"), TextureSlot.PARTICLE, TextureSlots.PLANKS);
+        public static final ModelTemplate COUCH_TABLE_EAST = getTemplate("couch_table_east_template", Optional.of("_east"), TextureSlot.PARTICLE, TextureSlots.PLANKS);
+        public static final ModelTemplate COUCH_TABLE_SOUTH = getTemplate("couch_table_south_template", Optional.of("_south"), TextureSlot.PARTICLE, TextureSlots.PLANKS);
+        public static final ModelTemplate COUCH_TABLE_WEST = getTemplate("couch_table_west_template", Optional.of("_west"), TextureSlot.PARTICLE, TextureSlots.PLANKS);
+        public static final ModelTemplate COUCH_TABLE_NORTH_EAST = getTemplate("couch_table_north_east_template", Optional.of("_north_east"), TextureSlot.PARTICLE, TextureSlots.PLANKS);
+        public static final ModelTemplate COUCH_TABLE_NORTH_WEST = getTemplate("couch_table_north_west_template", Optional.of("_north_west"), TextureSlot.PARTICLE, TextureSlots.PLANKS);
+        public static final ModelTemplate COUCH_TABLE_SOUTH_EAST = getTemplate("couch_table_south_east_template", Optional.of("_south_east"), TextureSlot.PARTICLE, TextureSlots.PLANKS);
+        public static final ModelTemplate COUCH_TABLE_SOUTH_WEST = getTemplate("couch_table_south_west_template", Optional.of("_south_west"), TextureSlot.PARTICLE, TextureSlots.PLANKS);
+
+        public static final ModelTemplate CEILING_LAMP_SINGLE = getTemplate("ceiling_lamp_single_template", Optional.empty(), TextureSlot.PARTICLE, TextureSlots.CONCRETE, TextureSlots.CABLE, TextureSlots.LAMP);
+        public static final ModelTemplate CEILING_LAMP_SINGLE_ON = getTemplate("ceiling_lamp_single_template", Optional.of("_on"), TextureSlot.PARTICLE, TextureSlots.CONCRETE, TextureSlots.CABLE, TextureSlots.LAMP);
+        public static final ModelTemplate CEILING_LAMP_TOP = getTemplate("ceiling_lamp_top_template", Optional.of("_top"), TextureSlot.PARTICLE, TextureSlots.CONCRETE, TextureSlots.CABLE);
+        public static final ModelTemplate CEILING_LAMP_MIDDLE = getTemplate("ceiling_lamp_middle_template", Optional.of("_middle"), TextureSlot.PARTICLE, TextureSlots.CABLE);
+        public static final ModelTemplate CEILING_LAMP_BOTTOM = getTemplate("ceiling_lamp_bottom_template", Optional.of("_bottom"), TextureSlot.PARTICLE, TextureSlots.CABLE, TextureSlots.LAMP);
+        public static final ModelTemplate CEILING_LAMP_BOTTOM_ON = getTemplate("ceiling_lamp_bottom_template", Optional.of("_bottom_on"), TextureSlot.PARTICLE, TextureSlots.CABLE, TextureSlots.LAMP);
 
         private static ModelTemplate getTemplate(String name, Optional<String> suffix, TextureSlot... slots) {
             return new ModelTemplate(Optional.of(FabulousFurniture.prefix(name).withPrefix("block/template/")), suffix, slots);
