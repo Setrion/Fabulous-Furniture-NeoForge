@@ -1,6 +1,7 @@
 package net.setrion.fabulous_furniture.network;
 
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -15,7 +16,26 @@ public record CarpentryRecipes(List<RecipeHolder<CarpentryTableRecipe>> recipes)
 
     public static final CustomPacketPayload.Type<CarpentryRecipes> TYPE = new CustomPacketPayload.Type<>(FabulousFurniture.prefix("carpentry_recipes"));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, CarpentryRecipes> STREAM_CODEC = StreamCodec.of((buf, message) -> buf.writeCollection(message.recipes, (buf1, holder) -> RecipeHolder.STREAM_CODEC.encode(buf, holder)), buf -> new CarpentryRecipes(buf.readList(buf1 -> (RecipeHolder<CarpentryTableRecipe>) RecipeHolder.STREAM_CODEC.decode(buf))));
+    public static final StreamCodec<RegistryFriendlyByteBuf, CarpentryRecipes> STREAM_CODEC = StreamCodec.of(
+            (buf, message) -> {
+                if (message.recipes != null) {
+                    StreamCodec<RegistryFriendlyByteBuf, List<RecipeHolder<?>>> listCodec =
+                            RecipeHolder.STREAM_CODEC.apply(ByteBufCodecs.collection(java.util.ArrayList::new));
+
+                    listCodec.encode(buf, (List<RecipeHolder<?>>) (Object) message.recipes);
+                } else {
+                    buf.writeVarInt(0);
+                }
+            },
+    buf -> {
+            StreamCodec<RegistryFriendlyByteBuf, List<RecipeHolder<?>>> listCodec =
+                RecipeHolder.STREAM_CODEC.apply(ByteBufCodecs.collection(java.util.ArrayList::new));
+
+            List<RecipeHolder<?>> decodedList = listCodec.decode(buf);
+
+            return new CarpentryRecipes((List<RecipeHolder<CarpentryTableRecipe>>) (Object) decodedList);
+        }
+    );
 
     @Override
     public Type<? extends CustomPacketPayload> type() {

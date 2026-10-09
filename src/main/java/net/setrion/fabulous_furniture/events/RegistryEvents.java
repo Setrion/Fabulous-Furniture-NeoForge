@@ -1,8 +1,16 @@
 package net.setrion.fabulous_furniture.events;
 
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistrySetBuilder;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
+import net.minecraft.data.loot.LootTableProvider;
+import net.minecraft.data.registries.RegistriesDatapackGenerator;
+import net.minecraft.resources.RegistryDataLoader;
+import net.minecraft.resources.RegistryValidator;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -14,12 +22,15 @@ import net.setrion.fabulous_furniture.data.*;
 import net.setrion.fabulous_furniture.network.CarpentryRecipes;
 import net.setrion.fabulous_furniture.registry.*;
 
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 @EventBusSubscriber()
 public class RegistryEvents {
 
     public static void registerEverything(IEventBus modEventBus) {
+        SFFSounds.SOUND_EVENTS.register(modEventBus);
         SFFStats.STATS.register(modEventBus);
         SFFEntityTypes.ENTITY_TYPES.register(modEventBus);
         SFFCreativeTabs.CREATIVE_MODE_TABS.register(modEventBus);
@@ -50,14 +61,15 @@ public class RegistryEvents {
     public static void gatherClientData(GatherDataEvent.Client event) {
         DataGenerator generator = event.getGenerator();
         PackOutput output = event.getGenerator().getPackOutput();
-        CompletableFuture<HolderLookup.Provider> newLookup = event.getLookupProvider();
+        CompletableFuture<HolderLookup.Provider> newLookup = event.getReloadableLookupProvider();
+
+        event.createReloadableRegistryObjects(new RegistrySetBuilder().add(Registries.LOOT_TABLE, new LootTableGenerator()).add(RecipeGenerator.create()));
 
         generator.addProvider(true, new DataMapGenerator(output, newLookup));
         TagGenerator.Blocks blockTags = new TagGenerator.Blocks(output, newLookup);
-        generator.addProvider(true, new LootTableGenerator(output, newLookup));
+        generator.addProvider(true, new SoundDefinitionsProvider(output));
         generator.addProvider(true, blockTags);
         generator.addProvider(true, new LangGenerator(output));
-        generator.addProvider(true, new RecipeRunner(output, newLookup));
         generator.addProvider(true, new TagGenerator.Items(output, newLookup));
         generator.addProvider(true, new ModelGenerator(output));
     }
@@ -66,14 +78,14 @@ public class RegistryEvents {
     public static void gatherServerData(GatherDataEvent.Server event) {
         DataGenerator generator = event.getGenerator();
         PackOutput output = event.getGenerator().getPackOutput();
-        CompletableFuture<HolderLookup.Provider> newLookup = event.getLookupProvider();
+        CompletableFuture<HolderLookup.Provider> newLookup = event.getReloadableLookupProvider();
+
+        event.createReloadableRegistryObjects(new RegistrySetBuilder().add(Registries.LOOT_TABLE, new LootTableGenerator()).add(RecipeGenerator.create()));
 
         generator.addProvider(true, new DataMapGenerator(output, newLookup));
         TagGenerator.Blocks blockTags = new TagGenerator.Blocks(output, newLookup);
-        generator.addProvider(true, new LootTableGenerator(output, newLookup));
         generator.addProvider(true, new LangGenerator(output));
         generator.addProvider(true, blockTags);
-        generator.addProvider(true, new RecipeRunner(output, newLookup));
         generator.addProvider(true, new TagGenerator.Items(output, newLookup));
     }
 }

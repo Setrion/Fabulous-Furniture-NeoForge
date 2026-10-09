@@ -19,6 +19,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -30,15 +31,14 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.setrion.fabulous_furniture.registry.SFFBlockEntityTypes;
 import net.setrion.fabulous_furniture.registry.SFFStats;
 import net.setrion.fabulous_furniture.world.level.block.entity.KitchenStorageBaseBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class KitchenCounterContainerBaseBlock extends BaseEntityBlock implements BlockTagSupplier {
-
-    public static final MapCodec<KitchenCounterContainerBaseBlock> CODEC = simpleCodec(KitchenCounterContainerBaseBlock::new);
+public class KitchenCounterContainerBaseBlock extends BaseEntityBlock implements BlockTagSupplier, BlockEntitySupplier {
 
     public static final EnumProperty<Direction> FACING;
     public static final BooleanProperty OPEN;
@@ -59,11 +59,6 @@ public class KitchenCounterContainerBaseBlock extends BaseEntityBlock implements
         super(properties);
         this.canBeOpened = canBeOpened;
         this.hasHinge = hasHinge;
-    }
-
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
     }
 
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
@@ -178,6 +173,11 @@ public class KitchenCounterContainerBaseBlock extends BaseEntityBlock implements
     @Override
     public List<TagKey<Block>> getTags() {
         return List.of(BlockTags.MINEABLE_WITH_AXE);
+    }
+
+    @Override
+    public BlockEntityType<?> getBlockEntityType() {
+        return SFFBlockEntityTypes.KITCHEN_STORAGE.get();
     }
 
     static {

@@ -20,6 +20,7 @@ public record MaterialType(String name, Item item) {
     public static final MaterialType JUNGLE;
     public static final MaterialType DARK_OAK;
     public static final MaterialType PALE_OAK;
+    public static final MaterialType POPLAR;
     public static final MaterialType CRIMSON;
     public static final MaterialType WARPED;
     public static final MaterialType MANGROVE;
@@ -91,13 +92,14 @@ public record MaterialType(String name, Item item) {
         JUNGLE = register(new MaterialType("jungle", Blocks.JUNGLE_PLANKS.asItem()));
         DARK_OAK = register(new MaterialType("dark_oak", Blocks.DARK_OAK_PLANKS.asItem()));
         PALE_OAK = register(new MaterialType("pale_oak", Blocks.PALE_OAK_PLANKS.asItem()));
+        POPLAR = register(new MaterialType("poplar", Blocks.POPLAR_PLANKS.asItem()));
         CRIMSON = register(new MaterialType("crimson", Blocks.CRIMSON_PLANKS.asItem()));
         WARPED = register(new MaterialType("warped", Blocks.WARPED_PLANKS.asItem()));
         MANGROVE = register(new MaterialType("mangrove", Blocks.MANGROVE_PLANKS.asItem()));
         BAMBOO = register(new MaterialType("bamboo", Blocks.BAMBOO_PLANKS.asItem()));
         LEAVES = register(new MaterialType("leaves", Blocks.OAK_LEAVES.asItem()));
-        WOOL = register(new MaterialType("wool", Blocks.WHITE_WOOL.asItem()));
-        CONCRETE = register(new MaterialType("concrete", Blocks.WHITE_CONCRETE.asItem()));
+        WOOL = register(new MaterialType("wool", Blocks.WOOL.white().asItem()));
+        CONCRETE = register(new MaterialType("concrete", Blocks.CONCRETE.white().asItem()));
         STONE = register(new MaterialType("stone", Blocks.STONE.asItem()));
         COBBLESTONE = register(new MaterialType("cobblestone", Blocks.COBBLESTONE.asItem()));
         COBBLED_DEEPSLATE = register(new MaterialType("cobbled_deepslate", Blocks.COBBLED_DEEPSLATE.asItem()));
@@ -118,7 +120,7 @@ public record MaterialType(String name, Item item) {
         CALCITE = register(new MaterialType("calcite", Blocks.CALCITE.asItem()));
         TERRACOTTA = register(new MaterialType("terracotta", Blocks.TERRACOTTA.asItem()));
         IRON = register(new MaterialType("iron", Blocks.IRON_BLOCK.asItem()));
-        COPPER = register(new MaterialType("copper", Blocks.COPPER_BLOCK.asItem()));
+        COPPER = register(new MaterialType("copper", Blocks.COPPER_BLOCK.weathering().unaffected().asItem()));
         GOLD = register(new MaterialType("gold", Blocks.GOLD_BLOCK.asItem()));
         NETHERITE = register(new MaterialType("netherite", Blocks.NETHERITE_BLOCK.asItem()));
     }

@@ -10,12 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class WeatheringKitchenShelfBlock extends KitchenShelfBlock implements WeatheringCopper {
 
-    public static final MapCodec<WeatheringKitchenShelfBlock> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(WeatherState.CODEC.fieldOf("weathering_state").forGetter(WeatheringKitchenShelfBlock::getAge), propertiesCodec()).apply(instance, WeatheringKitchenShelfBlock::new));
     private final WeatherState weatherState;
-
-    public MapCodec<WeatheringKitchenShelfBlock> codec() {
-        return CODEC;
-    }
 
     public WeatheringKitchenShelfBlock(WeatherState weatherState, Properties properties) {
         super(properties);

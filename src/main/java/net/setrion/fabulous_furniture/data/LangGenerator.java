@@ -28,6 +28,8 @@ public class LangGenerator extends LanguageProvider {
 
         FurnitureCategory.values().toList().forEach(category -> add(category.getTranslatableName(), createTranslatedName(category.name())));
 
+        addConfig();
+
         add("itemGroup.fabulous_furniture.main", "Setrion's Fabulous Furniture");
 
         add("carpentry_table.amount", "Amount: ");
@@ -90,6 +92,9 @@ public class LangGenerator extends LanguageProvider {
         add(CHERRY_HEDGE.asItem(), "Cherry Hedge");
         add(DARK_OAK_HEDGE.asItem(), "Dark Oak Hedge");
         add(PALE_OAK_HEDGE.asItem(), "Pale Oak Hedge");
+        add(RED_POPLAR_HEDGE.asItem(), "Red Poplar Hedge");
+        add(ORANGE_POPLAR_HEDGE.asItem(), "Orange Poplar Hedge");
+        add(YELLOW_POPLAR_HEDGE.asItem(), "Yellow Poplar Hedge");
         add(MANGROVE_HEDGE.asItem(), "Mangrove Hedge");
         add(AZALEA_HEDGE.asItem(), "Azalea Hedge");
         add(FLOWERING_AZALEA_HEDGE.asItem(), "Flowering Azalea Hedge");
@@ -242,6 +247,39 @@ public class LangGenerator extends LanguageProvider {
         translate(type.name()+log_suffix+"_trash_bin");
         translate("stripped_"+type.name()+log_suffix+"_trash_bin");
 
+        translate(type.name()+"_clock");
+        translate(type.name()+log_suffix+"_clock");
+        translate("stripped_"+type.name()+log_suffix+"_clock");
+
+        translate(type.name()+"_wall_clock");
+        translate(type.name()+log_suffix+"_wall_clock");
+        translate("stripped_"+type.name()+log_suffix+"_wall_clock");
+
+        translate(type.name()+"_grandfather_clock");
+        translate(type.name()+log_suffix+"_grandfather_clock");
+        translate("stripped_"+type.name()+log_suffix+"_grandfather_clock");
+
+        translate("modern_"+type.name()+"_grandfather_clock");
+        translate("modern_"+type.name()+log_suffix+"_grandfather_clock");
+        translate("modern_stripped_"+type.name()+log_suffix+"_grandfather_clock");
+
+        translate(type.name()+"_disc_mount");
+        translate(type.name()+log_suffix+"_disc_mount");
+        translate("stripped_"+type.name()+log_suffix+"_disc_mount");
+
+        translate(type.name()+"_music_disc_shelf");
+        translate(type.name()+log_suffix+"_music_disc_shelf");
+        translate("stripped_"+type.name()+log_suffix+"_music_disc_shelf");
+
+        translate(type.name()+"_globe");
+
+        /*TABLEWARE_MATERIALS.forEach((block, suffix) -> {
+            String top_name = block.getDescriptionId().replaceFirst("block.minecraft.", "").replaceFirst("quartz_block", "quartz");
+            translate(type.name() + "_" + top_name + "_tiled_coffee_table");
+            translate(type.name() + log_suffix + "_" + top_name + "_tiled_coffee_table");
+            translate("stripped_" + type.name() + log_suffix + "_" + top_name + "_tiled_coffee_table");
+        });*/
+
         for (WoodType type2 : WOOD_TYPES) {
             String log_suffix2;
             if (type2 == WoodType.CRIMSON || type2 == WoodType.WARPED) {
@@ -298,6 +336,13 @@ public class LangGenerator extends LanguageProvider {
                 translate(color.getName()+"_stripped_"+type.name()+log_suffix+"_footstool");
             }
         }));
+    }
+
+    private void addConfig() {
+        add("fabulous_furniture.configuration.main", "Fabulous Furniture Config");
+        add("fabulous_furniture.cfg.enable_clock_ticks", "Enable Clock Ticks");
+        add("fabulous_furniture.cfg.gong_hours_default", "Gong Hours (Default)");
+        add("fabulous_furniture.cfg.gong_hours_realtime", "Gong Hours (Realtime)");
     }
 
     private void translate(String name) {

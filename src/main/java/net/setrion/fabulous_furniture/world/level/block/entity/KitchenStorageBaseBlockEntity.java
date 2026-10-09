@@ -1,9 +1,7 @@
 package net.setrion.fabulous_furniture.world.level.block.entity;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.ItemStack;

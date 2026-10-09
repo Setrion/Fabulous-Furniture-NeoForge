@@ -1,0 +1,12 @@
+{
+  "sources": [
+    {
+      "type": "minecraft:single",
+      "resource": "fabulous_furniture:entity/clock/clock_hands_and_pendulums"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "fabulous_furniture:entity/globe/globe"
+    }
+  ]
+}

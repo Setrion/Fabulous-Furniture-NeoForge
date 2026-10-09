@@ -1,28 +1,20 @@
 package net.setrion.fabulous_furniture.data;
 
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.WritableRegistry;
-import net.minecraft.data.PackOutput;
+import net.minecraft.core.registries.SingleRegistryBootstrap;
 import net.minecraft.data.loot.LootTableProvider;
-import net.minecraft.util.ProblemReporter;
+import net.minecraft.data.worldgen.BootstrapContext;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.ValidationContext;
-import net.minecraft.world.level.storage.loot.ValidationContextSource;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
+import java.util.Set;
 
 public class LootTableGenerator extends LootTableProvider {
 
-    public LootTableGenerator(PackOutput output, CompletableFuture<HolderLookup.Provider> provider) {
-        super(output, BuiltInLootTables.all(), List.of(
-                new LootTableProvider.SubProviderEntry(BlockLootTables::new, LootContextParamSets.BLOCK)), provider);
-    }
-
-    @Override
-    protected void validate(WritableRegistry<LootTable> tables, ValidationContextSource validationContext, ProblemReporter.Collector problems) {
-        // Do not validate against all registered loot tables
+     public LootTableGenerator() {
+        super(BuiltInLootTables.all(), List.of(
+                new LootTableProvider.SubProviderEntry(BlockLootTables::new, LootContextParamSets.BLOCK)));
     }
 }

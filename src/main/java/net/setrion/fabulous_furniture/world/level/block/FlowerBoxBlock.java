@@ -6,6 +6,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.Prediction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -15,18 +17,26 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.Half;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.setrion.fabulous_furniture.registry.SFFBlockEntityTypes;
 import net.setrion.fabulous_furniture.registry.SFFStats;
 import net.setrion.fabulous_furniture.registry.SFFTags;
 import net.setrion.fabulous_furniture.util.VoxelShapeUtils;
@@ -35,19 +45,18 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class FlowerBoxBlock extends BaseEntityBlock implements BlockTagSupplier, ItemModelSupplier {
-
-    public static final MapCodec<FlowerBoxBlock> CODEC = simpleCodec(FlowerBoxBlock::new);
+public class FlowerBoxBlock extends BaseEntityBlock implements BlockTagSupplier, ItemModelSupplier, SimpleWaterloggedBlock, BlockEntitySupplier {
 
     private static final VoxelShape VOXELSHAPE_BOTTOM;
     private static final VoxelShape VOXELSHAPE_TOP;
 
     public static final EnumProperty<Direction> FACING;
+    public static final BooleanProperty WATERLOGGED;
     public static final EnumProperty<Half> HALF;
 
     public FlowerBoxBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false));
     }
 
     @Override
@@ -64,6 +73,18 @@ public class FlowerBoxBlock extends BaseEntityBlock implements BlockTagSupplier,
             case NORTH: default:
                 yield shape;
         };
+    }
+
+    @Override
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess ticks, BlockPos pos, Direction directionToNeighbour, BlockPos neighbourPos, BlockState neighbourState, RandomSource random) {
+        if (state.getValue(WATERLOGGED)) {
+            ticks.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
+        }
+        return super.updateShape(state, level, ticks, pos, directionToNeighbour, neighbourPos, neighbourState, random);
+    }
+
+    protected FluidState getFluidState(BlockState state) {
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
 
     protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
@@ -140,7 +161,7 @@ public class FlowerBoxBlock extends BaseEntityBlock implements BlockTagSupplier,
                 ItemStack flower = flowerBox.takeFlower(serverlevel, slot, player);
                 if (!flower.isEmpty()) {
                     if (!player.addItem(flower)) {
-                        player.drop(flower, false);
+                        player.drop(flower, false, Prediction.PREDICTED);
                     }
                     player.awardStat(SFFStats.INTERACT_WITH_FLOWER_BOX.get());
                     return InteractionResult.SUCCESS_SERVER;
@@ -158,12 +179,8 @@ public class FlowerBoxBlock extends BaseEntityBlock implements BlockTagSupplier,
     @javax.annotation.Nullable
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockPos blockpos = context.getClickedPos();
-        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite()).setValue(HALF, context.getClickLocation().y - (double)blockpos.getY() > (double)0.5F ? Half.TOP : Half.BOTTOM);
-    }
-
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
+        FluidState replacedFluidState = context.getLevel().getFluidState(context.getClickedPos());
+        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite()).setValue(HALF, context.getClickLocation().y - (double)blockpos.getY() > (double)0.5F ? Half.TOP : Half.BOTTOM).setValue(WATERLOGGED, replacedFluidState.is(Fluids.WATER));
     }
 
     @Override
@@ -173,12 +190,18 @@ public class FlowerBoxBlock extends BaseEntityBlock implements BlockTagSupplier,
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING, HALF);
+        builder.add(FACING, HALF, WATERLOGGED);
+    }
+
+    @Override
+    public BlockEntityType<?> getBlockEntityType() {
+        return SFFBlockEntityTypes.FLOWER_BOX.get();
     }
 
     static {
         FACING = BlockStateProperties.HORIZONTAL_FACING;
         HALF = BlockStateProperties.HALF;
+        WATERLOGGED = BlockStateProperties.WATERLOGGED;
         VOXELSHAPE_BOTTOM = Block.box(0.0, 0.0, 0.0, 16.0, 6.0, 8.0);
         VOXELSHAPE_TOP = Block.box(0.0, 10.0, 0.0, 16.0, 16.0, 8.0);
     }

@@ -12,14 +12,14 @@ import java.util.List;
 public class FlowerBoxRenderState extends BlockEntityRenderState {
 
     public List<ItemStack> items = Collections.emptyList();
-    public Direction facing;
+    public Direction direction;
     public Half half;
     public int lightCoords;
     public final BlockModelRenderState[] flowers;
 
     public FlowerBoxRenderState() {
-        this.facing = Direction.NORTH;
-        this.half = Half.BOTTOM;
+        direction = Direction.NORTH;
+        half = Half.BOTTOM;
         flowers = new BlockModelRenderState[]{new BlockModelRenderState(), new BlockModelRenderState(), new BlockModelRenderState(), new BlockModelRenderState()};
     }
 }

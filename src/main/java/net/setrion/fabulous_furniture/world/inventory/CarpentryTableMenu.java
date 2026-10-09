@@ -3,6 +3,7 @@ package net.setrion.fabulous_furniture.world.inventory;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Prediction;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -18,7 +19,8 @@ import net.setrion.fabulous_furniture.registry.SFFRecipeTypes;
 import net.setrion.fabulous_furniture.world.item.crafting.CarpentryTableRecipe;
 import net.setrion.fabulous_furniture.world.item.crafting.StackedIngredient;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CarpentryTableMenu extends AbstractContainerMenu {
@@ -230,7 +232,7 @@ public class CarpentryTableMenu extends AbstractContainerMenu {
 
             slot.onTake(player, itemstack1);
             if (index == 6) {
-                player.drop(itemstack1, false);
+                player.drop(itemstack1, false, Prediction.PREDICTED);
             }
 
             this.broadcastChanges();

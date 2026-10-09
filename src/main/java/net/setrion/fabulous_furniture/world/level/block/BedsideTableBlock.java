@@ -1,6 +1,5 @@
 package net.setrion.fabulous_furniture.world.level.block;
 
-import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -17,8 +16,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -28,34 +31,27 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.setrion.fabulous_furniture.registry.SFFBlockEntityTypes;
 import net.setrion.fabulous_furniture.registry.SFFStats;
 import net.setrion.fabulous_furniture.util.VoxelShapeUtils;
-import net.setrion.fabulous_furniture.world.level.block.entity.BedsideTableBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class BedsideTableBlock extends BaseEntityBlock implements BlockTagSupplier {
+public class BedsideTableBlock extends BaseEntityBlock implements BlockTagSupplier, BlockEntitySupplier {
 
     public static final EnumProperty<Direction> FACING;
     public static final BooleanProperty OPEN;
     protected static final VoxelShape SHAPE;
 
-    public static final MapCodec<BedsideTableBlock> CODEC = simpleCodec(BedsideTableBlock::new);
-
     public BedsideTableBlock(Properties properties) {
         super(properties);
-    }
-
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
     }
 
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return new BedsideTableBlockEntity(blockPos, blockState);
+        return getBlockEntityType().create(blockPos, blockState);
     }
 
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
@@ -132,5 +128,10 @@ public class BedsideTableBlock extends BaseEntityBlock implements BlockTagSuppli
     @Override
     public List<TagKey<Block>> getTags() {
         return List.of(BlockTags.MINEABLE_WITH_AXE);
+    }
+
+    @Override
+    public BlockEntityType<?> getBlockEntityType() {
+        return SFFBlockEntityTypes.BEDSIDE_TABLE.get();
     }
 }

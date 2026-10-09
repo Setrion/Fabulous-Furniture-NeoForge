@@ -1,9 +1,7 @@
 package net.setrion.fabulous_furniture.world.level.block.entity;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.ItemStack;
@@ -12,7 +10,7 @@ import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.setrion.fabulous_furniture.registry.SFFBlockEntityTypes;
-import net.setrion.fabulous_furniture.world.level.block.*;
+import net.setrion.fabulous_furniture.world.level.block.FridgeBlock;
 
 public class KitchenFridgeBlockEntity extends SFFBaseContainerBlockEntity {
 

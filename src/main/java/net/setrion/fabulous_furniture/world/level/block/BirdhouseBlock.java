@@ -2,6 +2,8 @@ package net.setrion.fabulous_furniture.world.level.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
@@ -61,8 +63,8 @@ public class BirdhouseBlock extends Block implements BlockTagSupplier, ItemModel
     }
 
     @Override
-    public void playerDestroy(Level level, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity te, ItemStack stack) {
-        super.playerDestroy(level, player, pos, Blocks.AIR.defaultBlockState(), te, stack);
+    public void playerDestroy(ServerLevel level, ServerPlayer player, BlockPos pos, BlockState state, @org.jspecify.annotations.Nullable BlockEntity blockEntity, ItemStack destroyedWith) {
+        super.playerDestroy(level, player, pos, Blocks.AIR.defaultBlockState(), blockEntity, destroyedWith);
     }
 
     protected static void preventDropFromBottomPart(Level level, BlockPos pos, BlockState state, Player player) {

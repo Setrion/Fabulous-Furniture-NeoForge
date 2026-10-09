@@ -4,6 +4,7 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -21,7 +22,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.*;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -42,8 +46,6 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 public class FridgeBlock extends BaseEntityBlock implements BlockTagSupplier, ItemModelSupplier {
-
-    public static final MapCodec<FridgeBlock> CODEC = simpleCodec(FridgeBlock::new);
 
     public static final EnumProperty<Direction> FACING;
     public static final BooleanProperty OPEN;
@@ -94,8 +96,8 @@ public class FridgeBlock extends BaseEntityBlock implements BlockTagSupplier, It
     }
 
     @Override
-    public void playerDestroy(Level level, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity te, ItemStack stack) {
-        super.playerDestroy(level, player, pos, Blocks.AIR.defaultBlockState(), te, stack);
+    public void playerDestroy(ServerLevel level, ServerPlayer player, BlockPos pos, BlockState state, @org.jspecify.annotations.Nullable BlockEntity blockEntity, ItemStack destroyedWith) {
+        super.playerDestroy(level, player, pos, Blocks.AIR.defaultBlockState(), blockEntity, destroyedWith);
     }
 
     protected static void preventDropFromBottomPart(Level level, BlockPos pos, BlockState state, Player player) {
@@ -225,11 +227,6 @@ public class FridgeBlock extends BaseEntityBlock implements BlockTagSupplier, It
             this.playSound(entity, state, level, pos, open);
             level.gameEvent(entity, open ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pos);
         }
-    }
-
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
     }
 
     @org.jetbrains.annotations.Nullable

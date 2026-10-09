@@ -2,17 +2,16 @@ package net.setrion.fabulous_furniture.world.level.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.attribute.BedRule;
+import net.minecraft.world.attribute.EnvironmentAttribute;
 import net.minecraft.world.attribute.EnvironmentAttributes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -20,6 +19,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
+import net.minecraft.world.level.block.AbstractBedBlock;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -30,8 +30,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.pathfinder.PathComputationType;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -42,7 +40,7 @@ import net.setrion.fabulous_furniture.world.level.block.state.properties.BedShap
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class WoodenBedBlock extends Block implements BlockTagSupplier, ItemModelSupplier {
+public class WoodenBedBlock extends AbstractBedBlock implements BlockTagSupplier, ItemModelSupplier {
 
     public static final EnumProperty<BedPart> PART;
     public static final EnumProperty<BedShape> SHAPE;
@@ -57,85 +55,36 @@ public class WoodenBedBlock extends Block implements BlockTagSupplier, ItemModel
         this.registerDefaultState(this.stateDefinition.any().setValue(PART, BedPart.FOOT).setValue(OCCUPIED, false));
     }
 
+    @Override
+    protected EnvironmentAttribute<BedRule> getBedEnvironmentAttribute() {
+        return EnvironmentAttributes.BED_RULE;
+    }
+
+    @Override
+    protected InteractionResult destroyOnUse(BlockState state, Level level, BlockPos pos, Player player) {
+        level.removeBlock(pos, false);
+        BlockPos blockPos = pos.relative(state.getValue(FACING).getOpposite());
+        if (level.getBlockState(blockPos).is(this)) {
+            level.removeBlock(blockPos, false);
+        }
+
+        Vec3 boomPos = Vec3.atCenterOf(pos);
+        level.explode(null, level.damageSources().badRespawnPointExplosion(boomPos), null, boomPos, 5.0F, true, Level.ExplosionInteraction.BLOCK);
+        return InteractionResult.SUCCESS_SERVER;
+    }
+
+    @Override
+    protected void destroyOnLeave(Level level, BlockPos blockPos) {
+
+    }
+
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING, PART, SHAPE, OCCUPIED);
     }
 
-    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult result) {
-        if (level.isClientSide()) {
-            return InteractionResult.SUCCESS_SERVER;
-        } else {
-            if (state.getValue(PART) != BedPart.HEAD) {
-                pos = pos.relative(state.getValue(FACING));
-                state = level.getBlockState(pos);
-                if (!state.is(this)) {
-                    return InteractionResult.CONSUME;
-                }
-            }
-
-            BedRule bedrule = level.environmentAttributes().getValue(EnvironmentAttributes.BED_RULE, pos);
-            if (bedrule.explodes()) {
-                bedrule.errorMessage().ifPresent(player::sendOverlayMessage);
-                level.removeBlock(pos, false);
-                BlockPos blockpos = pos.relative(state.getValue(FACING).getOpposite());
-                if (level.getBlockState(blockpos).is(this)) {
-                    level.removeBlock(blockpos, false);
-                }
-
-                Vec3 vec3 = pos.getCenter();
-                level.explode(null, level.damageSources().badRespawnPointExplosion(vec3), null, vec3, 5.0F, true, Level.ExplosionInteraction.BLOCK);
-                return InteractionResult.SUCCESS_SERVER;
-            } else if (state.getValue(OCCUPIED)) {
-                if (!this.kickVillagerOutOfBed(level, pos)) {
-                    player.sendOverlayMessage(Component.translatable("block.minecraft.bed.occupied"));
-                }
-
-                return InteractionResult.SUCCESS_SERVER;
-            } else {
-                player.startSleepInBed(pos).ifLeft((problem) -> {
-                    if (problem.message() != null) {
-                        player.sendOverlayMessage(problem.message());
-                    }
-                });
-                return InteractionResult.SUCCESS_SERVER;
-            }
-        }
-    }
-
     @Override
-    public boolean isBed(BlockState state, BlockGetter level, BlockPos pos, LivingEntity sleeper) {
-        return true;
-    }
-
-    private boolean kickVillagerOutOfBed(Level level, BlockPos pos) {
-        List<Villager> list = level.getEntitiesOfClass(Villager.class, new AABB(pos), LivingEntity::isSleeping);
-        if (list.isEmpty()) {
-            return false;
-        } else {
-            list.getFirst().stopSleeping();
-            return true;
-        }
-    }
-
-    public void fallOn(Level level, BlockState state, BlockPos pos, Entity entity, float amount) {
-        super.fallOn(level, state, pos, entity, amount * 0.5F);
-    }
-
-    public void updateEntityMovementAfterFallOn(BlockGetter getter, Entity entity) {
-        if (entity.isSuppressingBounce()) {
-            super.updateEntityMovementAfterFallOn(getter, entity);
-        } else {
-            this.bounceUp(entity);
-        }
-
-    }
-
-    private void bounceUp(Entity entity) {
-        Vec3 vec3 = entity.getDeltaMovement();
-        if (vec3.y < 0.0) {
-            double d0 = entity instanceof LivingEntity ? 1.0 : 0.8;
-            entity.setDeltaMovement(vec3.x, -vec3.y * 0.6600000262260437 * d0, vec3.z);
-        }
+    public void fallOn(Level level, BlockState state, BlockPos pos, Entity entity, double fallDistance) {
+        super.fallOn(level, state, pos, entity, fallDistance * .5F);
     }
 
     @Override

@@ -2,7 +2,10 @@ package net.setrion.fabulous_furniture.data;
 
 import com.mojang.math.Quadrant;
 import net.minecraft.client.data.models.*;
-import net.minecraft.client.data.models.blockstates.*;
+import net.minecraft.client.data.models.blockstates.BlockModelDefinitionGenerator;
+import net.minecraft.client.data.models.blockstates.MultiPartGenerator;
+import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
+import net.minecraft.client.data.models.blockstates.PropertyDispatch;
 import net.minecraft.client.data.models.model.*;
 import net.minecraft.client.renderer.block.dispatch.VariantMutator;
 import net.minecraft.client.resources.model.sprite.Material;
@@ -23,14 +26,14 @@ import net.setrion.fabulous_furniture.FabulousFurniture;
 import net.setrion.fabulous_furniture.world.level.block.*;
 import net.setrion.fabulous_furniture.world.level.block.state.properties.*;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static net.minecraft.client.data.models.BlockModelGenerators.*;
 import static net.minecraft.client.renderer.block.dispatch.VariantMutator.Y_ROT;
 import static net.minecraft.world.level.block.Blocks.*;
-
 import static net.setrion.fabulous_furniture.registry.SFFBlocks.*;
 
 public class ModelGenerator extends ModelProvider {
@@ -53,14 +56,14 @@ public class ModelGenerator extends ModelProvider {
         createModel(blockModels, createFridge(IRON_FRIDGE.get(), TextureMapping.getBlockTexture(IRON_BLOCK).sprite(), TextureMapping.getBlockTexture(IRON_BARS).sprite(), TextureMapping.getBlockTexture(ANVIL).sprite(), blockModels));
         createModel(blockModels, createFridge(GOLD_FRIDGE.get(), TextureMapping.getBlockTexture(GOLD_BLOCK).sprite(), TextureMapping.getBlockTexture(IRON_BARS).sprite(), TextureMapping.getBlockTexture(ANVIL).sprite(), blockModels));
         createModel(blockModels, createFridge(NETHERITE_FRIDGE.get(), TextureMapping.getBlockTexture(NETHERITE_BLOCK).sprite(), TextureMapping.getBlockTexture(IRON_BARS).sprite(), TextureMapping.getBlockTexture(ANVIL).sprite(), blockModels));
-        createModel(blockModels, createFridge(COPPER_FRIDGE.get(), TextureMapping.getBlockTexture(COPPER_BLOCK).sprite(), TextureMapping.getBlockTexture(IRON_BARS).sprite(), TextureMapping.getBlockTexture(ANVIL).sprite(), blockModels));
-        createModel(blockModels, createFridge(EXPOSED_COPPER_FRIDGE.get(), TextureMapping.getBlockTexture(EXPOSED_COPPER).sprite(), TextureMapping.getBlockTexture(IRON_BARS).sprite(), TextureMapping.getBlockTexture(ANVIL).sprite(), blockModels));
-        createModel(blockModels, createFridge(WEATHERED_COPPER_FRIDGE.get(), TextureMapping.getBlockTexture(WEATHERED_COPPER).sprite(), TextureMapping.getBlockTexture(IRON_BARS).sprite(), TextureMapping.getBlockTexture(ANVIL).sprite(), blockModels));
-        createModel(blockModels, createFridge(OXIDIZED_COPPER_FRIDGE.get(), TextureMapping.getBlockTexture(OXIDIZED_COPPER).sprite(), TextureMapping.getBlockTexture(IRON_BARS).sprite(), TextureMapping.getBlockTexture(ANVIL).sprite(), blockModels));
-        createModel(blockModels, createFridge(WAXED_COPPER_FRIDGE.get(), TextureMapping.getBlockTexture(COPPER_BLOCK).sprite(), TextureMapping.getBlockTexture(IRON_BARS).sprite(), TextureMapping.getBlockTexture(ANVIL).sprite(), blockModels));
-        createModel(blockModels, createFridge(WAXED_EXPOSED_COPPER_FRIDGE.get(), TextureMapping.getBlockTexture(EXPOSED_COPPER).sprite(), TextureMapping.getBlockTexture(IRON_BARS).sprite(), TextureMapping.getBlockTexture(ANVIL).sprite(), blockModels));
-        createModel(blockModels, createFridge(WAXED_WEATHERED_COPPER_FRIDGE.get(), TextureMapping.getBlockTexture(WEATHERED_COPPER).sprite(), TextureMapping.getBlockTexture(IRON_BARS).sprite(), TextureMapping.getBlockTexture(ANVIL).sprite(), blockModels));
-        createModel(blockModels, createFridge(WAXED_OXIDIZED_COPPER_FRIDGE.get(), TextureMapping.getBlockTexture(OXIDIZED_COPPER).sprite(), TextureMapping.getBlockTexture(IRON_BARS).sprite(), TextureMapping.getBlockTexture(ANVIL).sprite(), blockModels));
+        createModel(blockModels, createFridge(COPPER_FRIDGE.get(), TextureMapping.getBlockTexture(COPPER_BLOCK.weathering().unaffected()).sprite(), TextureMapping.getBlockTexture(IRON_BARS).sprite(), TextureMapping.getBlockTexture(ANVIL).sprite(), blockModels));
+        createModel(blockModels, createFridge(EXPOSED_COPPER_FRIDGE.get(), TextureMapping.getBlockTexture(COPPER_BLOCK.weathering().exposed()).sprite(), TextureMapping.getBlockTexture(IRON_BARS).sprite(), TextureMapping.getBlockTexture(ANVIL).sprite(), blockModels));
+        createModel(blockModels, createFridge(WEATHERED_COPPER_FRIDGE.get(), TextureMapping.getBlockTexture(COPPER_BLOCK.weathering().weathered()).sprite(), TextureMapping.getBlockTexture(IRON_BARS).sprite(), TextureMapping.getBlockTexture(ANVIL).sprite(), blockModels));
+        createModel(blockModels, createFridge(OXIDIZED_COPPER_FRIDGE.get(), TextureMapping.getBlockTexture(COPPER_BLOCK.weathering().oxidized()).sprite(), TextureMapping.getBlockTexture(IRON_BARS).sprite(), TextureMapping.getBlockTexture(ANVIL).sprite(), blockModels));
+        createModel(blockModels, createFridge(WAXED_COPPER_FRIDGE.get(), TextureMapping.getBlockTexture(COPPER_BLOCK.weathering().unaffected()).sprite(), TextureMapping.getBlockTexture(IRON_BARS).sprite(), TextureMapping.getBlockTexture(ANVIL).sprite(), blockModels));
+        createModel(blockModels, createFridge(WAXED_EXPOSED_COPPER_FRIDGE.get(), TextureMapping.getBlockTexture(COPPER_BLOCK.weathering().exposed()).sprite(), TextureMapping.getBlockTexture(IRON_BARS).sprite(), TextureMapping.getBlockTexture(ANVIL).sprite(), blockModels));
+        createModel(blockModels, createFridge(WAXED_WEATHERED_COPPER_FRIDGE.get(), TextureMapping.getBlockTexture(COPPER_BLOCK.weathering().weathered()).sprite(), TextureMapping.getBlockTexture(IRON_BARS).sprite(), TextureMapping.getBlockTexture(ANVIL).sprite(), blockModels));
+        createModel(blockModels, createFridge(WAXED_OXIDIZED_COPPER_FRIDGE.get(), TextureMapping.getBlockTexture(COPPER_BLOCK.weathering().oxidized()).sprite(), TextureMapping.getBlockTexture(IRON_BARS).sprite(), TextureMapping.getBlockTexture(ANVIL).sprite(), blockModels));
 
         createTableware(blockModels);
         createToasters(blockModels);
@@ -73,6 +76,9 @@ public class ModelGenerator extends ModelProvider {
         createHedgeBlock(CHERRY_HEDGE.get(), TextureMapping.getBlockTexture(CHERRY_LEAVES).sprite(), blockModels);
         createHedgeBlock(DARK_OAK_HEDGE.get(), TextureMapping.getBlockTexture(DARK_OAK_LEAVES).sprite(), blockModels, -12012264);
         createHedgeBlock(PALE_OAK_HEDGE.get(), TextureMapping.getBlockTexture(PALE_OAK_LEAVES).sprite(), blockModels);
+        createHedgeBlock(RED_POPLAR_HEDGE.get(), TextureMapping.getBlockTexture(RED_POPLAR_LEAVES).sprite(), blockModels);
+        createHedgeBlock(ORANGE_POPLAR_HEDGE.get(), TextureMapping.getBlockTexture(ORANGE_POPLAR_LEAVES).sprite(), blockModels);
+        createHedgeBlock(YELLOW_POPLAR_HEDGE.get(), TextureMapping.getBlockTexture(YELLOW_POPLAR_LEAVES).sprite(), blockModels);
         createHedgeBlock(MANGROVE_HEDGE.get(), TextureMapping.getBlockTexture(MANGROVE_LEAVES).sprite(), blockModels, -7158200);
         createHedgeBlock(AZALEA_HEDGE.get(), TextureMapping.getBlockTexture(AZALEA_LEAVES).sprite(), blockModels);
         createHedgeBlock(FLOWERING_AZALEA_HEDGE.get(), TextureMapping.getBlockTexture(FLOWERING_AZALEA_LEAVES).sprite(), blockModels);
@@ -94,7 +100,7 @@ public class ModelGenerator extends ModelProvider {
     }
 
     private void createCurtains(BlockModelGenerators blockModels) {
-        WOOL_COLORS.forEach((wool, color) -> METALS.forEach((rod, name) -> createModel(blockModels, createCurtainBlock(getBlockFromIdentifier(FabulousFurniture.prefix(color+"_"+name+"_curtains")), TextureMapping.getBlockTexture(wool).sprite(), TextureMapping.getBlockTexture(getBlockFromIdentifier(Identifier.parse(rod.builtInRegistryHolder().getKey().identifier().toString().replaceFirst("waxed_", "")))).sprite(), blockModels))));
+        WOOL_COLORS.forEach((wool, color) -> METALS.forEach((rod, name) -> createModel(blockModels, createCurtainBlock(getBlockFromIdentifier(FabulousFurniture.prefix(color+"_"+name+"_curtains")), TextureMapping.getBlockTexture(wool).sprite(), TextureMapping.getBlockTexture(getBlockFromIdentifier(Identifier.parse(rod.builtInRegistryHolder().key().identifier().toString().replaceFirst("waxed_", "")))).sprite(), blockModels))));
     }
 
     private void createBirdbaths(BlockModelGenerators blockModels) {
@@ -112,25 +118,25 @@ public class ModelGenerator extends ModelProvider {
     }
 
     private void createToasters(BlockModelGenerators blockModels) {
-        METALS.forEach((metal, name) -> createModel(blockModels, createToasterBlock(getBlockFromIdentifier(FabulousFurniture.prefix(name+"_toaster")), metal.builtInRegistryHolder().getKey().identifier(), TextureMapping.getBlockTexture(ANVIL).sprite(), blockModels)));
+        METALS.forEach((metal, name) -> createModel(blockModels, createToasterBlock(getBlockFromIdentifier(FabulousFurniture.prefix(name+"_toaster")), metal.builtInRegistryHolder().key().identifier(), TextureMapping.getBlockTexture(ANVIL).sprite(), blockModels)));
     }
 
     private void createKitchenTiles(BlockModelGenerators blockModels) {
-        createModel(blockModels, createKitchenTiles(WHITE_LIGHT_GRAY_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(WHITE_CONCRETE).sprite(), TextureMapping.getBlockTexture(LIGHT_GRAY_CONCRETE).sprite(), blockModels));
-        createModel(blockModels, createKitchenTiles(WHITE_GRAY_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(WHITE_CONCRETE).sprite(), TextureMapping.getBlockTexture(GRAY_CONCRETE).sprite(), blockModels));
-        createModel(blockModels, createKitchenTiles(WHITE_BLACK_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(WHITE_CONCRETE).sprite(), TextureMapping.getBlockTexture(BLACK_CONCRETE).sprite(), blockModels));
-        createModel(blockModels, createKitchenTiles(WHITE_BROWN_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(WHITE_CONCRETE).sprite(), TextureMapping.getBlockTexture(BROWN_CONCRETE).sprite(), blockModels));
-        createModel(blockModels, createKitchenTiles(WHITE_RED_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(WHITE_CONCRETE).sprite(), TextureMapping.getBlockTexture(RED_CONCRETE).sprite(), blockModels));
-        createModel(blockModels, createKitchenTiles(WHITE_ORANGE_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(WHITE_CONCRETE).sprite(), TextureMapping.getBlockTexture(ORANGE_CONCRETE).sprite(), blockModels));
-        createModel(blockModels, createKitchenTiles(WHITE_YELLOW_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(WHITE_CONCRETE).sprite(), TextureMapping.getBlockTexture(YELLOW_CONCRETE).sprite(), blockModels));
-        createModel(blockModels, createKitchenTiles(WHITE_LIME_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(WHITE_CONCRETE).sprite(), TextureMapping.getBlockTexture(LIME_CONCRETE).sprite(), blockModels));
-        createModel(blockModels, createKitchenTiles(WHITE_GREEN_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(WHITE_CONCRETE).sprite(), TextureMapping.getBlockTexture(GREEN_CONCRETE).sprite(), blockModels));
-        createModel(blockModels, createKitchenTiles(WHITE_CYAN_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(WHITE_CONCRETE).sprite(), TextureMapping.getBlockTexture(CYAN_CONCRETE).sprite(), blockModels));
-        createModel(blockModels, createKitchenTiles(WHITE_LIGHT_BLUE_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(WHITE_CONCRETE).sprite(), TextureMapping.getBlockTexture(LIGHT_BLUE_CONCRETE).sprite(), blockModels));
-        createModel(blockModels, createKitchenTiles(WHITE_BLUE_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(WHITE_CONCRETE).sprite(), TextureMapping.getBlockTexture(BLUE_CONCRETE).sprite(), blockModels));
-        createModel(blockModels, createKitchenTiles(WHITE_PURPLE_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(WHITE_CONCRETE).sprite(), TextureMapping.getBlockTexture(PURPLE_CONCRETE).sprite(), blockModels));
-        createModel(blockModels, createKitchenTiles(WHITE_MAGENTA_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(WHITE_CONCRETE).sprite(), TextureMapping.getBlockTexture(MAGENTA_CONCRETE).sprite(), blockModels));
-        createModel(blockModels, createKitchenTiles(WHITE_PINK_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(WHITE_CONCRETE).sprite(), TextureMapping.getBlockTexture(PINK_CONCRETE).sprite(), blockModels));
+        createModel(blockModels, createKitchenTiles(WHITE_LIGHT_GRAY_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(CONCRETE.white()).sprite(), TextureMapping.getBlockTexture(CONCRETE.lightGray()).sprite(), blockModels));
+        createModel(blockModels, createKitchenTiles(WHITE_GRAY_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(CONCRETE.white()).sprite(), TextureMapping.getBlockTexture(CONCRETE.gray()).sprite(), blockModels));
+        createModel(blockModels, createKitchenTiles(WHITE_BLACK_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(CONCRETE.white()).sprite(), TextureMapping.getBlockTexture(CONCRETE.black()).sprite(), blockModels));
+        createModel(blockModels, createKitchenTiles(WHITE_BROWN_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(CONCRETE.white()).sprite(), TextureMapping.getBlockTexture(CONCRETE.brown()).sprite(), blockModels));
+        createModel(blockModels, createKitchenTiles(WHITE_RED_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(CONCRETE.white()).sprite(), TextureMapping.getBlockTexture(CONCRETE.red()).sprite(), blockModels));
+        createModel(blockModels, createKitchenTiles(WHITE_ORANGE_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(CONCRETE.white()).sprite(), TextureMapping.getBlockTexture(CONCRETE.orange()).sprite(), blockModels));
+        createModel(blockModels, createKitchenTiles(WHITE_YELLOW_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(CONCRETE.white()).sprite(), TextureMapping.getBlockTexture(CONCRETE.yellow()).sprite(), blockModels));
+        createModel(blockModels, createKitchenTiles(WHITE_LIME_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(CONCRETE.white()).sprite(), TextureMapping.getBlockTexture(CONCRETE.lime()).sprite(), blockModels));
+        createModel(blockModels, createKitchenTiles(WHITE_GREEN_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(CONCRETE.white()).sprite(), TextureMapping.getBlockTexture(CONCRETE.green()).sprite(), blockModels));
+        createModel(blockModels, createKitchenTiles(WHITE_CYAN_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(CONCRETE.white()).sprite(), TextureMapping.getBlockTexture(CONCRETE.cyan()).sprite(), blockModels));
+        createModel(blockModels, createKitchenTiles(WHITE_LIGHT_BLUE_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(CONCRETE.white()).sprite(), TextureMapping.getBlockTexture(CONCRETE.lightBlue()).sprite(), blockModels));
+        createModel(blockModels, createKitchenTiles(WHITE_BLUE_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(CONCRETE.white()).sprite(), TextureMapping.getBlockTexture(CONCRETE.blue()).sprite(), blockModels));
+        createModel(blockModels, createKitchenTiles(WHITE_PURPLE_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(CONCRETE.white()).sprite(), TextureMapping.getBlockTexture(CONCRETE.purple()).sprite(), blockModels));
+        createModel(blockModels, createKitchenTiles(WHITE_MAGENTA_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(CONCRETE.white()).sprite(), TextureMapping.getBlockTexture(CONCRETE.magenta()).sprite(), blockModels));
+        createModel(blockModels, createKitchenTiles(WHITE_PINK_KITCHEN_TILES.get(), TextureMapping.getBlockTexture(CONCRETE.white()).sprite(), TextureMapping.getBlockTexture(CONCRETE.pink()).sprite(), blockModels));
     }
 
     private void createCeilingLamps(BlockModelGenerators blockModels) {
@@ -249,6 +255,39 @@ public class ModelGenerator extends ModelProvider {
         createModel(blockModels, createTrashBinBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+log_suffix+"_trash_bin")), TextureMapping.getBlockTexture(log).sprite(), blockModels));
         createModel(blockModels, createTrashBinBlock(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_trash_bin")), TextureMapping.getBlockTexture(strippedLog).sprite(), blockModels));
 
+        createModel(blockModels, createWoodenClockBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+"_clock")), TextureMapping.getBlockTexture(planks).sprite(), TextureMapping.getBlockTexture(log).sprite(), blockModels));
+        createModel(blockModels, createWoodenClockBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+log_suffix+"_clock")), TextureMapping.getBlockTexture(log).sprite(), TextureMapping.getBlockTexture(strippedLog).sprite(), blockModels));
+        createModel(blockModels, createWoodenClockBlock(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_clock")), TextureMapping.getBlockTexture(strippedLog).sprite(), TextureMapping.getBlockTexture(log).sprite(), blockModels));
+
+        createModel(blockModels, createWoodenWallClockBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+"_wall_clock")), TextureMapping.getBlockTexture(planks).sprite(), TextureMapping.getBlockTexture(log).sprite(), blockModels));
+        createModel(blockModels, createWoodenWallClockBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+log_suffix+"_wall_clock")), TextureMapping.getBlockTexture(log).sprite(), TextureMapping.getBlockTexture(strippedLog).sprite(), blockModels));
+        createModel(blockModels, createWoodenWallClockBlock(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_wall_clock")), TextureMapping.getBlockTexture(strippedLog).sprite(), TextureMapping.getBlockTexture(log).sprite(), blockModels));
+
+        createModel(blockModels, createGrandfatherClock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+"_grandfather_clock")), TextureMapping.getBlockTexture(planks).sprite(), blockModels));
+        createModel(blockModels, createGrandfatherClock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+log_suffix+"_grandfather_clock")), TextureMapping.getBlockTexture(log).sprite(), blockModels));
+        createModel(blockModels, createGrandfatherClock(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_grandfather_clock")), TextureMapping.getBlockTexture(strippedLog).sprite(), blockModels));
+
+        createModel(blockModels, createModernGrandfatherClock(getBlockFromIdentifier(FabulousFurniture.prefix("modern_"+type.name()+"_grandfather_clock")), TextureMapping.getBlockTexture(planks).sprite(), blockModels));
+        createModel(blockModels, createModernGrandfatherClock(getBlockFromIdentifier(FabulousFurniture.prefix("modern_"+type.name()+log_suffix+"_grandfather_clock")), TextureMapping.getBlockTexture(log).sprite(), blockModels));
+        createModel(blockModels, createModernGrandfatherClock(getBlockFromIdentifier(FabulousFurniture.prefix("modern_stripped_"+type.name()+log_suffix+"_grandfather_clock")), TextureMapping.getBlockTexture(strippedLog).sprite(), blockModels));
+
+        createModel(blockModels, createDiscMountBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+"_disc_mount")), TextureMapping.getBlockTexture(planks).sprite(), blockModels));
+        createModel(blockModels, createDiscMountBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+log_suffix+"_disc_mount")), TextureMapping.getBlockTexture(log).sprite(), blockModels));
+        createModel(blockModels, createDiscMountBlock(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_disc_mount")), TextureMapping.getBlockTexture(strippedLog).sprite(), blockModels));
+
+        createModel(blockModels, createMusicDiscShelfBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+"_music_disc_shelf")), TextureMapping.getBlockTexture(planks).sprite(), blockModels));
+        createModel(blockModels, createMusicDiscShelfBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+log_suffix+"_music_disc_shelf")), TextureMapping.getBlockTexture(log).sprite(), blockModels));
+        createModel(blockModels, createMusicDiscShelfBlock(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_music_disc_shelf")), TextureMapping.getBlockTexture(strippedLog).sprite(), blockModels));
+
+        createModel(blockModels, createGlobeBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name()+"_globe")), TextureMapping.getBlockTexture(planks).sprite(), TextureMapping.getBlockTexture(log).sprite(), TextureMapping.getBlockTexture(log, "_top").sprite(), blockModels));
+
+        /*TABLEWARE_MATERIALS.forEach((block, suffix) -> {
+            String top_name = block.getDescriptionId().replaceFirst("block.minecraft.", "").replaceFirst("quartz_block", "quartz");
+            createModel(blockModels, createTiledCoffeeTableBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + "_" + top_name+"_tiled_coffee_table")), planks, block, suffix, blockModels));
+            createModel(blockModels, createTiledCoffeeTableBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + log_suffix + "_" + top_name+"_tiled_coffee_table")), log, block, suffix, blockModels));
+            createModel(blockModels, createTiledCoffeeTableBlock(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_" + type.name() + log_suffix + "_" + top_name+"_tiled_coffee_table")), strippedLog, block, suffix, blockModels));
+        });*/
+
         for (WoodType type2 : WOOD_TYPES) {
             Block planks2 = getBlockFromIdentifier(Identifier.parse(type2.name()+"_planks"));
             Block log2;
@@ -294,32 +333,32 @@ public class ModelGenerator extends ModelProvider {
                 createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + "_" + name + "_bench")), planks, TextureMapping.getBlockTexture(metal).sprite(), blockModels));
                 createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + log_suffix + "_" + name + "_bench")), log, TextureMapping.getBlockTexture(metal).sprite(), blockModels));
                 createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_" + type.name() + log_suffix + "_" + name + "_bench")), strippedLog, TextureMapping.getBlockTexture(metal).sprite(), blockModels));
-            } else if (metal == Blocks.COPPER_BLOCK){
+            } else if (metal == Blocks.COPPER_BLOCK.weathering().unaffected()){
                 createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + "_waxed_" + name + "_bench")), planks, TextureMapping.getBlockTexture(metal).sprite(), blockModels));
                 createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + log_suffix + "_waxed_" + name + "_bench")), log, TextureMapping.getBlockTexture(metal).sprite(), blockModels));
                 createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_" + type.name() + log_suffix + "_waxed_" + name + "_bench")), strippedLog, TextureMapping.getBlockTexture(metal).sprite(), blockModels));
-                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + "_waxed_exposed_" + name + "_bench")), planks, TextureMapping.getBlockTexture(EXPOSED_COPPER).sprite(), blockModels));
-                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + log_suffix + "_waxed_exposed_" + name + "_bench")), log, TextureMapping.getBlockTexture(EXPOSED_COPPER).sprite(), blockModels));
-                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_" + type.name() + log_suffix + "_waxed_exposed_" + name + "_bench")), strippedLog, TextureMapping.getBlockTexture(EXPOSED_COPPER).sprite(), blockModels));
-                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + "_waxed_weathered_" + name + "_bench")), planks, TextureMapping.getBlockTexture(WEATHERED_COPPER).sprite(), blockModels));
-                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + log_suffix + "_waxed_weathered_" + name + "_bench")), log, TextureMapping.getBlockTexture(WEATHERED_COPPER).sprite(), blockModels));
-                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_" + type.name() + log_suffix + "_waxed_weathered_" + name + "_bench")), strippedLog, TextureMapping.getBlockTexture(WEATHERED_COPPER).sprite(), blockModels));
-                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + "_waxed_oxidized_" + name + "_bench")), planks, TextureMapping.getBlockTexture(OXIDIZED_COPPER).sprite(), blockModels));
-                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + log_suffix + "_waxed_oxidized_" + name + "_bench")), log, TextureMapping.getBlockTexture(OXIDIZED_COPPER).sprite(), blockModels));
-                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_" + type.name() + log_suffix + "_waxed_oxidized_" + name + "_bench")), strippedLog, TextureMapping.getBlockTexture(OXIDIZED_COPPER).sprite(), blockModels));
+                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + "_waxed_exposed_" + name + "_bench")), planks, TextureMapping.getBlockTexture(COPPER_BLOCK.weathering().exposed()).sprite(), blockModels));
+                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + log_suffix + "_waxed_exposed_" + name + "_bench")), log, TextureMapping.getBlockTexture(COPPER_BLOCK.weathering().exposed()).sprite(), blockModels));
+                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_" + type.name() + log_suffix + "_waxed_exposed_" + name + "_bench")), strippedLog, TextureMapping.getBlockTexture(COPPER_BLOCK.weathering().exposed()).sprite(), blockModels));
+                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + "_waxed_weathered_" + name + "_bench")), planks, TextureMapping.getBlockTexture(COPPER_BLOCK.weathering().weathered()).sprite(), blockModels));
+                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + log_suffix + "_waxed_weathered_" + name + "_bench")), log, TextureMapping.getBlockTexture(COPPER_BLOCK.weathering().weathered()).sprite(), blockModels));
+                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_" + type.name() + log_suffix + "_waxed_weathered_" + name + "_bench")), strippedLog, TextureMapping.getBlockTexture(COPPER_BLOCK.weathering().weathered()).sprite(), blockModels));
+                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + "_waxed_oxidized_" + name + "_bench")), planks, TextureMapping.getBlockTexture(COPPER_BLOCK.weathering().oxidized()).sprite(), blockModels));
+                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + log_suffix + "_waxed_oxidized_" + name + "_bench")), log, TextureMapping.getBlockTexture(COPPER_BLOCK.weathering().oxidized()).sprite(), blockModels));
+                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_" + type.name() + log_suffix + "_waxed_oxidized_" + name + "_bench")), strippedLog, TextureMapping.getBlockTexture(COPPER_BLOCK.weathering().oxidized()).sprite(), blockModels));
 
                 createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + "_" +  name + "_bench")), planks, TextureMapping.getBlockTexture(metal).sprite(), blockModels));
                 createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + log_suffix + "_" + name + "_bench")), log, TextureMapping.getBlockTexture(metal).sprite(), blockModels));
                 createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_" + type.name() + log_suffix + "_" + name + "_bench")), strippedLog, TextureMapping.getBlockTexture(metal).sprite(), blockModels));
-                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + "_exposed_" + name + "_bench")), planks, TextureMapping.getBlockTexture(EXPOSED_COPPER).sprite(), blockModels));
-                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + log_suffix + "_exposed_" + name + "_bench")), log, TextureMapping.getBlockTexture(EXPOSED_COPPER).sprite(), blockModels));
-                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_" + type.name() + log_suffix + "_exposed_" + name + "_bench")), strippedLog, TextureMapping.getBlockTexture(EXPOSED_COPPER).sprite(), blockModels));
-                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + "_weathered_" + name + "_bench")), planks, TextureMapping.getBlockTexture(WEATHERED_COPPER).sprite(), blockModels));
-                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + log_suffix + "_weathered_" + name + "_bench")), log, TextureMapping.getBlockTexture(WEATHERED_COPPER).sprite(), blockModels));
-                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_" + type.name() + log_suffix + "_weathered_" + name + "_bench")), strippedLog, TextureMapping.getBlockTexture(WEATHERED_COPPER).sprite(), blockModels));
-                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + "_oxidized_" + name + "_bench")), planks, TextureMapping.getBlockTexture(OXIDIZED_COPPER).sprite(), blockModels));
-                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + log_suffix + "_oxidized_" + name + "_bench")), log, TextureMapping.getBlockTexture(OXIDIZED_COPPER).sprite(), blockModels));
-                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_" + type.name() + log_suffix + "_oxidized_" + name + "_bench")), strippedLog, TextureMapping.getBlockTexture(OXIDIZED_COPPER).sprite(), blockModels));
+                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + "_exposed_" + name + "_bench")), planks, TextureMapping.getBlockTexture(COPPER_BLOCK.weathering().exposed()).sprite(), blockModels));
+                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + log_suffix + "_exposed_" + name + "_bench")), log, TextureMapping.getBlockTexture(COPPER_BLOCK.weathering().exposed()).sprite(), blockModels));
+                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_" + type.name() + log_suffix + "_exposed_" + name + "_bench")), strippedLog, TextureMapping.getBlockTexture(COPPER_BLOCK.weathering().exposed()).sprite(), blockModels));
+                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + "_weathered_" + name + "_bench")), planks, TextureMapping.getBlockTexture(COPPER_BLOCK.weathering().weathered()).sprite(), blockModels));
+                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + log_suffix + "_weathered_" + name + "_bench")), log, TextureMapping.getBlockTexture(COPPER_BLOCK.weathering().weathered()).sprite(), blockModels));
+                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_" + type.name() + log_suffix + "_weathered_" + name + "_bench")), strippedLog, TextureMapping.getBlockTexture(COPPER_BLOCK.weathering().weathered()).sprite(), blockModels));
+                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + "_oxidized_" + name + "_bench")), planks, TextureMapping.getBlockTexture(COPPER_BLOCK.weathering().oxidized()).sprite(), blockModels));
+                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix(type.name() + log_suffix + "_oxidized_" + name + "_bench")), log, TextureMapping.getBlockTexture(COPPER_BLOCK.weathering().oxidized()).sprite(), blockModels));
+                createModel(blockModels, createBenchBlock(getBlockFromIdentifier(FabulousFurniture.prefix("stripped_" + type.name() + log_suffix + "_oxidized_" + name + "_bench")), strippedLog, TextureMapping.getBlockTexture(COPPER_BLOCK.weathering().oxidized()).sprite(), blockModels));
             }
         });
 
@@ -612,27 +651,21 @@ public class ModelGenerator extends ModelProvider {
         MultiVariant single = BlockModelGenerators.plainVariant(ModelTemplates.TABLE_SINGLE.create(block, mapping, blockModels.modelOutput));
         MultiVariant middle = BlockModelGenerators.plainVariant(ModelTemplates.TABLE_MIDDLE.create(block, mapping, blockModels.modelOutput));
         MultiVariant north = BlockModelGenerators.plainVariant(ModelTemplates.TABLE_NORTH.create(block, mapping, blockModels.modelOutput));
-        MultiVariant east = BlockModelGenerators.plainVariant(ModelTemplates.TABLE_EAST.create(block, mapping, blockModels.modelOutput));
-        MultiVariant south = BlockModelGenerators.plainVariant(ModelTemplates.TABLE_SOUTH.create(block, mapping, blockModels.modelOutput));
-        MultiVariant west = BlockModelGenerators.plainVariant(ModelTemplates.TABLE_WEST.create(block, mapping, blockModels.modelOutput));
         MultiVariant north_east = BlockModelGenerators.plainVariant(ModelTemplates.TABLE_NORTH_EAST.create(block, mapping, blockModels.modelOutput));
-        MultiVariant north_west = BlockModelGenerators.plainVariant(ModelTemplates.TABLE_NORTH_WEST.create(block, mapping, blockModels.modelOutput));
-        MultiVariant south_east = BlockModelGenerators.plainVariant(ModelTemplates.TABLE_SOUTH_EAST.create(block, mapping, blockModels.modelOutput));
-        MultiVariant south_west = BlockModelGenerators.plainVariant(ModelTemplates.TABLE_SOUTH_WEST.create(block, mapping, blockModels.modelOutput));
         return MultiVariantGenerator.dispatch(block).with(
                 PropertyDispatch.initial(TableBlock.NORTH, TableBlock.EAST, TableBlock.SOUTH, TableBlock.WEST)
                         .select(false, false, false, false, single)
                         .select(true, true, true, true, middle)
                         .select(true, false, true, false, middle)
                         .select(false, true, false, true, middle)
-                        .select(true, false, false, false, south)
-                        .select(false, true, false, false, west)
+                        .select(true, false, false, false, north.with(Y_ROT.withValue(Quadrant.R180)).with(VariantMutator.UV_LOCK.withValue(true)))
+                        .select(false, true, false, false, north.with(Y_ROT.withValue(Quadrant.R270)).with(VariantMutator.UV_LOCK.withValue(true)))
                         .select(false, false, true, false, north)
-                        .select(false, false, false, true, east)
-                        .select(true, true, false, false, south_west)
-                        .select(false, true, true, false, north_west)
+                        .select(false, false, false, true, north.with(Y_ROT.withValue(Quadrant.R90)).with(VariantMutator.UV_LOCK.withValue(true)))
+                        .select(true, true, false, false, north_east.with(Y_ROT.withValue(Quadrant.R180)).with(VariantMutator.UV_LOCK.withValue(true)))
+                        .select(false, true, true, false, north_east.with(Y_ROT.withValue(Quadrant.R270)).with(VariantMutator.UV_LOCK.withValue(true)))
                         .select(false, false, true, true, north_east)
-                        .select(true, false, false, true, south_east)
+                        .select(true, false, false, true, north_east.with(Y_ROT.withValue(Quadrant.R90)).with(VariantMutator.UV_LOCK.withValue(true)))
                         .select(true, true, true, false, middle)
                         .select(false, true, true, true, middle)
                         .select(true, false, true, true, middle)
@@ -849,6 +882,73 @@ public class ModelGenerator extends ModelProvider {
         return MultiVariantGenerator.dispatch(block, model);
     }
 
+    private MultiVariantGenerator createWoodenClockBlock(Block block, Identifier planks, Identifier log, BlockModelGenerators blockModels) {
+        MultiVariant model = BlockModelGenerators.plainVariant(ModelTemplates.WOODEN_CLOCK.create(block, new TextureMapping().put(TextureSlot.PARTICLE, new Material(planks)).put(TextureSlots.PLANKS, new Material(planks)).put(TextureSlots.LOG, new Material(log)), blockModels.modelOutput));
+        return MultiVariantGenerator.dispatch(block).with(
+                PropertyDispatch.initial(WoodenClockBlock.REAL_TIME)
+                        .select(true, model)
+                        .select(false, model)
+        ).with(ROTATION_HORIZONTAL_FACING);
+    }
+
+    private MultiVariantGenerator createWoodenWallClockBlock(Block block, Identifier planks, Identifier log, BlockModelGenerators blockModels) {
+        MultiVariant model = BlockModelGenerators.plainVariant(ModelTemplates.WOODEN_WALL_CLOCK.create(block, new TextureMapping().put(TextureSlot.PARTICLE, new Material(planks)).put(TextureSlots.PLANKS, new Material(planks)).put(TextureSlots.LOG, new Material(log)), blockModels.modelOutput));
+        return MultiVariantGenerator.dispatch(block).with(
+                PropertyDispatch.initial(WoodenClockBlock.REAL_TIME)
+                        .select(true, model)
+                        .select(false, model)
+        ).with(ROTATION_HORIZONTAL_FACING);
+    }
+
+    private MultiVariantGenerator createGrandfatherClock(Block block, Identifier wood, BlockModelGenerators blockModels) {
+        TextureMapping mapping_bottom = new TextureMapping().put(TextureSlot.PARTICLE, new Material(wood)).put(TextureSlots.WOOD, new Material(wood)).put(TextureSlots.GLASS, TextureMapping.getBlockTexture(GLASS)).put(TextureSlots.DIAL, TextureMapping.getBlockTexture(QUARTZ_BLOCK, "_bottom"));
+        TextureMapping mapping_top = new TextureMapping().put(TextureSlot.PARTICLE, new Material(wood)).put(TextureSlots.WOOD, new Material(wood)).put(TextureSlots.GLASS, TextureMapping.getBlockTexture(GLASS)).put(TextureSlots.DIAL, TextureMapping.getBlockTexture(QUARTZ_BLOCK, "_bottom"));
+        MultiVariant bottom = BlockModelGenerators.plainVariant(ModelTemplates.GRANDFATHER_CLOCK_BOTTOM.create(block, mapping_bottom, blockModels.modelOutput));
+        MultiVariant top = BlockModelGenerators.plainVariant(ModelTemplates.GRANDFATHER_CLOCK_TOP.create(block, mapping_top, blockModels.modelOutput));
+        Identifier item = ModelTemplates.GRANDFATHER_CLOCK_INVENTORY.create(block, mapping_top, blockModels.modelOutput);
+        blockModels.registerSimpleItemModel(block, item);
+        return MultiVariantGenerator.dispatch(block).with(
+                PropertyDispatch.initial(GrandfatherClockBlock.HALF, GrandfatherClockBlock.REAL_TIME)
+                        .select(DoubleBlockHalf.UPPER, false, top)
+                        .select(DoubleBlockHalf.UPPER, true, top)
+                        .select(DoubleBlockHalf.LOWER, false, bottom)
+                        .select(DoubleBlockHalf.LOWER, true, bottom)
+        ).with(ROTATION_HORIZONTAL_FACING);
+    }
+
+    private MultiVariantGenerator createModernGrandfatherClock(Block block, Identifier wood, BlockModelGenerators blockModels) {
+        TextureMapping mapping_bottom = new TextureMapping().put(TextureSlot.PARTICLE, new Material(wood)).put(TextureSlots.WOOD, new Material(wood)).put(TextureSlots.GLASS, TextureMapping.getBlockTexture(GLASS)).put(TextureSlots.DIAL, TextureMapping.getBlockTexture(QUARTZ_BLOCK, "_bottom"));
+        TextureMapping mapping_top = new TextureMapping().put(TextureSlot.PARTICLE, new Material(wood)).put(TextureSlots.WOOD, new Material(wood)).put(TextureSlots.GLASS, TextureMapping.getBlockTexture(GLASS)).put(TextureSlots.DIAL, TextureMapping.getBlockTexture(QUARTZ_BLOCK, "_bottom"));
+        MultiVariant bottom = BlockModelGenerators.plainVariant(ModelTemplates.MODERN_GRANDFATHER_CLOCK_BOTTOM.create(block, mapping_bottom, blockModels.modelOutput));
+        MultiVariant top = BlockModelGenerators.plainVariant(ModelTemplates.MODERN_GRANDFATHER_CLOCK_TOP.create(block, mapping_top, blockModels.modelOutput));
+        Identifier item = ModelTemplates.MODERN_GRANDFATHER_CLOCK_INVENTORY.create(block, mapping_top, blockModels.modelOutput);
+        blockModels.registerSimpleItemModel(block, item);
+        return MultiVariantGenerator.dispatch(block).with(
+                PropertyDispatch.initial(GrandfatherClockBlock.HALF, GrandfatherClockBlock.REAL_TIME)
+                        .select(DoubleBlockHalf.UPPER, false, top)
+                        .select(DoubleBlockHalf.UPPER, true, top)
+                        .select(DoubleBlockHalf.LOWER, false, bottom)
+                        .select(DoubleBlockHalf.LOWER, true, bottom)
+        ).with(ROTATION_HORIZONTAL_FACING);
+    }
+
+    private MultiVariantGenerator createDiscMountBlock(Block block, Identifier wood, BlockModelGenerators blockModels) {
+        MultiVariant model = BlockModelGenerators.plainVariant(ModelTemplates.DISC_MOUNT.create(block, new TextureMapping().put(TextureSlot.PARTICLE, new Material(wood)).put(TextureSlots.WOOD, new Material(wood)), blockModels.modelOutput));
+        return MultiVariantGenerator.dispatch(block, model).with(ROTATION_HORIZONTAL_FACING);
+    }
+
+    private MultiVariantGenerator createMusicDiscShelfBlock(Block block, Identifier wood, BlockModelGenerators blockModels) {
+        MultiVariant model = BlockModelGenerators.plainVariant(ModelTemplates.MUSIC_DISC_SHELF.create(block, new TextureMapping().put(TextureSlot.PARTICLE, new Material(wood)).put(TextureSlots.WOOD, new Material(wood)), blockModels.modelOutput));
+        return MultiVariantGenerator.dispatch(block, model).with(ROTATION_HORIZONTAL_FACING);
+    }
+
+    private MultiVariantGenerator createGlobeBlock(Block block, Identifier planks, Identifier log, Identifier log_top, BlockModelGenerators blockModels) {
+        MultiVariant model = BlockModelGenerators.plainVariant(ModelTemplates.GLOBE.create(block, new TextureMapping().put(TextureSlot.PARTICLE, new Material(planks)).put(TextureSlots.PLANKS, new Material(planks)).put(TextureSlots.LOG, new Material(log)).put(TextureSlots.LOG_TOP, new Material(log_top)), blockModels.modelOutput));
+        Identifier inventory = ModelTemplates.GLOBE_INVENTORY.create(block, new TextureMapping().put(TextureSlots.PLANKS, new Material(planks)).put(TextureSlots.LOG, new Material(log)).put(TextureSlots.LOG_TOP, new Material(log_top)), blockModels.modelOutput);
+        blockModels.registerSimpleItemModel(block, inventory);
+        return MultiVariantGenerator.dispatch(block, model).with(ROTATION_HORIZONTAL_FACING);
+    }
+
     private MultiVariantGenerator createBirdbathBlock(Block block, Identifier stone, BlockModelGenerators blockModels) {
         MultiVariant model = BlockModelGenerators.plainVariant(ModelTemplates.BIRDBATH.create(block, new TextureMapping().put(TextureSlot.PARTICLE, new Material(stone)).put(TextureSlots.STONE, new Material(stone)).put(TextureSlots.WATER, TextureMapping.getBlockTexture(WATER, "_still")), blockModels.modelOutput));
         return MultiVariantGenerator.dispatch(block, model);
@@ -947,27 +1047,21 @@ public class ModelGenerator extends ModelProvider {
         MultiVariant single = BlockModelGenerators.plainVariant(ModelTemplates.COUCH_TABLE_SINGLE.create(block, mapping, blockModels.modelOutput));
         MultiVariant middle = BlockModelGenerators.plainVariant(ModelTemplates.COUCH_TABLE_MIDDLE.create(block, mapping, blockModels.modelOutput));
         MultiVariant north = BlockModelGenerators.plainVariant(ModelTemplates.COUCH_TABLE_NORTH.create(block, mapping, blockModels.modelOutput));
-        MultiVariant east = BlockModelGenerators.plainVariant(ModelTemplates.COUCH_TABLE_EAST.create(block, mapping, blockModels.modelOutput));
-        MultiVariant south = BlockModelGenerators.plainVariant(ModelTemplates.COUCH_TABLE_SOUTH.create(block, mapping, blockModels.modelOutput));
-        MultiVariant west = BlockModelGenerators.plainVariant(ModelTemplates.COUCH_TABLE_WEST.create(block, mapping, blockModels.modelOutput));
         MultiVariant north_east = BlockModelGenerators.plainVariant(ModelTemplates.COUCH_TABLE_NORTH_EAST.create(block, mapping, blockModels.modelOutput));
-        MultiVariant north_west = BlockModelGenerators.plainVariant(ModelTemplates.COUCH_TABLE_NORTH_WEST.create(block, mapping, blockModels.modelOutput));
-        MultiVariant south_east = BlockModelGenerators.plainVariant(ModelTemplates.COUCH_TABLE_SOUTH_EAST.create(block, mapping, blockModels.modelOutput));
-        MultiVariant south_west = BlockModelGenerators.plainVariant(ModelTemplates.COUCH_TABLE_SOUTH_WEST.create(block, mapping, blockModels.modelOutput));
         return MultiVariantGenerator.dispatch(block).with(
                 PropertyDispatch.initial(CouchTableBlock.NORTH, CouchTableBlock.EAST, CouchTableBlock.SOUTH, CouchTableBlock.WEST)
                         .select(false, false, false, false, single)
                         .select(true, true, true, true, middle)
                         .select(true, false, true, false, middle)
                         .select(false, true, false, true, middle)
-                        .select(true, false, false, false, south)
-                        .select(false, true, false, false, west)
+                        .select(true, false, false, false, north.with(Y_ROT.withValue(Quadrant.R180)).with(VariantMutator.UV_LOCK.withValue(true)))
+                        .select(false, true, false, false, north.with(Y_ROT.withValue(Quadrant.R270)).with(VariantMutator.UV_LOCK.withValue(true)))
                         .select(false, false, true, false, north)
-                        .select(false, false, false, true, east)
-                        .select(true, true, false, false, south_west)
-                        .select(false, true, true, false, north_west)
+                        .select(false, false, false, true, north.with(Y_ROT.withValue(Quadrant.R90)).with(VariantMutator.UV_LOCK.withValue(true)))
+                        .select(true, true, false, false, north_east.with(Y_ROT.withValue(Quadrant.R180)).with(VariantMutator.UV_LOCK.withValue(true)))
+                        .select(false, true, true, false, north_east.with(Y_ROT.withValue(Quadrant.R270)).with(VariantMutator.UV_LOCK.withValue(true)))
                         .select(false, false, true, true, north_east)
-                        .select(true, false, false, true, south_east)
+                        .select(true, false, false, true, north_east.with(Y_ROT.withValue(Quadrant.R90)).with(VariantMutator.UV_LOCK.withValue(true)))
                         .select(true, true, true, false, middle)
                         .select(false, true, true, true, middle)
                         .select(true, false, true, true, middle)
@@ -975,7 +1069,66 @@ public class ModelGenerator extends ModelProvider {
         );
     }
 
-    private void createModel(BlockModelGenerators blockModels, MultiVariantGenerator generator) {
+    public static MultiPartGenerator createTiledCoffeeTableBlock(Block block, Block wood, Block tiles, String suffix, BlockModelGenerators blockModels) {
+        TextureMapping mapping = new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(wood)).put(TextureSlots.WOOD, TextureMapping.getBlockTexture(wood)).put(TextureSlots.CONCRETE, TextureMapping.getBlockTexture(CONCRETE.gray())).put(TextureSlots.TILES, TextureMapping.getBlockTexture(tiles, suffix));
+        TextureMapping legMapping = new TextureMapping().put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(wood)).put(TextureSlots.WOOD, TextureMapping.getBlockTexture(wood));
+        MultiVariant plate_single = BlockModelGenerators.plainVariant(ModelTemplates.TILED_COFFEE_TABLE_PLATE_SINGLE.create(block, mapping, blockModels.modelOutput));
+        MultiVariant plate_corner = BlockModelGenerators.plainVariant(ModelTemplates.TILED_COFFEE_TABLE_PLATE_CORNER.create(block, mapping, blockModels.modelOutput));
+        MultiVariant plate_straight = BlockModelGenerators.plainVariant(ModelTemplates.TILED_COFFEE_TABLE_PLATE_STRAIGHT.create(block, mapping, blockModels.modelOutput));
+        MultiVariant plate_middle = BlockModelGenerators.plainVariant(ModelTemplates.TILED_COFFEE_TABLE_PLATE_MIDDLE.create(block, mapping, blockModels.modelOutput));
+        MultiVariant plate_small_end = BlockModelGenerators.plainVariant(ModelTemplates.TILED_COFFEE_TABLE_PLATE_THIN_END.create(block, mapping, blockModels.modelOutput));
+        MultiVariant plate_small_middle = BlockModelGenerators.plainVariant(ModelTemplates.TILED_COFFEE_TABLE_PLATE_THIN_MIDDLE.create(block, mapping, blockModels.modelOutput));
+
+        MultiVariant leg_single = BlockModelGenerators.plainVariant(ModelTemplates.TILED_COFFEE_TABLE_LEG_SINGLE.create(block, legMapping, blockModels.modelOutput));
+        MultiVariant leg_end = BlockModelGenerators.plainVariant(ModelTemplates.TILED_COFFEE_TABLE_LEG_END.create(block, legMapping, blockModels.modelOutput));
+        MultiVariant leg_middle = BlockModelGenerators.plainVariant(ModelTemplates.TILED_COFFEE_TABLE_LEG_MIDDLE.create(block, legMapping, blockModels.modelOutput));
+
+        Identifier inventory = ModelTemplates.TILED_COFFEE_TABLE_INVENTORY.create(block, mapping, blockModels.modelOutput);
+        blockModels.registerSimpleItemModel(block, inventory);
+
+        return MultiPartGenerator.multiPart(block)
+                .with(condition().term(TiledCoffeeTableBlock.PLATE_TYPE, TiledCoffeeTablePlateType.SINGLE), plate_single)
+                .with(condition().term(TiledCoffeeTableBlock.LEG_TYPE, TiledCoffeeTableLegType.SINGLE).term(TiledCoffeeTableBlock.PLATE_FACING, Direction.NORTH), leg_single)
+                .with(condition().term(TiledCoffeeTableBlock.LEG_TYPE, TiledCoffeeTableLegType.SINGLE).term(TiledCoffeeTableBlock.PLATE_FACING, Direction.EAST), leg_single.with(Y_ROT_90).with(UV_LOCK))
+                .with(condition().term(TiledCoffeeTableBlock.LEG_TYPE, TiledCoffeeTableLegType.SINGLE).term(TiledCoffeeTableBlock.PLATE_FACING, Direction.SOUTH), leg_single.with(Y_ROT_180).with(UV_LOCK))
+                .with(condition().term(TiledCoffeeTableBlock.LEG_TYPE, TiledCoffeeTableLegType.SINGLE).term(TiledCoffeeTableBlock.PLATE_FACING, Direction.WEST), leg_single.with(Y_ROT_270).with(UV_LOCK))
+
+                .with(condition().term(TiledCoffeeTableBlock.PLATE_TYPE, TiledCoffeeTablePlateType.STRAIGHT).term(TiledCoffeeTableBlock.PLATE_FACING, Direction.NORTH), plate_straight)
+                .with(condition().term(TiledCoffeeTableBlock.PLATE_TYPE, TiledCoffeeTablePlateType.STRAIGHT).term(TiledCoffeeTableBlock.PLATE_FACING, Direction.EAST), plate_straight.with(Y_ROT_90).with(UV_LOCK))
+                .with(condition().term(TiledCoffeeTableBlock.PLATE_TYPE, TiledCoffeeTablePlateType.STRAIGHT).term(TiledCoffeeTableBlock.PLATE_FACING, Direction.SOUTH), plate_straight.with(Y_ROT_180).with(UV_LOCK))
+                .with(condition().term(TiledCoffeeTableBlock.PLATE_TYPE, TiledCoffeeTablePlateType.STRAIGHT).term(TiledCoffeeTableBlock.PLATE_FACING, Direction.WEST), plate_straight.with(Y_ROT_270).with(UV_LOCK))
+
+                .with(condition().term(TiledCoffeeTableBlock.PLATE_TYPE, TiledCoffeeTablePlateType.CORNER).term(TiledCoffeeTableBlock.PLATE_FACING, Direction.NORTH), plate_corner)
+                .with(condition().term(TiledCoffeeTableBlock.PLATE_TYPE, TiledCoffeeTablePlateType.CORNER).term(TiledCoffeeTableBlock.PLATE_FACING, Direction.EAST), plate_corner.with(Y_ROT_90).with(UV_LOCK))
+                .with(condition().term(TiledCoffeeTableBlock.PLATE_TYPE, TiledCoffeeTablePlateType.CORNER).term(TiledCoffeeTableBlock.PLATE_FACING, Direction.SOUTH), plate_corner.with(Y_ROT_180).with(UV_LOCK))
+                .with(condition().term(TiledCoffeeTableBlock.PLATE_TYPE, TiledCoffeeTablePlateType.CORNER).term(TiledCoffeeTableBlock.PLATE_FACING, Direction.WEST), plate_corner.with(Y_ROT_270).with(UV_LOCK))
+
+                .with(condition().term(TiledCoffeeTableBlock.PLATE_TYPE, TiledCoffeeTablePlateType.MIDDLE), plate_middle)
+
+                .with(condition().term(TiledCoffeeTableBlock.PLATE_TYPE, TiledCoffeeTablePlateType.SMALL_END).term(TiledCoffeeTableBlock.PLATE_FACING, Direction.NORTH), plate_small_end)
+                .with(condition().term(TiledCoffeeTableBlock.PLATE_TYPE, TiledCoffeeTablePlateType.SMALL_END).term(TiledCoffeeTableBlock.PLATE_FACING, Direction.EAST), plate_small_end.with(Y_ROT_90).with(UV_LOCK))
+                .with(condition().term(TiledCoffeeTableBlock.PLATE_TYPE, TiledCoffeeTablePlateType.SMALL_END).term(TiledCoffeeTableBlock.PLATE_FACING, Direction.SOUTH), plate_small_end.with(Y_ROT_180).with(UV_LOCK))
+                .with(condition().term(TiledCoffeeTableBlock.PLATE_TYPE, TiledCoffeeTablePlateType.SMALL_END).term(TiledCoffeeTableBlock.PLATE_FACING, Direction.WEST), plate_small_end.with(Y_ROT_270).with(UV_LOCK))
+
+                .with(condition().term(TiledCoffeeTableBlock.PLATE_TYPE, TiledCoffeeTablePlateType.SMALL_MIDDLE).term(TiledCoffeeTableBlock.PLATE_FACING, Direction.NORTH), plate_small_middle)
+                .with(condition().term(TiledCoffeeTableBlock.PLATE_TYPE, TiledCoffeeTablePlateType.SMALL_MIDDLE).term(TiledCoffeeTableBlock.PLATE_FACING, Direction.EAST), plate_small_middle.with(Y_ROT_90).with(UV_LOCK))
+                .with(condition().term(TiledCoffeeTableBlock.PLATE_TYPE, TiledCoffeeTablePlateType.SMALL_MIDDLE).term(TiledCoffeeTableBlock.PLATE_FACING, Direction.SOUTH), plate_small_middle.with(Y_ROT_180).with(UV_LOCK))
+                .with(condition().term(TiledCoffeeTableBlock.PLATE_TYPE, TiledCoffeeTablePlateType.SMALL_MIDDLE).term(TiledCoffeeTableBlock.PLATE_FACING, Direction.WEST), plate_small_middle.with(Y_ROT_270).with(UV_LOCK))
+
+                .with(condition().term(TiledCoffeeTableBlock.LEG_TYPE, TiledCoffeeTableLegType.END).term(TiledCoffeeTableBlock.LEG_FACING, Direction.NORTH), leg_end)
+                .with(condition().term(TiledCoffeeTableBlock.LEG_TYPE, TiledCoffeeTableLegType.END).term(TiledCoffeeTableBlock.LEG_FACING, Direction.EAST), leg_end.with(Y_ROT_90).with(UV_LOCK))
+                .with(condition().term(TiledCoffeeTableBlock.LEG_TYPE, TiledCoffeeTableLegType.END).term(TiledCoffeeTableBlock.LEG_FACING, Direction.SOUTH), leg_end.with(Y_ROT_180).with(UV_LOCK))
+                .with(condition().term(TiledCoffeeTableBlock.LEG_TYPE, TiledCoffeeTableLegType.END).term(TiledCoffeeTableBlock.LEG_FACING, Direction.WEST), leg_end.with(Y_ROT_270).with(UV_LOCK))
+
+                .with(condition().term(TiledCoffeeTableBlock.LEG_TYPE, TiledCoffeeTableLegType.MIDDLE).term(TiledCoffeeTableBlock.LEG_FACING, Direction.NORTH), leg_middle)
+                .with(condition().term(TiledCoffeeTableBlock.LEG_TYPE, TiledCoffeeTableLegType.MIDDLE).term(TiledCoffeeTableBlock.LEG_FACING, Direction.EAST), leg_middle.with(Y_ROT_90).with(UV_LOCK))
+                .with(condition().term(TiledCoffeeTableBlock.LEG_TYPE, TiledCoffeeTableLegType.MIDDLE).term(TiledCoffeeTableBlock.LEG_FACING, Direction.SOUTH), leg_middle.with(Y_ROT_180).with(UV_LOCK))
+                .with(condition().term(TiledCoffeeTableBlock.LEG_TYPE, TiledCoffeeTableLegType.MIDDLE).term(TiledCoffeeTableBlock.LEG_FACING, Direction.WEST), leg_middle.with(Y_ROT_270).with(UV_LOCK))
+
+                ;
+    }
+
+    private void createModel(BlockModelGenerators blockModels, BlockModelDefinitionGenerator generator) {
         blockModels.blockStateOutput.accept(generator);
     }
 
@@ -988,7 +1141,7 @@ public class ModelGenerator extends ModelProvider {
     }
 
     private void registerBirdbathModel(ItemModelOutput output, Block block) {
-        output.accept(block.asItem(), ItemModelUtils.tintedModel(ModelLocationUtils.getModelLocation(block), ItemModelUtils.constantTint(-1), ItemModelUtils.constantTint(4159204)));
+        output.accept(block.asItem(), ItemModelUtils.tintedModel(ModelLocationUtils.getModelLocation(block), ItemModelUtils.constantTint(4159204)));
     }
 
     @Override
@@ -1045,6 +1198,8 @@ public class ModelGenerator extends ModelProvider {
         public static final TextureSlot FURNACE = TextureSlot.create("furnace");
         public static final TextureSlot TILE_BASE = TextureSlot.create("tile_base");
         public static final TextureSlot TILE_2 = TextureSlot.create("tile_2");
+        public static final TextureSlot TILES = TextureSlot.create("tiles");
+        public static final TextureSlot DIAL = TextureSlot.create("dial");
     }
 
     public static class ModelTemplates {
@@ -1112,13 +1267,7 @@ public class ModelGenerator extends ModelProvider {
         public static final ModelTemplate TABLE_SINGLE = getTemplate("wooden_table_single_template", Optional.of("_single"), TextureSlot.PARTICLE, TextureSlots.PLANKS);
         public static final ModelTemplate TABLE_MIDDLE = getTemplate("wooden_table_middle_template", Optional.of("_middle"), TextureSlot.PARTICLE, TextureSlots.PLANKS);
         public static final ModelTemplate TABLE_NORTH = getTemplate("wooden_table_north_template", Optional.of("_north"), TextureSlot.PARTICLE, TextureSlots.PLANKS);
-        public static final ModelTemplate TABLE_EAST = getTemplate("wooden_table_east_template", Optional.of("_east"), TextureSlot.PARTICLE, TextureSlots.PLANKS);
-        public static final ModelTemplate TABLE_SOUTH = getTemplate("wooden_table_south_template", Optional.of("_south"), TextureSlot.PARTICLE, TextureSlots.PLANKS);
-        public static final ModelTemplate TABLE_WEST = getTemplate("wooden_table_west_template", Optional.of("_west"), TextureSlot.PARTICLE, TextureSlots.PLANKS);
         public static final ModelTemplate TABLE_NORTH_EAST = getTemplate("wooden_table_north_east_template", Optional.of("_north_east"), TextureSlot.PARTICLE, TextureSlots.PLANKS);
-        public static final ModelTemplate TABLE_NORTH_WEST = getTemplate("wooden_table_north_west_template", Optional.of("_north_west"), TextureSlot.PARTICLE, TextureSlots.PLANKS);
-        public static final ModelTemplate TABLE_SOUTH_EAST = getTemplate("wooden_table_south_east_template", Optional.of("_south_east"), TextureSlot.PARTICLE, TextureSlots.PLANKS);
-        public static final ModelTemplate TABLE_SOUTH_WEST = getTemplate("wooden_table_south_west_template", Optional.of("_south_west"), TextureSlot.PARTICLE, TextureSlots.PLANKS);
 
         public static final ModelTemplate CURTAIN_SMALL_CLOSED = getTemplate("curtains_small_closed_template", Optional.of("_small_closed"), TextureSlot.PARTICLE, TextureSlots.WOOL, TextureSlots.CURTAIN_ROD);
         public static final ModelTemplate CURTAIN_SMALL_SINGLE_OPEN = getTemplate("curtains_small_single_open_template", Optional.of("_small_single_open"), TextureSlot.PARTICLE, TextureSlots.WOOL, TextureSlots.CURTAIN_ROD);
@@ -1179,6 +1328,23 @@ public class ModelGenerator extends ModelProvider {
 
         public static final ModelTemplate TRASH_BIN = getTemplate("trash_bin_template", Optional.empty(), TextureSlot.PARTICLE, TextureSlots.METAL, TextureSlots.WOOD);
         public static final ModelTemplate BIRDBATH = getTemplate("birdbath_template", Optional.empty(), TextureSlot.PARTICLE, TextureSlots.STONE, TextureSlots.WATER);
+        public static final ModelTemplate WOODEN_CLOCK = getTemplate("wooden_clock_template", Optional.empty(), TextureSlot.PARTICLE, TextureSlots.PLANKS, TextureSlots.LOG);
+        public static final ModelTemplate WOODEN_WALL_CLOCK = getTemplate("wooden_wall_clock_template", Optional.empty(), TextureSlot.PARTICLE, TextureSlots.PLANKS, TextureSlots.LOG);
+
+        public static final ModelTemplate GRANDFATHER_CLOCK_TOP = getTemplate("grandfather_clock_top_template", Optional.of("_top"), TextureSlot.PARTICLE, TextureSlots.WOOD, TextureSlots.GLASS, TextureSlots.DIAL);
+        public static final ModelTemplate GRANDFATHER_CLOCK_BOTTOM = getTemplate("grandfather_clock_bottom_template", Optional.of("_bottom"), TextureSlot.PARTICLE, TextureSlots.WOOD, TextureSlots.GLASS, TextureSlots.DIAL);
+        public static final ModelTemplate GRANDFATHER_CLOCK_INVENTORY = getTemplate("grandfather_clock_inventory_template", Optional.of("_inventory"), TextureSlot.PARTICLE, TextureSlots.WOOD, TextureSlots.GLASS, TextureSlots.DIAL);
+
+        public static final ModelTemplate MODERN_GRANDFATHER_CLOCK_TOP = getTemplate("modern_grandfather_clock_top_template", Optional.of("_top"), TextureSlot.PARTICLE, TextureSlots.WOOD, TextureSlots.GLASS, TextureSlots.DIAL);
+        public static final ModelTemplate MODERN_GRANDFATHER_CLOCK_BOTTOM = getTemplate("modern_grandfather_clock_bottom_template", Optional.of("_bottom"), TextureSlot.PARTICLE, TextureSlots.WOOD, TextureSlots.GLASS, TextureSlots.DIAL);
+        public static final ModelTemplate MODERN_GRANDFATHER_CLOCK_INVENTORY = getTemplate("modern_grandfather_clock_inventory_template", Optional.of("_inventory"), TextureSlot.PARTICLE, TextureSlots.WOOD, TextureSlots.GLASS, TextureSlots.DIAL);
+
+        public static final ModelTemplate DISC_MOUNT = getTemplate("disc_mount_template", Optional.empty(), TextureSlot.PARTICLE, TextureSlots.WOOD);
+
+        public static final ModelTemplate MUSIC_DISC_SHELF = getTemplate("music_disc_shelf_template", Optional.empty(), TextureSlot.PARTICLE, TextureSlots.WOOD);
+
+        public static final ModelTemplate GLOBE = getTemplate("globe_template", Optional.empty(), TextureSlot.PARTICLE, TextureSlots.PLANKS, TextureSlots.LOG, TextureSlots.LOG_TOP);
+        public static final ModelTemplate GLOBE_INVENTORY = getTemplate("globe_inventory_template", Optional.of("_inventory"), TextureSlots.PLANKS, TextureSlots.LOG, TextureSlots.LOG_TOP);
 
         public static final ModelTemplate HEDGE_POST = getTemplate("hedge_post_template", Optional.of("_post"), TextureSlot.WALL).extend().build();
         public static final ModelTemplate HEDGE_LOW_SIDE = getTemplate("hedge_side_template", Optional.of("_side"), TextureSlot.WALL).extend().build();
@@ -1203,13 +1369,7 @@ public class ModelGenerator extends ModelProvider {
         public static final ModelTemplate COUCH_TABLE_SINGLE = getTemplate("couch_table_single_template", Optional.of("_single"), TextureSlot.PARTICLE, TextureSlots.PLANKS);
         public static final ModelTemplate COUCH_TABLE_MIDDLE = getTemplate("couch_table_middle_template", Optional.of("_middle"), TextureSlot.PARTICLE, TextureSlots.PLANKS);
         public static final ModelTemplate COUCH_TABLE_NORTH = getTemplate("couch_table_north_template", Optional.of("_north"), TextureSlot.PARTICLE, TextureSlots.PLANKS);
-        public static final ModelTemplate COUCH_TABLE_EAST = getTemplate("couch_table_east_template", Optional.of("_east"), TextureSlot.PARTICLE, TextureSlots.PLANKS);
-        public static final ModelTemplate COUCH_TABLE_SOUTH = getTemplate("couch_table_south_template", Optional.of("_south"), TextureSlot.PARTICLE, TextureSlots.PLANKS);
-        public static final ModelTemplate COUCH_TABLE_WEST = getTemplate("couch_table_west_template", Optional.of("_west"), TextureSlot.PARTICLE, TextureSlots.PLANKS);
         public static final ModelTemplate COUCH_TABLE_NORTH_EAST = getTemplate("couch_table_north_east_template", Optional.of("_north_east"), TextureSlot.PARTICLE, TextureSlots.PLANKS);
-        public static final ModelTemplate COUCH_TABLE_NORTH_WEST = getTemplate("couch_table_north_west_template", Optional.of("_north_west"), TextureSlot.PARTICLE, TextureSlots.PLANKS);
-        public static final ModelTemplate COUCH_TABLE_SOUTH_EAST = getTemplate("couch_table_south_east_template", Optional.of("_south_east"), TextureSlot.PARTICLE, TextureSlots.PLANKS);
-        public static final ModelTemplate COUCH_TABLE_SOUTH_WEST = getTemplate("couch_table_south_west_template", Optional.of("_south_west"), TextureSlot.PARTICLE, TextureSlots.PLANKS);
 
         public static final ModelTemplate CEILING_LAMP_SINGLE = getTemplate("ceiling_lamp_single_template", Optional.empty(), TextureSlot.PARTICLE, TextureSlots.CONCRETE, TextureSlots.CABLE, TextureSlots.LAMP);
         public static final ModelTemplate CEILING_LAMP_SINGLE_ON = getTemplate("ceiling_lamp_single_template", Optional.of("_on"), TextureSlot.PARTICLE, TextureSlots.CONCRETE, TextureSlots.CABLE, TextureSlots.LAMP);
@@ -1217,6 +1377,17 @@ public class ModelGenerator extends ModelProvider {
         public static final ModelTemplate CEILING_LAMP_MIDDLE = getTemplate("ceiling_lamp_middle_template", Optional.of("_middle"), TextureSlot.PARTICLE, TextureSlots.CABLE);
         public static final ModelTemplate CEILING_LAMP_BOTTOM = getTemplate("ceiling_lamp_bottom_template", Optional.of("_bottom"), TextureSlot.PARTICLE, TextureSlots.CABLE, TextureSlots.LAMP);
         public static final ModelTemplate CEILING_LAMP_BOTTOM_ON = getTemplate("ceiling_lamp_bottom_template", Optional.of("_bottom_on"), TextureSlot.PARTICLE, TextureSlots.CABLE, TextureSlots.LAMP);
+
+        public static final ModelTemplate TILED_COFFEE_TABLE_PLATE_SINGLE = getTemplate("tiled_coffee_table_plate_single_template", Optional.of("_plate_single"), TextureSlot.PARTICLE, TextureSlots.WOOD, TextureSlots.CONCRETE, TextureSlots.TILES);
+        public static final ModelTemplate TILED_COFFEE_TABLE_PLATE_CORNER = getTemplate("tiled_coffee_table_plate_corner_template", Optional.of("_plate_corner"), TextureSlot.PARTICLE, TextureSlots.WOOD, TextureSlots.CONCRETE, TextureSlots.TILES);
+        public static final ModelTemplate TILED_COFFEE_TABLE_PLATE_STRAIGHT = getTemplate("tiled_coffee_table_plate_straight_template", Optional.of("_plate_straight"), TextureSlot.PARTICLE, TextureSlots.WOOD, TextureSlots.CONCRETE, TextureSlots.TILES);
+        public static final ModelTemplate TILED_COFFEE_TABLE_PLATE_MIDDLE = getTemplate("tiled_coffee_table_plate_middle_template", Optional.of("_plate_middle"), TextureSlot.PARTICLE, TextureSlots.WOOD, TextureSlots.CONCRETE, TextureSlots.TILES);
+        public static final ModelTemplate TILED_COFFEE_TABLE_PLATE_THIN_END = getTemplate("tiled_coffee_table_plate_thin_end_template", Optional.of("_plate_thin_end"), TextureSlot.PARTICLE, TextureSlots.WOOD, TextureSlots.CONCRETE, TextureSlots.TILES);
+        public static final ModelTemplate TILED_COFFEE_TABLE_PLATE_THIN_MIDDLE = getTemplate("tiled_coffee_table_plate_thin_middle_template", Optional.of("_plate_thin_middle"), TextureSlot.PARTICLE, TextureSlots.WOOD, TextureSlots.CONCRETE, TextureSlots.TILES);
+        public static final ModelTemplate TILED_COFFEE_TABLE_LEG_SINGLE = getTemplate("tiled_coffee_table_leg_single_template", Optional.of("_leg_single"), TextureSlot.PARTICLE, TextureSlots.WOOD);
+        public static final ModelTemplate TILED_COFFEE_TABLE_LEG_MIDDLE = getTemplate("tiled_coffee_table_leg_middle_template", Optional.of("_leg_middle"), TextureSlot.PARTICLE, TextureSlots.WOOD);
+        public static final ModelTemplate TILED_COFFEE_TABLE_LEG_END = getTemplate("tiled_coffee_table_leg_end_template", Optional.of("_leg_end"), TextureSlot.PARTICLE, TextureSlots.WOOD);
+        public static final ModelTemplate TILED_COFFEE_TABLE_INVENTORY = getTemplate("tiled_coffee_table_inventory_template", Optional.of("_inventory"), TextureSlot.PARTICLE, TextureSlots.WOOD, TextureSlots.CONCRETE, TextureSlots.TILES);
 
         private static ModelTemplate getTemplate(String name, Optional<String> suffix, TextureSlot... slots) {
             return new ModelTemplate(Optional.of(FabulousFurniture.prefix(name).withPrefix("block/template/")), suffix, slots);

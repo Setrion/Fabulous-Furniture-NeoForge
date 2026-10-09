@@ -25,10 +25,10 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.display.SlotDisplay;
 import net.minecraft.world.item.crafting.display.SlotDisplayContext;
 import net.setrion.fabulous_furniture.FabulousFurniture;
-import net.setrion.fabulous_furniture.world.item.crafting.StackedIngredient;
-import net.setrion.fabulous_furniture.world.level.block.state.properties.FurnitureCategory;
 import net.setrion.fabulous_furniture.world.inventory.CarpentryTableMenu;
 import net.setrion.fabulous_furniture.world.item.crafting.CarpentryTableRecipe;
+import net.setrion.fabulous_furniture.world.item.crafting.StackedIngredient;
+import net.setrion.fabulous_furniture.world.level.block.state.properties.FurnitureCategory;
 import net.setrion.fabulous_furniture.world.level.block.state.properties.MaterialType;
 
 import java.util.ArrayList;

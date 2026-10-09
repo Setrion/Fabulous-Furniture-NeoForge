@@ -22,8 +22,6 @@ import java.util.List;
 
 public class ToasterBlock extends BaseEntityBlock implements BlockTagSupplier {
 
-    public static final MapCodec<ToasterBlock> CODEC = simpleCodec(ToasterBlock::new);
-
     public static final VoxelShape VOXELSHAPE = Block.box(2, 0, 2, 14, 4, 14);
 
     public static final EnumProperty<Direction> FACING;
@@ -46,11 +44,6 @@ public class ToasterBlock extends BaseEntityBlock implements BlockTagSupplier {
             case NORTH: default:
                 yield VOXELSHAPE;
         };
-    }
-
-    @Override
-    protected MapCodec<? extends ToasterBlock> codec() {
-        return CODEC;
     }
 
     @Nullable

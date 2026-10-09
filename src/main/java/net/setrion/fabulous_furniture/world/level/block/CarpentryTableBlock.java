@@ -18,6 +18,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.setrion.fabulous_furniture.network.CarpentryRecipes;
+import net.setrion.fabulous_furniture.registry.SFFBlocks;
 import net.setrion.fabulous_furniture.registry.SFFRecipeTypes;
 import net.setrion.fabulous_furniture.world.inventory.CarpentryTableMenu;
 import net.setrion.fabulous_furniture.world.item.crafting.CarpentryTableRecipe;

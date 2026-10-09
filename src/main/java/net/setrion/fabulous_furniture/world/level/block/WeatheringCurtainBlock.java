@@ -10,12 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class WeatheringCurtainBlock extends CurtainBlock implements WeatheringCopper {
 
-    public static final MapCodec<WeatheringCurtainBlock> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(WeatherState.CODEC.fieldOf("weathering_state").forGetter(WeatheringCurtainBlock::getAge), propertiesCodec()).apply(instance, WeatheringCurtainBlock::new));
     private final WeatherState weatherState;
-
-    public MapCodec<WeatheringCurtainBlock> codec() {
-        return CODEC;
-    }
 
     public WeatheringCurtainBlock(WeatherState weatherState, Properties properties) {
         super(properties);

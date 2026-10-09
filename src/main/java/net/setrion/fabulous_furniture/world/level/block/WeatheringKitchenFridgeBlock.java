@@ -15,12 +15,7 @@ import net.setrion.fabulous_furniture.world.level.block.entity.KitchenFridgeBloc
 
 public class WeatheringKitchenFridgeBlock extends FridgeBlock implements WeatheringCopper {
 
-    public static final MapCodec<WeatheringKitchenFridgeBlock> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(WeatherState.CODEC.fieldOf("weathering_state").forGetter(WeatheringKitchenFridgeBlock::getAge), propertiesCodec()).apply(instance, WeatheringKitchenFridgeBlock::new));
     private final WeatheringCopper.WeatherState weatherState;
-
-    public MapCodec<WeatheringKitchenFridgeBlock> codec() {
-        return CODEC;
-    }
 
     public WeatheringKitchenFridgeBlock(WeatheringCopper.WeatherState weatherState, Properties properties) {
         super(properties);

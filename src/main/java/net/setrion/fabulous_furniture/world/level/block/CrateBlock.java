@@ -15,31 +15,27 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.setrion.fabulous_furniture.registry.SFFBlockEntityTypes;
 import net.setrion.fabulous_furniture.registry.SFFStats;
 import net.setrion.fabulous_furniture.world.level.block.entity.CrateBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class CrateBlock extends BaseEntityBlock implements BlockTagSupplier {
-
-    public static final MapCodec<CrateBlock> CODEC = simpleCodec(CrateBlock::new);
+public class CrateBlock extends BaseEntityBlock implements BlockTagSupplier, BlockEntitySupplier {
 
     public CrateBlock(Properties properties) {
         super(properties);
     }
 
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
-    }
 
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return new CrateBlockEntity(blockPos, blockState);
+        return getBlockEntityType().create(blockPos, blockState);
     }
 
     @Override
@@ -64,5 +60,10 @@ public class CrateBlock extends BaseEntityBlock implements BlockTagSupplier {
     @Override
     public List<TagKey<Block>> getTags() {
         return List.of(BlockTags.MINEABLE_WITH_AXE);
+    }
+
+    @Override
+    public BlockEntityType<?> getBlockEntityType() {
+        return SFFBlockEntityTypes.CRATE.get();
     }
 }

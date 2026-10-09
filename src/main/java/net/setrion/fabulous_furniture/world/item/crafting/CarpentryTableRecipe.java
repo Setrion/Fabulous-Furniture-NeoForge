@@ -6,9 +6,10 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.AdvancementRewards;
-import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.criterion.RecipeUnlockedTrigger;
+import net.minecraft.advancements.triggers.Criterion;
+import net.minecraft.advancements.triggers.RecipeUnlockedTrigger;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -33,13 +34,15 @@ import net.setrion.fabulous_furniture.world.level.block.state.properties.Furnitu
 import net.setrion.fabulous_furniture.world.level.block.state.properties.MaterialType;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class CarpentryTableRecipe implements Recipe<SingleRecipeInput> {
 
     static StreamCodec<FriendlyByteBuf, FurnitureCategory> FURNITURE_CATEGORY_STREAM_CODEC = StreamCodec.of((buf, type) -> Utf8String.write(buf, type.name(), 128), buf -> {
         String name = Utf8String.read(buf, 128);
-        FurnitureCategory w = FurnitureCategory.CRATES;
+        FurnitureCategory w = FurnitureCategory.STORAGE;
         for (FurnitureCategory wType : FurnitureCategory.values().toList()) {
             if (wType.name().equals(name)) {
                 w = wType;
@@ -222,7 +225,7 @@ public class CarpentryTableRecipe implements Recipe<SingleRecipeInput> {
         public void save(RecipeOutput output, ResourceKey<Recipe<?>> id) {
             validate(id);
             Advancement.Builder builder = output.advancement()
-                    .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(id))
+                    .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(output.lookup(Registries.RECIPE).getOrThrow(id)))
                     .rewards(AdvancementRewards.Builder.recipe(id))
                     .requirements(AdvancementRequirements.Strategy.OR);
             criteria.forEach(builder::addCriterion);

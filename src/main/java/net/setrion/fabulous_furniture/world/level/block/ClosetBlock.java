@@ -4,6 +4,7 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -26,15 +27,20 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.*;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.setrion.fabulous_furniture.registry.SFFBlockEntityTypes;
 import net.setrion.fabulous_furniture.registry.SFFStats;
 import net.setrion.fabulous_furniture.util.VoxelShapeUtils;
 import net.setrion.fabulous_furniture.world.level.block.entity.ClosetBlockEntity;
@@ -43,9 +49,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-public class ClosetBlock extends BaseEntityBlock implements BlockTagSupplier, ItemModelSupplier {
-
-    public static final MapCodec<ClosetBlock> CODEC = simpleCodec(ClosetBlock::new);
+public class ClosetBlock extends BaseEntityBlock implements BlockTagSupplier, ItemModelSupplier, BlockEntitySupplier {
 
     public static final EnumProperty<Direction> FACING;
     public static final BooleanProperty OPEN;
@@ -95,8 +99,8 @@ public class ClosetBlock extends BaseEntityBlock implements BlockTagSupplier, It
     }
 
     @Override
-    public void playerDestroy(Level level, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity te, ItemStack stack) {
-        super.playerDestroy(level, player, pos, Blocks.AIR.defaultBlockState(), te, stack);
+    public void playerDestroy(ServerLevel level, ServerPlayer player, BlockPos pos, BlockState state, @org.jspecify.annotations.Nullable BlockEntity blockEntity, ItemStack destroyedWith) {
+        super.playerDestroy(level, player, pos, Blocks.AIR.defaultBlockState(), blockEntity, destroyedWith);
     }
 
     protected static void preventDropFromBottomPart(Level level, BlockPos pos, BlockState state, Player player) {
@@ -195,15 +199,10 @@ public class ClosetBlock extends BaseEntityBlock implements BlockTagSupplier, It
         }
     }
 
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
-    }
-
     @org.jetbrains.annotations.Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return new ClosetBlockEntity(blockPos, blockState);
+        return getBlockEntityType().create(blockPos, blockState);
     }
 
     @Override
@@ -219,6 +218,11 @@ public class ClosetBlock extends BaseEntityBlock implements BlockTagSupplier, It
     @Override
     public boolean hasSeparateModel() {
         return false;
+    }
+
+    @Override
+    public BlockEntityType<?> getBlockEntityType() {
+        return SFFBlockEntityTypes.CLOSET.get();
     }
 
     static {

@@ -33,7 +33,6 @@ public class HangingBirdhouseBlock extends RotatableBlock {
         if (direction.getOpposite() == state.getValue(FACING) && !state.canSurvive(level, pos)) {
             return Blocks.AIR.defaultBlockState();
         } else {
-
             return super.updateShape(state, level, tickAccess, pos, direction, neighborPos, neighborState, random);
         }
     }

@@ -29,18 +29,18 @@ public class DataMapGenerator extends DataMapProvider {
     @Override
     protected void gather(HolderLookup.Provider provider) {
         builder(NeoForgeDataMaps.OXIDIZABLES)
-                .add(SFFBlocks.COPPER_FRIDGE.getKey(), new Oxidizable(SFFBlocks.EXPOSED_COPPER_FRIDGE.get()), false)
-                .add(SFFBlocks.EXPOSED_COPPER_FRIDGE.getKey(), new Oxidizable(SFFBlocks.WEATHERED_COPPER_FRIDGE.get()), false)
-                .add(SFFBlocks.WEATHERED_COPPER_FRIDGE.getKey(), new Oxidizable(SFFBlocks.OXIDIZED_COPPER_FRIDGE.get()), false);
+                .add(SFFBlocks.COPPER_FRIDGE.key(), new Oxidizable(SFFBlocks.EXPOSED_COPPER_FRIDGE.get()), false)
+                .add(SFFBlocks.EXPOSED_COPPER_FRIDGE.key(), new Oxidizable(SFFBlocks.WEATHERED_COPPER_FRIDGE.get()), false)
+                .add(SFFBlocks.WEATHERED_COPPER_FRIDGE.key(), new Oxidizable(SFFBlocks.OXIDIZED_COPPER_FRIDGE.get()), false);
 
         builder(NeoForgeDataMaps.WAXABLES)
-                .add(SFFBlocks.COPPER_FRIDGE.getKey(), new Waxable(SFFBlocks.WAXED_COPPER_FRIDGE.get()), false)
-                .add(SFFBlocks.EXPOSED_COPPER_FRIDGE.getKey(), new Waxable(SFFBlocks.WAXED_EXPOSED_COPPER_FRIDGE.get()), false)
-                .add(SFFBlocks.WEATHERED_COPPER_FRIDGE.getKey(), new Waxable(SFFBlocks.WAXED_WEATHERED_COPPER_FRIDGE.get()), false)
-                .add(SFFBlocks.OXIDIZED_COPPER_FRIDGE.getKey(), new Waxable(SFFBlocks.WAXED_OXIDIZED_COPPER_FRIDGE.get()), false);
+                .add(SFFBlocks.COPPER_FRIDGE.key(), new Waxable(SFFBlocks.WAXED_COPPER_FRIDGE.get()), false)
+                .add(SFFBlocks.EXPOSED_COPPER_FRIDGE.key(), new Waxable(SFFBlocks.WAXED_EXPOSED_COPPER_FRIDGE.get()), false)
+                .add(SFFBlocks.WEATHERED_COPPER_FRIDGE.key(), new Waxable(SFFBlocks.WAXED_WEATHERED_COPPER_FRIDGE.get()), false)
+                .add(SFFBlocks.OXIDIZED_COPPER_FRIDGE.key(), new Waxable(SFFBlocks.WAXED_OXIDIZED_COPPER_FRIDGE.get()), false);
 
         METALS.forEach((metal, name) -> {
-            if (metal == Blocks.COPPER_BLOCK) {
+            if (metal == Blocks.COPPER_BLOCK.weathering().unaffected()) {
                 builder(NeoForgeDataMaps.OXIDIZABLES).add(getKeyFromResourceLocation(FabulousFurniture.prefix(name+"_toaster")).get(), new Oxidizable(getBlockFromResourceLocation(FabulousFurniture.prefix("exposed_" + name + "_toaster"))), false);
                 builder(NeoForgeDataMaps.OXIDIZABLES).add(getKeyFromResourceLocation(FabulousFurniture.prefix("exposed_"+name+"_toaster")).get(), new Oxidizable(getBlockFromResourceLocation(FabulousFurniture.prefix("weathered_" + name + "_toaster"))), false);
                 builder(NeoForgeDataMaps.OXIDIZABLES).add(getKeyFromResourceLocation(FabulousFurniture.prefix("weathered_"+name+"_toaster")).get(), new Oxidizable(getBlockFromResourceLocation(FabulousFurniture.prefix("oxidized_" + name + "_toaster"))), false);
@@ -54,7 +54,7 @@ public class DataMapGenerator extends DataMapProvider {
 
         WOOL_COLORS.forEach((wool, color) -> {
             METALS.forEach((metal, name) -> {
-                if (metal == Blocks.COPPER_BLOCK) {
+                if (metal == Blocks.COPPER_BLOCK.weathering().unaffected()) {
                     builder(NeoForgeDataMaps.OXIDIZABLES).add(getKeyFromResourceLocation(FabulousFurniture.prefix(color+"_"+name+"_curtains")).get(), new Oxidizable(getBlockFromResourceLocation(FabulousFurniture.prefix(color+"_exposed_" + name + "_curtains"))), false);
                     builder(NeoForgeDataMaps.OXIDIZABLES).add(getKeyFromResourceLocation(FabulousFurniture.prefix(color+"_exposed_"+name+"_curtains")).get(), new Oxidizable(getBlockFromResourceLocation(FabulousFurniture.prefix(color+"_weathered_" + name + "_curtains"))), false);
                     builder(NeoForgeDataMaps.OXIDIZABLES).add(getKeyFromResourceLocation(FabulousFurniture.prefix(color+"_weathered_"+name+"_curtains")).get(), new Oxidizable(getBlockFromResourceLocation(FabulousFurniture.prefix(color+"_oxidized_" + name + "_curtains"))), false);
@@ -78,7 +78,7 @@ public class DataMapGenerator extends DataMapProvider {
             }
 
             METALS.forEach((metal, name) -> {
-                if (metal == Blocks.COPPER_BLOCK) {
+                if (metal == Blocks.COPPER_BLOCK.weathering().unaffected()) {
                     builder(NeoForgeDataMaps.OXIDIZABLES).add(getKeyFromResourceLocation(FabulousFurniture.prefix(type.name() + "_" + name + "_kitchen_shelf")).get(), new Oxidizable(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name() + "_exposed_" + name + "_kitchen_shelf"))), false);
                     builder(NeoForgeDataMaps.OXIDIZABLES).add(getKeyFromResourceLocation(FabulousFurniture.prefix(type.name() + "_exposed_" + name + "_kitchen_shelf")).get(), new Oxidizable(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name() + "_weathered_" + name + "_kitchen_shelf"))), false);
                     builder(NeoForgeDataMaps.OXIDIZABLES).add(getKeyFromResourceLocation(FabulousFurniture.prefix(type.name() + "_weathered_" + name + "_kitchen_shelf")).get(), new Oxidizable(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name() + "_oxidized_" + name + "_kitchen_shelf"))), false);

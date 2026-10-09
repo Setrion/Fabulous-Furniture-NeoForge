@@ -4,7 +4,6 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.properties.WoodType;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
 import net.neoforged.neoforge.common.data.ItemTagsProvider;
 import net.setrion.fabulous_furniture.FabulousFurniture;
@@ -13,8 +12,6 @@ import net.setrion.fabulous_furniture.registry.SFFTags;
 import net.setrion.fabulous_furniture.world.level.block.BlockTagSupplier;
 
 import java.util.concurrent.CompletableFuture;
-
-import static net.setrion.fabulous_furniture.registry.SFFBlocks.WOOD_TYPES;
 
 public class TagGenerator {
 
@@ -38,78 +35,76 @@ public class TagGenerator {
 
         @Override
         protected void addTags(HolderLookup.Provider provider) {
-            for (WoodType type : WOOD_TYPES) {
-                tag(SFFTags.Blocks.CRATES).add(BuiltInRegistries.BLOCK.getValue(FabulousFurniture.prefix(type.name()+"_crate")));
-            }
-
             SFFBlocks.BLOCKS.getEntries().stream().filter(entry -> entry.getId().getNamespace().equals(FabulousFurniture.MOD_ID)).forEach(entry -> {
                 Block block = entry.get();
                 if(block instanceof BlockTagSupplier supplier) {
-                    supplier.getTags().forEach(key -> this.tag(key).add(block));
+                    supplier.getTags().forEach(key -> this.tag(key).add(entry.key()));
                 } else {
                     throw new IllegalArgumentException("Block doesn't implement BlockTagSupplier: " + entry.getId());
                 }
             });
 
             tag(SFFTags.Blocks.COPPER_FRIDGES).add(
-                    SFFBlocks.COPPER_FRIDGE.get(),
-                    SFFBlocks.EXPOSED_COPPER_FRIDGE.get(),
-                    SFFBlocks.WEATHERED_COPPER_FRIDGE.get(),
-                    SFFBlocks.OXIDIZED_COPPER_FRIDGE.get(),
-                    SFFBlocks.WAXED_COPPER_FRIDGE.get(),
-                    SFFBlocks.WAXED_EXPOSED_COPPER_FRIDGE.get(),
-                    SFFBlocks.WAXED_WEATHERED_COPPER_FRIDGE.get(),
-                    SFFBlocks.WAXED_OXIDIZED_COPPER_FRIDGE.get()
+                    SFFBlocks.COPPER_FRIDGE.key(),
+                    SFFBlocks.EXPOSED_COPPER_FRIDGE.key(),
+                    SFFBlocks.WEATHERED_COPPER_FRIDGE.key(),
+                    SFFBlocks.OXIDIZED_COPPER_FRIDGE.key(),
+                    SFFBlocks.WAXED_COPPER_FRIDGE.key(),
+                    SFFBlocks.WAXED_EXPOSED_COPPER_FRIDGE.key(),
+                    SFFBlocks.WAXED_WEATHERED_COPPER_FRIDGE.key(),
+                    SFFBlocks.WAXED_OXIDIZED_COPPER_FRIDGE.key()
             );
 
             tag(SFFTags.Blocks.FRIDGES).add(
-                    SFFBlocks.IRON_FRIDGE.get(),
-                    SFFBlocks.GOLD_FRIDGE.get(),
-                    SFFBlocks.NETHERITE_FRIDGE.get()
+                    SFFBlocks.IRON_FRIDGE.key(),
+                    SFFBlocks.GOLD_FRIDGE.key(),
+                    SFFBlocks.NETHERITE_FRIDGE.key()
             ).addTag(SFFTags.Blocks.COPPER_FRIDGES);
 
             tag(SFFTags.Blocks.FLOWER_BOX_PLACABLES).add(
-                    net.minecraft.world.level.block.Blocks.OAK_SAPLING,
-                    net.minecraft.world.level.block.Blocks.SPRUCE_SAPLING,
-                    net.minecraft.world.level.block.Blocks.BIRCH_SAPLING,
-                    net.minecraft.world.level.block.Blocks.JUNGLE_SAPLING,
-                    net.minecraft.world.level.block.Blocks.ACACIA_SAPLING,
-                    net.minecraft.world.level.block.Blocks.DARK_OAK_SAPLING,
-                    net.minecraft.world.level.block.Blocks.MANGROVE_PROPAGULE,
-                    net.minecraft.world.level.block.Blocks.CHERRY_SAPLING,
-                    net.minecraft.world.level.block.Blocks.PALE_OAK_SAPLING,
-                    net.minecraft.world.level.block.Blocks.BROWN_MUSHROOM,
-                    net.minecraft.world.level.block.Blocks.RED_MUSHROOM,
-                    net.minecraft.world.level.block.Blocks.CRIMSON_FUNGUS,
-                    net.minecraft.world.level.block.Blocks.WARPED_FUNGUS,
-                    net.minecraft.world.level.block.Blocks.SHORT_GRASS,
-                    net.minecraft.world.level.block.Blocks.FERN,
-                    net.minecraft.world.level.block.Blocks.SHORT_DRY_GRASS,
-                    net.minecraft.world.level.block.Blocks.BUSH,
-                    net.minecraft.world.level.block.Blocks.DEAD_BUSH,
-                    net.minecraft.world.level.block.Blocks.DANDELION,
-                    net.minecraft.world.level.block.Blocks.POPPY,
-                    net.minecraft.world.level.block.Blocks.BLUE_ORCHID,
-                    net.minecraft.world.level.block.Blocks.ALLIUM,
-                    net.minecraft.world.level.block.Blocks.AZURE_BLUET,
-                    net.minecraft.world.level.block.Blocks.RED_TULIP,
-                    net.minecraft.world.level.block.Blocks.ORANGE_TULIP,
-                    net.minecraft.world.level.block.Blocks.WHITE_TULIP,
-                    net.minecraft.world.level.block.Blocks.PINK_TULIP,
-                    net.minecraft.world.level.block.Blocks.OXEYE_DAISY,
-                    net.minecraft.world.level.block.Blocks.CORNFLOWER,
-                    net.minecraft.world.level.block.Blocks.LILY_OF_THE_VALLEY,
-                    net.minecraft.world.level.block.Blocks.TORCHFLOWER,
-                    net.minecraft.world.level.block.Blocks.CACTUS_FLOWER,
-                    net.minecraft.world.level.block.Blocks.CLOSED_EYEBLOSSOM,
-                    net.minecraft.world.level.block.Blocks.OPEN_EYEBLOSSOM,
-                    net.minecraft.world.level.block.Blocks.WITHER_ROSE,
-                    net.minecraft.world.level.block.Blocks.BAMBOO,
-                    net.minecraft.world.level.block.Blocks.CRIMSON_ROOTS,
-                    net.minecraft.world.level.block.Blocks.WARPED_ROOTS,
-                    net.minecraft.world.level.block.Blocks.NETHER_SPROUTS,
-                    net.minecraft.world.level.block.Blocks.TALL_DRY_GRASS
-            );
+                    BuiltInRegistries.BLOCK.getResourceKey(net.minecraft.world.level.block.Blocks.OAK_SAPLING).get(),
+                    BuiltInRegistries.BLOCK.getResourceKey(net.minecraft.world.level.block.Blocks.SPRUCE_SAPLING).get(),
+                    BuiltInRegistries.BLOCK.getResourceKey(net.minecraft.world.level.block.Blocks.BIRCH_SAPLING).get(),
+                    BuiltInRegistries.BLOCK.getResourceKey(net.minecraft.world.level.block.Blocks.JUNGLE_SAPLING).get(),
+                    BuiltInRegistries.BLOCK.getResourceKey(net.minecraft.world.level.block.Blocks.ACACIA_SAPLING).get(),
+                    BuiltInRegistries.BLOCK.getResourceKey(net.minecraft.world.level.block.Blocks.DARK_OAK_SAPLING).get(),
+                    BuiltInRegistries.BLOCK.getResourceKey(net.minecraft.world.level.block.Blocks.MANGROVE_PROPAGULE).get(),
+                    BuiltInRegistries.BLOCK.getResourceKey(net.minecraft.world.level.block.Blocks.CHERRY_SAPLING).get(),
+                    BuiltInRegistries.BLOCK.getResourceKey(net.minecraft.world.level.block.Blocks.PALE_OAK_SAPLING).get(),
+                    BuiltInRegistries.BLOCK.getResourceKey(net.minecraft.world.level.block.Blocks.BROWN_MUSHROOM).get(),
+                    BuiltInRegistries.BLOCK.getResourceKey(net.minecraft.world.level.block.Blocks.RED_MUSHROOM).get(),
+                    BuiltInRegistries.BLOCK.getResourceKey(net.minecraft.world.level.block.Blocks.CRIMSON_FUNGUS).get(),
+                    BuiltInRegistries.BLOCK.getResourceKey(net.minecraft.world.level.block.Blocks.WARPED_FUNGUS).get(),
+                    BuiltInRegistries.BLOCK.getResourceKey(net.minecraft.world.level.block.Blocks.SHORT_GRASS).get(),
+                    BuiltInRegistries.BLOCK.getResourceKey(net.minecraft.world.level.block.Blocks.FERN).get(),
+                    BuiltInRegistries.BLOCK.getResourceKey(net.minecraft.world.level.block.Blocks.SHORT_DRY_GRASS).get(),
+                    BuiltInRegistries.BLOCK.getResourceKey(net.minecraft.world.level.block.Blocks.BUSH).get(),
+                    BuiltInRegistries.BLOCK.getResourceKey(net.minecraft.world.level.block.Blocks.DEAD_BUSH).get(),
+                    BuiltInRegistries.BLOCK.getResourceKey(net.minecraft.world.level.block.Blocks.DANDELION).get(),
+                    BuiltInRegistries.BLOCK.getResourceKey(net.minecraft.world.level.block.Blocks.POPPY).get(),
+                    BuiltInRegistries.BLOCK.getResourceKey(net.minecraft.world.level.block.Blocks.BLUE_ORCHID).get(),
+                    BuiltInRegistries.BLOCK.getResourceKey(net.minecraft.world.level.block.Blocks.ALLIUM).get(),
+                    BuiltInRegistries.BLOCK.getResourceKey(net.minecraft.world.level.block.Blocks.AZURE_BLUET).get(),
+                    BuiltInRegistries.BLOCK.getResourceKey(net.minecraft.world.level.block.Blocks.RED_TULIP).get(),
+                    BuiltInRegistries.BLOCK.getResourceKey(net.minecraft.world.level.block.Blocks.ORANGE_TULIP).get(),
+                    BuiltInRegistries.BLOCK.getResourceKey(net.minecraft.world.level.block.Blocks.WHITE_TULIP).get(),
+                    BuiltInRegistries.BLOCK.getResourceKey(net.minecraft.world.level.block.Blocks.PINK_TULIP).get(),
+                    BuiltInRegistries.BLOCK.getResourceKey(net.minecraft.world.level.block.Blocks.OXEYE_DAISY).get(),
+                    BuiltInRegistries.BLOCK.getResourceKey(net.minecraft.world.level.block.Blocks.CORNFLOWER).get(),
+                    BuiltInRegistries.BLOCK.getResourceKey(net.minecraft.world.level.block.Blocks.LILY_OF_THE_VALLEY).get(),
+                    BuiltInRegistries.BLOCK.getResourceKey(net.minecraft.world.level.block.Blocks.TORCHFLOWER).get(),
+                    BuiltInRegistries.BLOCK.getResourceKey(net.minecraft.world.level.block.Blocks.CACTUS_FLOWER).get(),
+                    BuiltInRegistries.BLOCK.getResourceKey(net.minecraft.world.level.block.Blocks.CLOSED_EYEBLOSSOM).get(),
+                    BuiltInRegistries.BLOCK.getResourceKey(net.minecraft.world.level.block.Blocks.OPEN_EYEBLOSSOM).get(),
+                    BuiltInRegistries.BLOCK.getResourceKey(net.minecraft.world.level.block.Blocks.WITHER_ROSE).get(),
+                    BuiltInRegistries.BLOCK.getResourceKey(net.minecraft.world.level.block.Blocks.BAMBOO).get(),
+                    BuiltInRegistries.BLOCK.getResourceKey(net.minecraft.world.level.block.Blocks.CRIMSON_ROOTS).get(),
+                    BuiltInRegistries.BLOCK.getResourceKey(net.minecraft.world.level.block.Blocks.WARPED_ROOTS).get(),
+                    BuiltInRegistries.BLOCK.getResourceKey(net.minecraft.world.level.block.Blocks.NETHER_SPROUTS).get(),
+                    BuiltInRegistries.BLOCK.getResourceKey(net.minecraft.world.level.block.Blocks.TALL_DRY_GRASS).get(),
+                    BuiltInRegistries.BLOCK.getResourceKey(net.minecraft.world.level.block.Blocks.FIREFLY_BUSH).get(),
+                    BuiltInRegistries.BLOCK.getResourceKey(net.minecraft.world.level.block.Blocks.BUSH).get()
+                    );
         }
     }
 }

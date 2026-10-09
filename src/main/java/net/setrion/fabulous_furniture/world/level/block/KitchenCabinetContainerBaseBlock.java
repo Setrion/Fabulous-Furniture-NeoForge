@@ -22,8 +22,6 @@ import java.util.List;
 
 public class KitchenCabinetContainerBaseBlock extends KitchenCounterContainerBaseBlock implements BlockTagSupplier {
 
-    public static final MapCodec<KitchenCabinetContainerBaseBlock> CODEC = simpleCodec(KitchenCabinetContainerBaseBlock::new);
-
     public static final EnumProperty<Direction> FACING;
     protected static final VoxelShape VOXELSHAPE;
 
@@ -39,11 +37,6 @@ public class KitchenCabinetContainerBaseBlock extends KitchenCounterContainerBas
         this.canBeOpened = canBeOpened;
         this.hasHinge = hasHinge;
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
-    }
-
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
     }
 
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {

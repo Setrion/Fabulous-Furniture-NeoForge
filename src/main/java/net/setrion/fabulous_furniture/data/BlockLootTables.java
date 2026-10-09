@@ -4,6 +4,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.BlockFamilies;
 import net.minecraft.data.loot.BlockLootSubProvider;
+import net.minecraft.data.loot.LootTableSubProvider;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.level.block.Block;
@@ -27,7 +28,7 @@ public class BlockLootTables extends BlockLootSubProvider {
 
     private final Set<Block> knownBlocks = new HashSet<>();
 
-    public BlockLootTables(HolderLookup.Provider provider) {
+    public BlockLootTables(LootTableSubProvider.Context provider) {
         super(Set.of(), FeatureFlags.REGISTRY.allFlags(), provider);
     }
 
@@ -205,6 +206,39 @@ public class BlockLootTables extends BlockLootSubProvider {
         dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+log_suffix+"_trash_bin")));
         dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_trash_bin")));
 
+        dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+"_clock")));
+        dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+log_suffix+"_clock")));
+        dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_clock")));
+
+        dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+"_wall_clock")));
+        dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+log_suffix+"_wall_clock")));
+        dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_wall_clock")));
+
+        add(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+"_grandfather_clock")), block -> createSinglePropConditionTable(block, GrandfatherClockBlock.HALF, DoubleBlockHalf.LOWER));
+        add(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+log_suffix+"_grandfather_clock")), block -> createSinglePropConditionTable(block, GrandfatherClockBlock.HALF, DoubleBlockHalf.LOWER));
+        add(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_grandfather_clock")), block -> createSinglePropConditionTable(block, GrandfatherClockBlock.HALF, DoubleBlockHalf.LOWER));
+
+        add(getBlockFromResourceLocation(FabulousFurniture.prefix("modern_"+type.name()+"_grandfather_clock")), block -> createSinglePropConditionTable(block, GrandfatherClockBlock.HALF, DoubleBlockHalf.LOWER));
+        add(getBlockFromResourceLocation(FabulousFurniture.prefix("modern_"+type.name()+log_suffix+"_grandfather_clock")), block -> createSinglePropConditionTable(block, GrandfatherClockBlock.HALF, DoubleBlockHalf.LOWER));
+        add(getBlockFromResourceLocation(FabulousFurniture.prefix("modern_stripped_"+type.name()+log_suffix+"_grandfather_clock")), block -> createSinglePropConditionTable(block, GrandfatherClockBlock.HALF, DoubleBlockHalf.LOWER));
+
+        dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+"_disc_mount")));
+        dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+log_suffix+"_disc_mount")));
+        dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_disc_mount")));
+
+        dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+"_music_disc_shelf")));
+        dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+log_suffix+"_music_disc_shelf")));
+        dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_"+type.name()+log_suffix+"_music_disc_shelf")));
+
+        dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name()+"_globe")));
+
+        /*TABLEWARE_MATERIALS.forEach((block, suffix) -> {
+            String top_name = block.getDescriptionId().replaceFirst("block.minecraft.", "").replaceFirst("quartz_block", "quartz");
+            dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name() + "_" + top_name + "_tiled_coffee_table")));
+            dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix(type.name() + log_suffix + "_" + top_name + "_tiled_coffee_table")));
+            dropSelf(getBlockFromResourceLocation(FabulousFurniture.prefix("stripped_" + type.name() + log_suffix + "_" + top_name + "_tiled_coffee_table")));
+        });*/
+
         for (WoodType type2 : WOOD_TYPES) {
             String log_suffix2;
             if (type2 == WoodType.CRIMSON || type2 == WoodType.WARPED) {
@@ -274,6 +308,9 @@ public class BlockLootTables extends BlockLootSubProvider {
         dropSelf(CHERRY_HEDGE.get());
         dropSelf(DARK_OAK_HEDGE.get());
         dropSelf(PALE_OAK_HEDGE.get());
+        dropSelf(RED_POPLAR_HEDGE.get());
+        dropSelf(ORANGE_POPLAR_HEDGE.get());
+        dropSelf(YELLOW_POPLAR_HEDGE.get());
         dropSelf(MANGROVE_HEDGE.get());
         dropSelf(AZALEA_HEDGE.get());
         dropSelf(FLOWERING_AZALEA_HEDGE.get());

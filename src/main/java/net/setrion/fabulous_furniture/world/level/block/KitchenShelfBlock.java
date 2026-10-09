@@ -20,8 +20,6 @@ import net.setrion.fabulous_furniture.world.level.block.state.properties.ShelfSh
 
 public class KitchenShelfBlock extends KitchenCabinetContainerBaseBlock implements ItemModelSupplier {
 
-    public static final MapCodec<KitchenShelfBlock> CODEC = simpleCodec(KitchenShelfBlock::new);
-
     public static final EnumProperty<Direction> FACING;
     public static final EnumProperty<ShelfShape> SHAPE;
 
@@ -33,23 +31,8 @@ public class KitchenShelfBlock extends KitchenCabinetContainerBaseBlock implemen
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
     }
 
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
-    }
-
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        Direction direction = state.getValue(FACING);
-        return switch (direction) {
-            case EAST:
-                yield VoxelShapeUtils.rotateShapeAroundY(Direction.NORTH, Direction.EAST, VOXELSHAPE);
-            case SOUTH:
-                yield VoxelShapeUtils.rotateShapeAroundY(Direction.NORTH, Direction.SOUTH, VOXELSHAPE);
-            case WEST:
-                yield VoxelShapeUtils.rotateShapeAroundY(Direction.NORTH, Direction.WEST, VOXELSHAPE);
-            case NORTH: default:
-                yield VOXELSHAPE;
-        };
+        return VoxelShapeUtils.rotateShapeAroundY(Direction.NORTH, state.getValue(FACING), VOXELSHAPE);
     }
 
     @Override

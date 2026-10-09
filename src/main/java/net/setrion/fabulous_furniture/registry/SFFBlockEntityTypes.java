@@ -32,4 +32,19 @@ public class SFFBlockEntityTypes {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FlowerBoxBlockEntity>> FLOWER_BOX = BLOCK_ENTITY_TYPES.register("flower_box", () -> new BlockEntityType<>(FlowerBoxBlockEntity::new,
             BuiltInRegistries.BLOCK.get(FabulousFurniture.prefix("oak_log_flower_box")).get().value()));
 
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ClockBlockEntity>> CLOCK = BLOCK_ENTITY_TYPES.register("clock", () -> new BlockEntityType<>(ClockBlockEntity::new,
+            BuiltInRegistries.BLOCK.get(FabulousFurniture.prefix("oak_log_clock")).get().value()));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GrandfatherClockBlockEntity>> GRANDFATHER_CLOCK = BLOCK_ENTITY_TYPES.register("grandfather_clock", () -> new BlockEntityType<>(GrandfatherClockBlockEntity::new,
+            BuiltInRegistries.BLOCK.get(FabulousFurniture.prefix("oak_log_grandfather_clock")).get().value()));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<DiscMountBlockEntity>> DISC_MOUNT = BLOCK_ENTITY_TYPES.register("disc_mount", () -> new BlockEntityType<>(DiscMountBlockEntity::new,
+            BuiltInRegistries.BLOCK.get(FabulousFurniture.prefix("oak_log_disc_mount")).get().value()));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MusicDiscShelfBlockEntity>> MUSIC_DISC_SHELF = BLOCK_ENTITY_TYPES.register("music_disc_shelf", () -> new BlockEntityType<>(MusicDiscShelfBlockEntity::new,
+            BuiltInRegistries.BLOCK.get(FabulousFurniture.prefix("oak_log_music_disc_shelf")).get().value()));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GlobeBlockEntity>> GLOBE = BLOCK_ENTITY_TYPES.register("globe", () -> new BlockEntityType<>(GlobeBlockEntity::new,
+            BuiltInRegistries.BLOCK.get(FabulousFurniture.prefix("oak_globe")).get().value()));
+
 }

@@ -2,6 +2,7 @@ package net.setrion.fabulous_furniture.client.renderer.blockentity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.block.BlockModelResolver;
@@ -13,6 +14,7 @@ import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.BlockItemStateProperties;
@@ -22,6 +24,7 @@ import net.minecraft.world.phys.Vec3;
 import net.setrion.fabulous_furniture.client.renderer.blockentity.state.FlowerBoxRenderState;
 import net.setrion.fabulous_furniture.world.level.block.FlowerBoxBlock;
 import net.setrion.fabulous_furniture.world.level.block.entity.FlowerBoxBlockEntity;
+import org.joml.Matrix4f;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -38,11 +41,10 @@ public class FlowerBoxRenderer implements BlockEntityRenderer<FlowerBoxBlockEnti
 
     public void extractRenderState(FlowerBoxBlockEntity blockEntity, FlowerBoxRenderState renderState, float f, Vec3 vec3, @Nullable ModelFeatureRenderer.CrumblingOverlay overlay) {
         BlockEntityRenderer.super.extractRenderState(blockEntity, renderState, f, vec3, overlay);
-        renderState.facing = blockEntity.getBlockState().getValue(FlowerBoxBlock.FACING);
+        renderState.direction = blockEntity.getBlockState().getValue(FlowerBoxBlock.FACING);
         renderState.half = blockEntity.getBlockState().getValue(FlowerBoxBlock.HALF);
         renderState.items = new ArrayList<>();
-        renderState.lightCoords = blockEntity.getLevel() != null ? LevelRenderer.getLightCoords(blockEntity.getLevel(), blockEntity.getBlockPos()) : 15728880;
-
+        renderState.lightCoords = blockEntity.getLevel() != null ? LightCoordsUtil.getLightCoords(blockEntity.getLevel(), blockEntity.getBlockPos()) : 15728880;
 
         renderState.items.addAll(blockEntity.getFlowers());
         for (int i = 0; i < renderState.items.size(); i++) {
@@ -61,7 +63,7 @@ public class FlowerBoxRenderer implements BlockEntityRenderer<FlowerBoxBlockEnti
 
     @Override
     public void submit(FlowerBoxRenderState renderState, PoseStack stack, SubmitNodeCollector submitNodeCollector, CameraRenderState cameraRenderState) {
-        Direction direction = renderState.facing;
+        Direction direction = renderState.direction;
         List<ItemStack> flowers = renderState.items;
         float h = 0.0F;
         if (renderState.half == Half.TOP) {
@@ -76,8 +78,8 @@ public class FlowerBoxRenderer implements BlockEntityRenderer<FlowerBoxBlockEnti
                     stack.translate(0.5F, 0.3F+h, 0.5F);
                     Direction direction1 = Direction.from2DDataValue((direction.get2DDataValue()) % 4);
                     float f = -direction1.getOpposite().toYRot();
-                    stack.mulPose(Axis.YP.rotationDegrees(f));
-                    stack.translate(-0.1249 - (j * 0.5), 0.0F, -0.1251F);
+                    stack.mulPose(new Matrix4f().rotate(Axis.YP.rotationDegrees(f)));
+                    stack.translate((-0.1249F - (j * 0.5)), 0.0F, -0.1251F);
                     stack.scale(0.75F, 0.75F, 0.75F);
                     renderState.flowers[j].submit(stack, submitNodeCollector, renderState.lightCoords, OverlayTexture.NO_OVERLAY, 0);
                     stack.popPose();
@@ -85,13 +87,13 @@ public class FlowerBoxRenderer implements BlockEntityRenderer<FlowerBoxBlockEnti
             } else {
                 int d = 0;
                 if (j == 3) d = 1;
-                if (!itemStack.isEmpty() && itemStack.getItem() instanceof BlockItem blockItem) {
+                if (!itemStack.isEmpty() && itemStack.getItem() instanceof BlockItem) {
                     stack.pushPose();
                     stack.translate(0.5F, 0.3F+h, 0.5F);
                     Direction direction1 = Direction.from2DDataValue((direction.get2DDataValue()) % 4);
                     float f = -direction1.getOpposite().toYRot();
-                    stack.mulPose(Axis.YP.rotationDegrees(f));
-                    stack.translate(-0.6251F + (d * 0.5), 0.0F, -0.6249F);
+                    stack.mulPose(new Matrix4f().rotate(Axis.YP.rotationDegrees(f)));
+                    stack.translate((-0.6251F + (d * 0.5)), 0.0F, -0.6249F);
                     stack.scale(0.75F, 0.75F, 0.75F);
                     renderState.flowers[j].submit(stack, submitNodeCollector, renderState.lightCoords, OverlayTexture.NO_OVERLAY, 0);
                     stack.popPose();

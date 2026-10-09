@@ -9,16 +9,20 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SmokerBlock;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.BlockEntityTypes;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.setrion.fabulous_furniture.registry.SFFBlockEntityTypes;
 import net.setrion.fabulous_furniture.util.VoxelShapeUtils;
 
 import java.util.List;
 
-public class KitchenCounterSmokerBlock extends SmokerBlock implements BlockTagSupplier {
+public class KitchenCounterSmokerBlock extends SmokerBlock implements BlockTagSupplier, BlockEntitySupplier {
 
     protected static final VoxelShape VOXELSHAPE;
 
@@ -56,6 +60,11 @@ public class KitchenCounterSmokerBlock extends SmokerBlock implements BlockTagSu
     @Override
     public List<TagKey<Block>> getTags() {
         return List.of(BlockTags.MINEABLE_WITH_AXE, BlockTags.MINEABLE_WITH_PICKAXE);
+    }
+
+    @Override
+    public BlockEntityType<?> getBlockEntityType() {
+        return BlockEntityTypes.SMOKER;
     }
 
     static {
